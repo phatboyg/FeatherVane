@@ -18,7 +18,7 @@ namespace FeatherVane
     /// VaneHandler can be anything from a simple delegate, to a more complex object.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface VaneHandler<T>
+    public interface VaneHandler<in T>
     {
         void Handle(T context);
     }
@@ -37,6 +37,11 @@ namespace FeatherVane
         public static VaneHandler<T> Success<T>()
         {
             return new Success<T>();
+        }
+
+        public static VaneHandler<T> Unhandled<T>()
+        {
+            return new Unhandled<T>();
         }
     }
 }

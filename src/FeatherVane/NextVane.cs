@@ -11,8 +11,6 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    using Vanes;
-
     public interface NextVane<T>
     {
         VaneHandler<T> GetHandler(T context);

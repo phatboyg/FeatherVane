@@ -9,14 +9,32 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane
 {
-    public class SuccessVane<T> :
-        NextVane<T>
+    using System;
+    using System.Runtime.Serialization;
+
+    [Serializable]
+    public class FeatherVaneException :
+        Exception
     {
-        public VaneHandler<T> GetHandler(T context)
+        public FeatherVaneException()
         {
-            return VaneHandler.Success<T>();
+        }
+
+        public FeatherVaneException(string message)
+            : base(message)
+        {
+        }
+
+        public FeatherVaneException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected FeatherVaneException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }
