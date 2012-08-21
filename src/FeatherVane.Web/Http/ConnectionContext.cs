@@ -1,0 +1,46 @@
+﻿// Copyright 2012-2012 Chris Patterson
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+// except in compliance with the License. You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software distributed under the
+// License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+// ANY KIND, either express or implied. See the License for the specific language governing
+// permissions and limitations under the License.
+namespace FeatherVane.Web.Http
+{
+    using System.Security.Principal;
+
+    /// <summary>
+    /// An Http connection 
+    /// </summary>
+    public interface ConnectionContext
+    {
+        /// <summary>
+        /// The request submitted for the connection
+        /// </summary>
+        RequestContext Request { get; }
+
+        /// <summary>
+        /// The response for the connection
+        /// </summary>
+        ResponseContext Response { get; }
+
+        /// <summary>
+        /// The user context under which the connection was established
+        /// </summary>
+        IPrincipal User { get; }
+
+        /// <summary>
+        /// The server context
+        /// </summary>
+        ServerContext Server { get; }
+
+        /// <summary>
+        /// Ends the processing for the connection
+        /// </summary>
+        void End();
+    }
+}

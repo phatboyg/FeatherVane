@@ -44,12 +44,18 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="HttpTests\Http_Specs.cs" />
+    <Compile Include="HttpTests\RequestHandling_Specs.cs" />
     <Compile Include="Trace_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FeatherVane.Web\FeatherVane.Web.csproj">
+      <Project>{F1851622-9293-4FB3-A6B8-CB7F81B06096}</Project>
+      <Name>FeatherVane.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FeatherVane\FeatherVane.csproj">
       <Project>{0851B204-7FD1-4EEC-BCB4-B4B78DB2D1A5}</Project>
       <Name>FeatherVane</Name>
