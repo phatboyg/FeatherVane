@@ -11,8 +11,47 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using Vanes;
+
     public interface NextVane<T>
     {
         VaneHandler<T> GetHandler(T context);
+    }
+
+    public static class NextVane
+    {
+        public static NextVane<T> Connect<T>(NextVane<T> last, params Vane<T>[] vanes)
+        {
+            NextVane<T> next = last;
+            for (int i = vanes.Length - 1; i >= 0; i--)
+            {
+                next = vanes[i].ConnectTo(next);
+            }
+
+            return next;
+        }
+
+        public static NextVane<T> Connect<T>(Vane<T> vane, NextVane<T> next)
+        {
+            return new ConnectVane<T>(vane, next);
+        }
+
+        class ConnectVane<T> :
+            NextVane<T>
+        {
+            readonly NextVane<T> _nextVane;
+            readonly Vane<T> _vane;
+
+            public ConnectVane(Vane<T> vane, NextVane<T> nextVane)
+            {
+                _vane = vane;
+                _nextVane = nextVane;
+            }
+
+            public VaneHandler<T> GetHandler(T context)
+            {
+                return _vane.GetHandler(context, _nextVane);
+            }
+        }
     }
 }

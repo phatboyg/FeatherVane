@@ -46,14 +46,13 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="NextVane.cs" />
-    <Compile Include="NextVaneImpl.cs" />
     <Compile Include="Vane.cs" />
     <Compile Include="VaneExtensions.cs" />
     <Compile Include="VaneHandler.cs" />
     <Compile Include="VaneHandlers\Success.cs" />
     <Compile Include="Vanes\SuccessVane.cs" />
     <Compile Include="Vanes\Profiler.cs" />
-    <Compile Include="Vanes\TraceLogger.cs" />
+    <Compile Include="Vanes\Logger.cs" />
     <Compile Include="Vanes\Transaction.cs" />
     <Compile Include="Vanes\WireTap.cs" />
   </ItemGroup>

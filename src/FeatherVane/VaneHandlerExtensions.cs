@@ -34,7 +34,7 @@ namespace FeatherVane
         /// <param name="innerHandler"></param>
         /// <param name="interceptor"></param>
         /// <returns></returns>
-        public static VaneHandler<T> Intercept<T>(this VaneHandler<T> innerHandler, Action<T, VaneHandler<T>> interceptor)
+        public static VaneHandler<T> InterceptWith<T>(this VaneHandler<T> innerHandler, Action<T, VaneHandler<T>> interceptor)
         {
             return new InterceptVaneHandler<T>(innerHandler, interceptor);
         }

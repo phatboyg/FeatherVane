@@ -13,15 +13,16 @@ namespace FeatherVane.Vanes
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
 
     public class Profiler<T> :
         Vane<T>
     {
         readonly ProfilerSettings _settings;
 
-        public Profiler(TimeSpan trivialThreshold)
+        public Profiler(TextWriter writer, TimeSpan trivialThreshold)
         {
-            _settings = new ProfilerSettings(trivialThreshold);
+            _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
         public VaneHandler<T> GetHandler(T context, NextVane<T> next)
@@ -31,12 +32,15 @@ namespace FeatherVane.Vanes
 
         class ProfilerSettings
         {
-            public ProfilerSettings(TimeSpan trivialThreshold)
+            public ProfilerSettings(TextWriter writer, TimeSpan trivialThreshold)
             {
+                Writer = writer;
                 TrivialThreshold = trivialThreshold;
             }
 
             public TimeSpan TrivialThreshold { get; private set; }
+
+            public TextWriter Writer { get; private set; }
         }
 
         class ProfilerVaneHandler :
@@ -70,9 +74,9 @@ namespace FeatherVane.Vanes
 
                     if (_stopwatch.Elapsed > _settings.TrivialThreshold)
                     {
-                        Trace.WriteLine(_timingId.ToString("N") + ": "
-                                        + _startTime.ToString("yyyyMMdd HHmmss.fff") + " "
-                                        + _stopwatch.ElapsedMilliseconds + "ms");
+                        _settings.Writer.WriteLine(_timingId.ToString("N") + ": "
+                                                   + _startTime.ToString("yyyyMMdd HHmmss.fff") + " "
+                                                   + _stopwatch.ElapsedMilliseconds + "ms");
                     }
                 }
             }

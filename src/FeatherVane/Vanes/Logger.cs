@@ -12,28 +12,31 @@
 namespace FeatherVane.Vanes
 {
     using System;
-    using System.Diagnostics;
+    using System.IO;
 
-    public class TraceLogger<T> :
+    public class Logger<T> :
         Vane<T>
     {
-        readonly Func<T, string> _getTraceOutput;
+        readonly Func<T, string> _getLogMessage;
+        readonly TextWriter _output;
 
-        public TraceLogger(Func<T, string> getTraceOutput)
+        public Logger(TextWriter output, Func<T, string> getLogMessage)
         {
-            _getTraceOutput = getTraceOutput;
+            _output = output;
+            _getLogMessage = getLogMessage;
         }
 
         public VaneHandler<T> GetHandler(T context, NextVane<T> next)
         {
-            return next.GetHandler(context).Intercept(Handler);
+            VaneHandler<T> nextHandler = next.GetHandler(context);
+
+            return nextHandler.InterceptWith(TraceHandler);
         }
 
-        void Handler(T context, VaneHandler<T> nextHandler)
+        void TraceHandler(T context, VaneHandler<T> nextHandler)
         {
-            string output = _getTraceOutput(context);
-
-            Trace.WriteLine(output);
+            string message = _getLogMessage(context);
+            _output.WriteLine(message);
 
             nextHandler.Handle(context);
         }

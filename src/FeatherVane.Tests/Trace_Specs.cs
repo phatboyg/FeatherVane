@@ -24,18 +24,15 @@ namespace FeatherVane.Tests
             int expected = 27;
             int? called = null;
 
-            NextVane<int> endVane = new SuccessVane<int>();
-
-
-            Vane<int> traceVane = new TraceLogger<int>(x =>
+            Vane<int> logger = new Logger<int>(Console.Out, x =>
                 {
                     called = x;
                     return x.ToString();
                 });
 
-            Vane<int> profiler = new Profiler<int>(TimeSpan.FromMilliseconds(2));
+            Vane<int> profiler = new Profiler<int>(Console.Error, TimeSpan.FromMilliseconds(2));
 
-            NextVane<int> vane = profiler.WithNext(traceVane.WithNext(endVane));
+            NextVane<int> vane = NextVane.Connect(new SuccessVane<int>(), profiler, logger);
 
             VaneHandler<int> handler = vane.GetHandler(expected);
 
