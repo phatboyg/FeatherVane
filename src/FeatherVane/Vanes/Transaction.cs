@@ -1,6 +1,16 @@
-﻿namespace FeatherVane.Vanes
+﻿// Copyright 2012-2012 Chris Patterson
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+// except in compliance with the License. You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software distributed under the
+// License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+// ANY KIND, either express or implied. See the License for the specific language governing
+// permissions and limitations under the License.
+namespace FeatherVane.Vanes
 {
-    using System;
     using System.Transactions;
 
     public class Transaction<T> :
@@ -13,21 +23,34 @@
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        public Action<T> Handle(T context, NextVane<T> next)
+        public VaneHandler<T> GetHandler(T context, NextVane<T> next)
         {
-            Action<T> nextHandler = next.Handle(context);
-            if (nextHandler == null)
-                return null;
+            VaneHandler<T> nextHandler = next.GetHandler(context);
 
-            return input =>
+            return new TransactionVaneHandler(_scopeOptions, nextHandler);
+        }
+
+        class TransactionVaneHandler :
+            VaneHandler<T>
+        {
+            readonly VaneHandler<T> _nextHandler;
+            readonly TransactionScopeOption _options;
+
+            public TransactionVaneHandler(TransactionScopeOption options, VaneHandler<T> nextHandler)
+            {
+                _options = options;
+                _nextHandler = nextHandler;
+            }
+
+            public void Handle(T context)
+            {
+                using (var scope = new TransactionScope(_options))
                 {
-                    using (var scope = new TransactionScope(_scopeOptions))
-                    {
-                        nextHandler(input);
+                    _nextHandler.Handle(context);
 
-                        scope.Complete();
-                    }
-                };
+                    scope.Complete();
+                }
+            }
         }
     }
 }

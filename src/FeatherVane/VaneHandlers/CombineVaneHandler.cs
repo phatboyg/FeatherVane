@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -9,27 +9,28 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.VaneHandlers
 {
     /// <summary>
-    /// A WireTap passes the context to another Vane so that it can be observed
+    /// Combines two VaneHandlers into a single, calling them in order first, second.
+    /// No special exception handling is performed.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class WireTap<T> :
-        Vane<T>
+    public class CombineVaneHandler<T> :
+        VaneHandler<T>
     {
-        readonly NextVane<T> _tap;
+        readonly VaneHandler<T> _first;
+        readonly VaneHandler<T> _next;
 
-        public WireTap(NextVane<T> tap)
+        public CombineVaneHandler(VaneHandler<T> first, VaneHandler<T> next)
         {
-            _tap = tap;
+            _first = first;
+            _next = next;
         }
 
-        public VaneHandler<T> GetHandler(T context, NextVane<T> next)
+        public void Handle(T context)
         {
-            VaneHandler<T> tapHandler = _tap.GetHandler(context);
-
-            return tapHandler.CombineWith(next.GetHandler(context));
+            _first.Handle(context);
+            _next.Handle(context);
         }
     }
 }

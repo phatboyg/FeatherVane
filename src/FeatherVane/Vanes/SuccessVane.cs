@@ -9,10 +9,20 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Vanes
 {
-    public interface Vane<T>
+    public class SuccessVane<T> :
+        Vane<T>,
+        NextVane<T>
     {
-        VaneHandler<T> GetHandler(T context, NextVane<T> next);
+        public VaneHandler<T> GetHandler(T context)
+        {
+            return VaneHandler.Success<T>();
+        }
+
+        public VaneHandler<T> GetHandler(T context, NextVane<T> next)
+        {
+            return VaneHandler.Success<T>();
+        }
     }
 }
