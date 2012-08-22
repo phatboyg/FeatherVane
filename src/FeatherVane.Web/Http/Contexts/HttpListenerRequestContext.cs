@@ -16,15 +16,20 @@ namespace FeatherVane.Web.Http.Contexts
     using System.IO;
     using System.Net;
     using System.Text;
+    using Util;
 
     public class HttpListenerRequestContext :
-        Request
+        RequestContext
     {
         readonly HttpListenerRequest _request;
+
+        readonly StreamStack _bodyStream;
 
         public HttpListenerRequestContext(HttpListenerRequest request)
         {
             _request = request;
+
+            _bodyStream = new StreamStack(request.InputStream);
         }
 
         public NameValueCollection Headers
@@ -32,9 +37,14 @@ namespace FeatherVane.Web.Http.Contexts
             get { return _request.Headers; }
         }
 
-        public Stream InputStream
+        public Stream BodyStream
         {
-            get { return _request.InputStream; }
+            get { return _bodyStream; }
+        }
+
+        public void AddBodyStreamDecorator(Func<Stream, Stream> decoratorFactory)
+        {
+            _bodyStream.Push(decoratorFactory);
         }
 
         public NameValueCollection QueryString

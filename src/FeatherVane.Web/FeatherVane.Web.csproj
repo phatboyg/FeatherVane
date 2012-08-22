@@ -52,12 +52,13 @@
     <Compile Include="Http\Exceptions\HttpServerException.cs" />
     <Compile Include="Http\ExtensionsToResponseContext.cs" />
     <Compile Include="Http\HttpServer.cs" />
-    <Compile Include="Http\Request.cs" />
+    <Compile Include="Http\RequestContext.cs" />
     <Compile Include="Http\ResponseContext.cs" />
     <Compile Include="Http\ServerContext.cs" />
     <Compile Include="Http\Vanes\CompressionVane.cs" />
     <Compile Include="Http\Vanes\TextEncoding.cs" />
     <Compile Include="Http\Vanes\NotFoundVane.cs" />
+    <Compile Include="Util\StreamStack.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

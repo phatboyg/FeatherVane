@@ -29,7 +29,7 @@
             where T1 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1);
+            context.Get(() => ctx1);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -48,8 +48,8 @@
             where T2 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -69,9 +69,9 @@
             where T3 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -92,10 +92,10 @@
             where T4 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -117,11 +117,11 @@
             where T5 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -144,12 +144,12 @@
             where T6 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -173,13 +173,13 @@
             where T7 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -204,14 +204,14 @@
             where T8 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -237,15 +237,15 @@
             where T9 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -272,16 +272,16 @@
             where T10 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -309,17 +309,17 @@
             where T11 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10); 
-            context.GetContext(() => ctx11);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10); 
+            context.Get(() => ctx11);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -348,18 +348,18 @@
             where T12 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10); 
-            context.GetContext(() => ctx11); 
-            context.GetContext(() => ctx12);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10); 
+            context.Get(() => ctx11); 
+            context.Get(() => ctx12);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -389,19 +389,19 @@
             where T13 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10); 
-            context.GetContext(() => ctx11); 
-            context.GetContext(() => ctx12); 
-            context.GetContext(() => ctx13);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10); 
+            context.Get(() => ctx11); 
+            context.Get(() => ctx12); 
+            context.Get(() => ctx13);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -432,20 +432,20 @@
             where T14 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10); 
-            context.GetContext(() => ctx11); 
-            context.GetContext(() => ctx12); 
-            context.GetContext(() => ctx13); 
-            context.GetContext(() => ctx14);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10); 
+            context.Get(() => ctx11); 
+            context.Get(() => ctx12); 
+            context.Get(() => ctx13); 
+            context.Get(() => ctx14);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -477,21 +477,21 @@
             where T15 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10); 
-            context.GetContext(() => ctx11); 
-            context.GetContext(() => ctx12); 
-            context.GetContext(() => ctx13); 
-            context.GetContext(() => ctx14); 
-            context.GetContext(() => ctx15);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10); 
+            context.Get(() => ctx11); 
+            context.Get(() => ctx12); 
+            context.Get(() => ctx13); 
+            context.Get(() => ctx14); 
+            context.Get(() => ctx15);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 
@@ -524,22 +524,22 @@
             where T16 : class
         {
             var context = new VaneContextImpl<T>(body); 
-            context.GetContext(() => ctx1); 
-            context.GetContext(() => ctx2); 
-            context.GetContext(() => ctx3); 
-            context.GetContext(() => ctx4); 
-            context.GetContext(() => ctx5); 
-            context.GetContext(() => ctx6); 
-            context.GetContext(() => ctx7); 
-            context.GetContext(() => ctx8); 
-            context.GetContext(() => ctx9); 
-            context.GetContext(() => ctx10); 
-            context.GetContext(() => ctx11); 
-            context.GetContext(() => ctx12); 
-            context.GetContext(() => ctx13); 
-            context.GetContext(() => ctx14); 
-            context.GetContext(() => ctx15); 
-            context.GetContext(() => ctx16);
+            context.Get(() => ctx1); 
+            context.Get(() => ctx2); 
+            context.Get(() => ctx3); 
+            context.Get(() => ctx4); 
+            context.Get(() => ctx5); 
+            context.Get(() => ctx6); 
+            context.Get(() => ctx7); 
+            context.Get(() => ctx8); 
+            context.Get(() => ctx9); 
+            context.Get(() => ctx10); 
+            context.Get(() => ctx11); 
+            context.Get(() => ctx12); 
+            context.Get(() => ctx13); 
+            context.Get(() => ctx14); 
+            context.Get(() => ctx15); 
+            context.Get(() => ctx16);
 
             VaneHandler<T> handler = vane.GetHandler(context);
 

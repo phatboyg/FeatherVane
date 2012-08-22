@@ -19,19 +19,9 @@ namespace FeatherVane.Web.Http
     public interface Connection
     {
         /// <summary>
-        /// The response for the connection
-        /// </summary>
-        ResponseContext Response { get; }
-
-        /// <summary>
         /// The user context under which the connection was established
         /// </summary>
         IPrincipal User { get; }
-
-        /// <summary>
-        /// The server context
-        /// </summary>
-        ServerContext Server { get; }
 
         /// <summary>
         /// Ends the processing for the connection

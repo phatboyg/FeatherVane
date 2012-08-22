@@ -11,19 +11,22 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Web.Http.Contexts
 {
+    using System;
     using System.Collections.Specialized;
     using System.IO;
     using System.Net;
+    using Util;
 
     public class HttpListenerResponseContext :
         ResponseContext
     {
         readonly HttpListenerResponse _response;
+        StreamStack _bodyStream;
 
         public HttpListenerResponseContext(HttpListenerResponse response)
         {
             _response = response;
-            OutputStream = response.OutputStream;
+            _bodyStream = new StreamStack(response.OutputStream);
         }
 
         public NameValueCollection Headers
@@ -31,9 +34,17 @@ namespace FeatherVane.Web.Http.Contexts
             get { return _response.Headers; }
         }
 
-        public Stream OutputStream { get; set; }
+        public Stream BodyStream
+        {
+            get { return _bodyStream; }
+        }
 
-        public long ContentLength64
+        public void AddBodyStreamFilter(Func<Stream, Stream> decoratorFactory)
+        {
+            _bodyStream.Push(decoratorFactory);
+        }
+
+        public long ContentLength
         {
             get { return _response.ContentLength64; }
             set { _response.ContentLength64 = value; }
@@ -64,7 +75,9 @@ namespace FeatherVane.Web.Http.Contexts
 
         public void Close()
         {
-            OutputStream.Dispose();
+            _bodyStream.Close();
+            _bodyStream.Dispose();
+
             _response.Close();
         }
     }

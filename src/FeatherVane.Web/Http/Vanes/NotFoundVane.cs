@@ -30,7 +30,7 @@ namespace FeatherVane.Web.Http.Vanes
             public void Handle(VaneContext<Connection> context)
             {
                 ResponseContext response;
-                if(context.TryGetContext(out response))
+                if(context.TryGet(out response))
                 {
                     response.StatusCode = 404;
                     response.StatusDescription = "Not Found";

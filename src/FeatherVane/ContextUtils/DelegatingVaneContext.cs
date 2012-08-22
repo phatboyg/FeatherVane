@@ -9,16 +9,21 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.ContextUtils
 {
     using System;
 
+    /// <summary>
+    /// Used as a VaneContext of a body type different than the original, but still retaining
+    /// the original context for all related operations.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class DelegatingVaneContext<T> :
         VaneContext<T>
         where T : class
     {
-        T _body;
-        VaneContext _originalContext;
+        readonly T _body;
+        readonly VaneContext _originalContext;
 
         public DelegatingVaneContext(VaneContext originalContext, T body)
         {
@@ -26,26 +31,31 @@ namespace FeatherVane
             _body = body;
         }
 
-        public Type ContextType
+        public Type BodyType
         {
             get { return typeof(T); }
         }
 
-        public bool HasContext(Type contextType)
+        public Type VaneType
         {
-            return _originalContext.HasContext(contextType);
+            get { return typeof(Vane<T>); }
         }
 
-        public bool TryGetContext<TContext>(out TContext context)
-            where TContext : class
+        public bool Has(Type contextType)
         {
-            return _originalContext.TryGetContext(out context);
+            return _originalContext.Has(contextType);
         }
 
-        public TContext GetContext<TContext>(MissingContextProvider<TContext> missingContextProvider)
+        public bool TryGet<TContext>(out TContext context)
             where TContext : class
         {
-            return _originalContext.GetContext(missingContextProvider);
+            return _originalContext.TryGet(out context);
+        }
+
+        public TContext Get<TContext>(MissingContextProvider<TContext> missingContextProvider)
+            where TContext : class
+        {
+            return _originalContext.Get(missingContextProvider);
         }
 
         public T Body

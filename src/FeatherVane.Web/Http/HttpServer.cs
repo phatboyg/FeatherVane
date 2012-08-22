@@ -165,6 +165,8 @@ namespace FeatherVane.Web.Http
 
         void ConnectionComplete(Connection connectionContext)
         {
+            connectionContext.End();
+
             int count = Interlocked.Decrement(ref _connectionCount);
 
             if (_closing)

@@ -23,14 +23,19 @@ namespace FeatherVane
         /// <summary>
         /// The type of the generic context that is being passed by the vane
         /// </summary>
-        Type ContextType { get; }
+        Type BodyType { get; }
+
+        /// <summary>
+        /// The type of the Vane, include the Vane<typeparam name="T">T</typeparam> interface
+        /// </summary>
+        Type VaneType { get; }
 
         /// <summary>
         /// Checks if the context type is available
         /// </summary>
         /// <param name="contextType">The type of context requested</param>
         /// <returns>True if the context is available, otherwise false</returns>
-        bool HasContext(Type contextType);
+        bool Has(Type contextType);
 
         /// <summary>
         /// Retrieve a context from a vane if it exists
@@ -38,17 +43,19 @@ namespace FeatherVane
         /// <typeparam name="TContext">The type of context to retrieve</typeparam>
         /// <param name="context">The resulting context if found</param>
         /// <returns>True if the context was found, otherwise false</returns>
-        bool TryGetContext<TContext>(out TContext context)
+        bool TryGet<TContext>(out TContext context)
             where TContext : class;
 
         /// <summary>
         /// Retrieve a context from a vane. If the context is not present, an argument
-        /// exception is thrown unless a missing context provider is specified.
+        /// exception is thrown unless a missing context provider is specified. Contexts
+        /// can only be added using Get, think of it as a GetOrAdd operation. Once a context
+        /// has been added using Get(), there is no way to replace that implementation.
         /// </summary>
         /// <typeparam name="TContext">The requested context</typeparam>
         /// <param name="missingContextProvider"></param>
         /// <returns></returns>
-        TContext GetContext<TContext>(MissingContextProvider<TContext> missingContextProvider)
+        TContext Get<TContext>(MissingContextProvider<TContext> missingContextProvider)
             where TContext : class;
     }
 
@@ -61,6 +68,9 @@ namespace FeatherVane
         VaneContext
         where T : class
     {
+        /// <summary>
+        /// The value being carried by the VaneContext, perhaps Payload, Data, or something else?
+        /// </summary>
         T Body { get; }
     }
 }

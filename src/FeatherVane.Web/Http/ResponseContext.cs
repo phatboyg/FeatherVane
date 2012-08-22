@@ -11,14 +11,22 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Web.Http
 {
+    using System;
     using System.Collections.Specialized;
     using System.IO;
 
     public interface ResponseContext
     {
         NameValueCollection Headers { get; }
-        Stream OutputStream { get; }
-        long ContentLength64 { get; set; }
+        Stream BodyStream { get; }
+
+        /// <summary>
+        /// Add a decorator to the body stream, for things like encoding, chunking, and compression
+        /// </summary>
+        /// <param name="decoratorFactory">A decorator provider</param>
+        void AddBodyStreamFilter(Func<Stream, Stream> decoratorFactory);
+
+        long ContentLength { get; set; }
         int StatusCode { get; set; }
         string StatusDescription { get; set; }
         string ContentType { get; set; }

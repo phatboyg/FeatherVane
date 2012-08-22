@@ -49,8 +49,8 @@ namespace FeatherVane.Web.Http.Vanes
 
             public void Handle(VaneContext<Connection> context)
             {
-                Request request;
-                if(context.TryGetContext(out request))
+                RequestContext request;
+                if(context.TryGet(out request))
                 {
                     Encoding encoding = GetEncoding(request);
                 }
@@ -62,7 +62,7 @@ namespace FeatherVane.Web.Http.Vanes
                 _nextHandler.Handle(context);
             }
 
-            Encoding GetEncoding(Request context)
+            Encoding GetEncoding(RequestContext context)
             {
                 string contentType = context.Headers["Content-Type"];
                 if (contentType == null)

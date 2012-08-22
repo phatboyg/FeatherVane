@@ -49,7 +49,7 @@ namespace FeatherVane.Tests.HttpTests
         {
             return NextVane.Connect(new Unhandled<Connection>(),
                 new Profiler<Connection>(Console.Out, TimeSpan.FromMilliseconds(2)),
-                new Logger<Connection>(Console.Error, x => x.GetContext<Request>().Url.ToString()),
+                new Logger<Connection>(Console.Error, x => x.Get<RequestContext>().Url.ToString()),
                 new NotFoundVane());
         }
     }

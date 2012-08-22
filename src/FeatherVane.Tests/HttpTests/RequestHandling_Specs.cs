@@ -49,7 +49,7 @@ namespace FeatherVane.Tests.HttpTests
         [Test]
         public void Should_get_a_200()
         {
-            Uri requestUri = new Uri(ServerUri.ToString() + "/hello");
+            Uri requestUri = new Uri(ServerUri + "/hello");
 
             var webRequest = (HttpWebRequest)WebRequest.Create(requestUri);
             HttpWebResponse _webResponse;
@@ -124,7 +124,7 @@ namespace FeatherVane.Tests.HttpTests
         {
             public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
             {
-                if (context.GetContext<Request>().Url.ToString().EndsWith("hello"))
+                if (context.Get<RequestContext>().Url.ToString().EndsWith("hello"))
                     return new HelloVaneHandler();
 
                 return next.GetHandler(context);
@@ -135,7 +135,7 @@ namespace FeatherVane.Tests.HttpTests
                 public void Handle(VaneContext<Connection> context)
                 {
                     ResponseContext response;
-                    if (context.TryGetContext(out response))
+                    if (context.TryGet(out response))
                     {
                         response.StatusCode = 200;
                         response.Write("Hello!");

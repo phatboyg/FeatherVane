@@ -20,7 +20,7 @@ namespace FeatherVane.Web.Http.Contexts
     {
         readonly DateTime _acceptedAt;
         readonly HttpListenerContext _httpContext;
-        readonly Request _request;
+        readonly RequestContext _request;
         readonly ResponseContext _response;
         readonly ServerContext _server;
 
@@ -34,7 +34,7 @@ namespace FeatherVane.Web.Http.Contexts
             _response = new HttpListenerResponseContext(httpContext.Response);
         }
 
-        public Request Request
+        public RequestContext Request
         {
             get { return _request; }
         }
@@ -56,8 +56,7 @@ namespace FeatherVane.Web.Http.Contexts
 
         public void End()
         {
-            _response.OutputStream.Flush();
-            _response.OutputStream.Dispose();
+            _response.Close();
             _httpContext.Response.Close();
         }
     }

@@ -37,7 +37,7 @@ namespace FeatherVane.Web.Http
 
         public static void Write(this ResponseContext response, params string[] text)
         {
-            using (var writer = new StreamWriter(response.OutputStream, Encoding.UTF8))
+            using (var writer = new StreamWriter(response.BodyStream, Encoding.UTF8))
             {
                 for (int i = 0; i < text.Length; i++)
                 {

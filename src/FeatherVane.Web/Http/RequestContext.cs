@@ -17,7 +17,7 @@ namespace FeatherVane.Web.Http
     using System.Net;
     using System.Text;
 
-    public interface Request
+    public interface RequestContext
     {
         /// <summary>
         /// The headers submitted as part of the request
@@ -27,7 +27,13 @@ namespace FeatherVane.Web.Http
         /// <summary>
         /// The input stream to read the request contents
         /// </summary>
-        Stream InputStream { get; }
+        Stream BodyStream { get; }
+
+        /// <summary>
+        /// Add a decorator to the body stream, for things like encoding, chunking, and compression
+        /// </summary>
+        /// <param name="decoratorFactory">A decorator provider</param>
+        void AddBodyStreamDecorator(Func<Stream,Stream> decoratorFactory);
 
         /// <summary>
         /// The query string arguments that were included with the request

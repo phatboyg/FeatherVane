@@ -12,6 +12,7 @@
 namespace FeatherVane
 {
     using System;
+    using ContextUtils;
 
     public static class VaneContextExtensions
     {
@@ -22,13 +23,13 @@ namespace FeatherVane
         /// <typeparam name="TContext"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static TContext GetContext<TContext>(this VaneContext context)
+        public static TContext Get<TContext>(this VaneContext context)
             where TContext : class
         {
             MissingContextProvider<TContext> missingContextProvider =
                 () => { throw new ArgumentException("The specified context was not found.", "TContext"); };
 
-            return context.GetContext(missingContextProvider);
+            return context.Get(missingContextProvider);
         }
 
         public static VaneContext<T> CreateDelegatingVaneContext<T>(this VaneContext context, T body)

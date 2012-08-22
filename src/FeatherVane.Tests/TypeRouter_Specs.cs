@@ -14,7 +14,7 @@
 
             NextVane<ConsumeContext<A>> messageAVane = NextVane.Connect(new Success<ConsumeContext<A>>(), lambda);
 
-            var typeRouter = new TypeRouter<ConsumeContext>(context => typeof(ConsumeContext<>).MakeGenericType(context.Body.MessageType));
+            var typeRouter = new TypeRouter<ConsumeContext>(context => context.Body.ContextType);
             typeRouter.Add(messageAVane, x =>
                 {
                     ConsumeContext<A> context;
@@ -33,6 +33,8 @@
         interface ConsumeContext
         {
             Type MessageType { get; }
+
+            Type ContextType { get; }
 
             bool TryGetContext<T>(out ConsumeContext<T> context);
         }
@@ -63,6 +65,11 @@
             public Type MessageType
             {
                 get { return typeof(T); }
+            }
+
+            public Type ContextType
+            {
+                get { return typeof(ConsumeContext<T>); }
             }
 
             public bool TryGetContext<T1>(out ConsumeContext<T1> context)

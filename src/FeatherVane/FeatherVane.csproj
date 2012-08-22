@@ -36,7 +36,7 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DelegatingVaneContext.cs" />
+    <Compile Include="ContextUtils\DelegatingVaneContext.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
@@ -46,7 +46,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NextVaneHandleExtensions.tt</DependentUpon>
     </Compile>
-    <Compile Include="Util\ContextCache.cs" />
+    <Compile Include="ContextUtils\ContextCache.cs" />
     <Compile Include="VaneContext.cs" />
     <Compile Include="VaneContextExtensions.cs" />
     <Compile Include="VaneContextImpl.cs" />

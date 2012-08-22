@@ -12,7 +12,7 @@
 namespace FeatherVane
 {
     using System;
-    using Util;
+    using ContextUtils;
 
 
     public class VaneContextImpl<T> :
@@ -28,23 +28,28 @@ namespace FeatherVane
             _contextCache = new ContextCache();
         }
 
-        public Type ContextType
+        public Type BodyType
         {
             get { return typeof(T); }
         }
 
-        public bool HasContext(Type contextType)
+        public Type VaneType
+        {
+            get { return typeof(Vane<T>); }
+        }
+
+        public bool Has(Type contextType)
         {
             return _contextCache.HasContext(contextType);
         }
 
-        public bool TryGetContext<TContext>(out TContext context)
+        public bool TryGet<TContext>(out TContext context)
             where TContext : class
         {
             return _contextCache.TryGetContext(out context);
         }
 
-        public TContext GetContext<TContext>(MissingContextProvider<TContext> missingContextProvider)
+        public TContext Get<TContext>(MissingContextProvider<TContext> missingContextProvider)
             where TContext : class
         {
             return _contextCache.GetContext(missingContextProvider);
