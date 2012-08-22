@@ -13,17 +13,13 @@ namespace FeatherVane
 {
     using System;
     using System.Runtime.Serialization;
+    using Internals.Extensions;
 
     [Serializable]
     public class UnhandledException :
         FeatherVaneException
     {
         public UnhandledException()
-        {
-        }
-
-        public UnhandledException(object context)
-            : this("The context was not handled")
         {
         }
 
@@ -40,6 +36,12 @@ namespace FeatherVane
         protected UnhandledException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
+        }
+
+        public static UnhandledException New<T>(VaneContext<T> context) 
+            where T : class
+        {
+            return new UnhandledException("The context was not handled: " + typeof(T).GetTypeName());
         }
     }
 }

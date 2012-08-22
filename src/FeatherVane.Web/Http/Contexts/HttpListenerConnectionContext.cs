@@ -16,11 +16,11 @@ namespace FeatherVane.Web.Http.Contexts
     using System.Security.Principal;
 
     public class HttpListenerConnectionContext :
-        ConnectionContext
+        Connection
     {
         readonly DateTime _acceptedAt;
         readonly HttpListenerContext _httpContext;
-        readonly RequestContext _request;
+        readonly Request _request;
         readonly ResponseContext _response;
         readonly ServerContext _server;
 
@@ -34,7 +34,7 @@ namespace FeatherVane.Web.Http.Contexts
             _response = new HttpListenerResponseContext(httpContext.Response);
         }
 
-        public RequestContext Request
+        public Request Request
         {
             get { return _request; }
         }

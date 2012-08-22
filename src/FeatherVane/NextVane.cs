@@ -12,13 +12,14 @@
 namespace FeatherVane
 {
     public interface NextVane<T>
+        where T : class
     {
-        VaneHandler<T> GetHandler(T context);
+        VaneHandler<T> GetHandler(VaneContext<T> context);
     }
 
     public static class NextVane
     {
-        public static NextVane<T> Connect<T>(NextVane<T> last, params Vane<T>[] vanes)
+        public static NextVane<T> Connect<T>(NextVane<T> last, params Vane<T>[] vanes) where T : class
         {
             NextVane<T> next = last;
             for (int i = vanes.Length - 1; i >= 0; i--)
@@ -29,13 +30,14 @@ namespace FeatherVane
             return next;
         }
 
-        public static NextVane<T> Connect<T>(Vane<T> vane, NextVane<T> next)
+        public static NextVane<T> Connect<T>(Vane<T> vane, NextVane<T> next) where T : class
         {
             return new ConnectVane<T>(vane, next);
         }
 
         class ConnectVane<T> :
             NextVane<T>
+            where T : class
         {
             readonly NextVane<T> _nextVane;
             readonly Vane<T> _vane;
@@ -46,7 +48,7 @@ namespace FeatherVane
                 _nextVane = nextVane;
             }
 
-            public VaneHandler<T> GetHandler(T context)
+            public VaneHandler<T> GetHandler(VaneContext<T> context)
             {
                 return _vane.GetHandler(context, _nextVane);
             }

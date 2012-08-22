@@ -15,17 +15,18 @@ namespace FeatherVane.VaneHandlers
 
     public class InterceptVaneHandler<T> :
         VaneHandler<T>
+        where T : class
     {
         readonly VaneHandler<T> _innerHandler;
-        readonly Action<T, VaneHandler<T>> _intercepter;
+        readonly Action<VaneContext<T>, VaneHandler<T>> _intercepter;
 
-        public InterceptVaneHandler(VaneHandler<T> innerHandler, Action<T, VaneHandler<T>> intercepter)
+        public InterceptVaneHandler(VaneHandler<T> innerHandler, Action<VaneContext<T>, VaneHandler<T>> intercepter)
         {
             _innerHandler = innerHandler;
             _intercepter = intercepter;
         }
 
-        public void Handle(T context)
+        public void Handle(VaneContext<T> context)
         {
             _intercepter(context, _innerHandler);
         }

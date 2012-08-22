@@ -12,7 +12,8 @@
 namespace FeatherVane
 {
     public interface Vane<T>
+        where T : class
     {
-        VaneHandler<T> GetHandler(T context, NextVane<T> next);
+        VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next);
     }
 }

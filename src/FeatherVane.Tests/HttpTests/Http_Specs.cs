@@ -30,7 +30,7 @@ namespace FeatherVane.Tests.HttpTests
         [TestFixtureSetUp]
         public void Setup_http_server()
         {
-            NextVane<ConnectionContext> vane = CreateMainVane();
+            NextVane<Connection> vane = CreateMainVane();
 
             ServerUri = new Uri("http://localhost:8008/FeatherVaneTests");
             _server = new HttpServer(ServerUri, vane);
@@ -45,11 +45,11 @@ namespace FeatherVane.Tests.HttpTests
 
         protected Uri ServerUri { get; set; }
 
-        protected virtual NextVane<ConnectionContext> CreateMainVane()
+        protected virtual NextVane<Connection> CreateMainVane()
         {
-            return NextVane.Connect(new UnhandledVane<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(2)),
-                new Logger<ConnectionContext>(Console.Error, x => x.Request.Url.ToString()),
+            return NextVane.Connect(new Unhandled<Connection>(),
+                new Profiler<Connection>(Console.Out, TimeSpan.FromMilliseconds(2)),
+                new Logger<Connection>(Console.Error, x => x.GetContext<Request>().Url.ToString()),
                 new NotFoundVane());
         }
     }

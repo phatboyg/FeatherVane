@@ -22,13 +22,13 @@ namespace FeatherVane.Web.Http
         ServerContext
     {
         readonly Uri _uri;
-        readonly NextVane<ConnectionContext> _vane;
+        readonly NextVane<Connection> _vane;
         bool _closing;
         int _concurrentConnectionLimit = 100000;
         int _connectionCount;
         HttpListener _httpListener;
 
-        public HttpServer(Uri uri, NextVane<ConnectionContext> vane)
+        public HttpServer(Uri uri, NextVane<Connection> vane)
         {
             _uri = uri;
             _vane = vane;
@@ -84,7 +84,7 @@ namespace FeatherVane.Web.Http
 
                 Interlocked.Increment(ref _connectionCount);
 
-                var connectionTask = new Task<ConnectionContext>(() => HandleConnection(acceptedAt, context));
+                var connectionTask = new Task<Connection>(() => HandleConnection(acceptedAt, context));
                 connectionTask.ContinueWith(task => ConnectionComplete(task.Result));
                 connectionTask.Start();
             }
@@ -100,13 +100,12 @@ namespace FeatherVane.Web.Http
             }
         }
 
-        ConnectionContext HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
+        Connection HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
         {
             var connectionContext = new HttpListenerConnectionContext(this, httpContext, acceptedAt);
 
-            VaneHandler<ConnectionContext> handler = _vane.GetHandler(connectionContext);
-
-            handler.Handle(connectionContext);
+            _vane.Handle(connectionContext, connectionContext.Request, connectionContext.Response,
+                connectionContext.Server);
 
             return connectionContext;
         }
@@ -164,7 +163,7 @@ namespace FeatherVane.Web.Http
                 _httpListener.Abort();
         }
 
-        void ConnectionComplete(ConnectionContext connectionContext)
+        void ConnectionComplete(Connection connectionContext)
         {
             int count = Interlocked.Decrement(ref _connectionCount);
 

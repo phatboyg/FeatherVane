@@ -16,13 +16,8 @@ namespace FeatherVane.Web.Http
     /// <summary>
     /// An Http connection 
     /// </summary>
-    public interface ConnectionContext
+    public interface Connection
     {
-        /// <summary>
-        /// The request submitted for the connection
-        /// </summary>
-        RequestContext Request { get; }
-
         /// <summary>
         /// The response for the connection
         /// </summary>

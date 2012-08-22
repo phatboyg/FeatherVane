@@ -18,13 +18,15 @@ namespace FeatherVane.Web.Http.Vanes
     using System.Security.Principal;
 
     public class CompressionVane :
-        Vane<ConnectionContext>
+        Vane<Connection>
     {
-        public VaneHandler<ConnectionContext> GetHandler(ConnectionContext context, NextVane<ConnectionContext> next)
+        public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
         {
-            VaneHandler<ConnectionContext> nextHandler = next.GetHandler(context);
+            VaneHandler<Connection> nextHandler = next.GetHandler(context);
 
-            string acceptEncoding = context.Request.Headers["Accept-Encoding"];
+
+
+            string acceptEncoding = context.GetContext<Request>().Headers["Accept-Encoding"];
             if (!string.IsNullOrEmpty(acceptEncoding))
             {
                 if ((acceptEncoding.IndexOf("gzip", StringComparison.OrdinalIgnoreCase) != -1))
@@ -42,13 +44,13 @@ namespace FeatherVane.Web.Http.Vanes
         }
 
         class CompressionContext :
-            ConnectionContext
+            Connection
         {
-            readonly RequestContext _requestContext;
+            readonly Request _requestContext;
             readonly ResponseContext _responseContext;
-            readonly ConnectionContext _context;
+            readonly Connection _context;
 
-            public CompressionContext(ConnectionContext context, RequestContext requestContext,
+            public CompressionContext(Connection context, Request requestContext,
                 ResponseContext responseContext)
             {
                 _context = context;
@@ -56,7 +58,7 @@ namespace FeatherVane.Web.Http.Vanes
                 _responseContext = responseContext;
             }
 
-            public RequestContext Request
+            public Request Request
             {
                 get { return _requestContext; }
             }
@@ -140,59 +142,58 @@ namespace FeatherVane.Web.Http.Vanes
         }
 
         class DeflateCompressHandler :
-            VaneHandler<ConnectionContext>
+            VaneHandler<Connection>
         {
-            readonly VaneHandler<ConnectionContext> _next;
+            readonly VaneHandler<Connection> _next;
 
-            public DeflateCompressHandler(VaneHandler<ConnectionContext> next)
+            public DeflateCompressHandler(VaneHandler<Connection> next)
             {
                 _next = next;
             }
 
-            public void Handle(ConnectionContext connectionContext)
+            public void Handle(VaneContext<Connection> connectionContext)
             {
-                using (
-                    var outputStream = new DeflateStream(connectionContext.Response.OutputStream,
-                        CompressionMode.Compress, true))
-                {
-                    connectionContext.Response.Headers["Content-Encoding"] = "deflate";
+//                using (
+//                    var outputStream = new DeflateStream(connectionContext.Body.Response.OutputStream,
+//                        CompressionMode.Compress, true))
+//                {
+//                    connectionContext.Body.Response.Headers["Content-Encoding"] = "deflate";
 
-                    var responseContext = new CompressionResponseContext(connectionContext.Response, outputStream);
-                    var context = new CompressionContext(connectionContext, connectionContext.Request, responseContext);
+//                    var responseContext = new CompressionResponseContext(connectionContext.Body.Response, outputStream);
+//                    var context = new CompressionContext(connectionContext, connectionContext.Body.Request, responseContext);
+//
+                    _next.Handle(connectionContext);
 
-                    _next.Handle(context);
-
-                    outputStream.Flush();
-                }
+//                    outputStream.Flush();
+//                }
             }
         }
 
         class GZipCompressHandler :
-            VaneHandler<ConnectionContext>
+            VaneHandler<Connection>
         {
-            readonly VaneHandler<ConnectionContext> _next;
+            readonly VaneHandler<Connection> _next;
 
-            public GZipCompressHandler(VaneHandler<ConnectionContext> next)
+            public GZipCompressHandler(VaneHandler<Connection> next)
             {
                 _next = next;
             }
 
-            public void Handle(ConnectionContext connectionContext)
+            public void Handle(VaneContext<Connection> connectionContext)
             {
-                using (
-                    var outputStream = new GZipStream(connectionContext.Response.OutputStream, CompressionMode.Compress,
-                        true))
-                {
-                    connectionContext.Response.Headers["Content-Encoding"] = "gzip";
+//                using (
+//                    var outputStream = new GZipStream(connectionContext.Response.OutputStream, CompressionMode.Compress,
+//                        true))
+//                {
+//                    connectionContext.Response.Headers["Content-Encoding"] = "gzip";
+//
+//                    var responseContext = new CompressionResponseContext(connectionContext.Response, outputStream);
+//                    var context = new CompressionContext(connectionContext, connectionContext.Request, responseContext);
 
-                    var responseContext = new CompressionResponseContext(connectionContext.Response, outputStream);
-                    var context = new CompressionContext(connectionContext, connectionContext.Request, responseContext);
-
-                    _next.Handle(context);
-
-                    outputStream.Flush();
+                    _next.Handle(connectionContext);
+//
+//                    outputStream.Flush();
                 }
             }
         }
     }
-}

@@ -13,7 +13,9 @@ namespace FeatherVane.Tests.HttpTests
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using NUnit.Framework;
     using Vanes;
     using Web.Http;
@@ -70,62 +72,74 @@ namespace FeatherVane.Tests.HttpTests
         [Test]
         public void Should_get_a_whole_lot_of_200s()
         {
-            Uri requestUri = new Uri(ServerUri.ToString() + "/hello");
+            Uri requestUri = new Uri(ServerUri + "/hello");
 
             Stopwatch start = Stopwatch.StartNew();
 
-            int iterations = 1000;
-            for (int i = 0; i < iterations; i++)
-            {
-                var webRequest = (HttpWebRequest)WebRequest.Create(requestUri);
-                HttpWebResponse _webResponse;
-                try
-                {
-                    _webResponse = (HttpWebResponse)webRequest.GetResponse();
-                }
-                catch (WebException ex)
-                {
-                    _webResponse = (HttpWebResponse)ex.Response;
-                }
-                using (_webResponse)
-                {
-                    Assert.AreEqual(HttpStatusCode.OK, _webResponse.StatusCode);
+            int threads = Environment.ProcessorCount * 2;
+            int iterations = 2000;
 
-                    _webResponse.Close();
-                }
-            }
+            var tasks = Enumerable.Range(0, threads).Select(x => Task.Factory.StartNew(() =>
+                {
+                    for (int i = 0; i < iterations; i++)
+                    {
+                        var webRequest = (HttpWebRequest)WebRequest.Create(requestUri);
+                        HttpWebResponse _webResponse;
+                        try
+                        {
+                            _webResponse = (HttpWebResponse)webRequest.GetResponse();
+                        }
+                        catch (WebException ex)
+                        {
+                            _webResponse = (HttpWebResponse)ex.Response;
+                        }
+                        using (_webResponse)
+                        {
+                            Assert.AreEqual(HttpStatusCode.OK, _webResponse.StatusCode);
+
+                            _webResponse.Close();
+                        }
+                    }
+                }, TaskCreationOptions.LongRunning)).ToArray();
+
+            Task.WaitAll(tasks);
 
             start.Stop();
 
             Console.WriteLine("Elapsed Time: {0}ms", start.ElapsedMilliseconds);
-            Console.WriteLine("Requests/second: {0}", Stopwatch.Frequency/((decimal)start.ElapsedTicks/iterations));
+            Console.WriteLine("Requests/second: {0}", (Stopwatch.Frequency/((decimal)start.ElapsedTicks/
+                (threads*iterations))).ToString("F0"));
         }
 
-        protected override NextVane<ConnectionContext> CreateMainVane()
+        protected override NextVane<Connection> CreateMainVane()
         {
-            return NextVane.Connect(new UnhandledVane<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(2)),
+            return NextVane.Connect(new Unhandled<Connection>(),
+                new Profiler<Connection>(Console.Out, TimeSpan.FromMilliseconds(2)),
                 new HelloVane(),
                 new NotFoundVane());
         }
 
         class HelloVane :
-            Vane<ConnectionContext>
+            Vane<Connection>
         {
-            public VaneHandler<ConnectionContext> GetHandler(ConnectionContext context, NextVane<ConnectionContext> next)
+            public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
             {
-                if (context.Request.Url.ToString().EndsWith("hello"))
+                if (context.GetContext<Request>().Url.ToString().EndsWith("hello"))
                     return new HelloVaneHandler();
 
                 return next.GetHandler(context);
             }
 
-            class HelloVaneHandler : VaneHandler<ConnectionContext>
+            class HelloVaneHandler : VaneHandler<Connection>
             {
-                public void Handle(ConnectionContext context)
+                public void Handle(VaneContext<Connection> context)
                 {
-                    context.Response.StatusCode = 200;
-                    context.Response.Write("Hello!");
+                    ResponseContext response;
+                    if (context.TryGetContext(out response))
+                    {
+                        response.StatusCode = 200;
+                        response.Write("Hello!");
+                    }
                 }
             }
         }

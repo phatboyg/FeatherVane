@@ -18,7 +18,7 @@ namespace FeatherVane.Web.Http.Contexts
     using System.Text;
 
     public class HttpListenerRequestContext :
-        RequestContext
+        Request
     {
         readonly HttpListenerRequest _request;
 

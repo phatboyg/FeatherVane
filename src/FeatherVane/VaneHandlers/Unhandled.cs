@@ -13,10 +13,11 @@ namespace FeatherVane.VaneHandlers
 {
     public class Unhandled<T> :
         VaneHandler<T>
+        where T : class
     {
-        public void Handle(T context)
+        public void Handle(VaneContext<T> context)
         {
-            throw new UnhandledException(context);
+            throw UnhandledException.New(context);
         }
     }
 }

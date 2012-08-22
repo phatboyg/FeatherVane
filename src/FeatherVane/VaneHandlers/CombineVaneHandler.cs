@@ -17,6 +17,7 @@ namespace FeatherVane.VaneHandlers
     /// </summary>
     public class CombineVaneHandler<T> :
         VaneHandler<T>
+        where T : class
     {
         readonly VaneHandler<T> _first;
         readonly VaneHandler<T> _next;
@@ -27,7 +28,7 @@ namespace FeatherVane.VaneHandlers
             _next = next;
         }
 
-        public void Handle(T context)
+        public void Handle(VaneContext<T> context)
         {
             _first.Handle(context);
             _next.Handle(context);

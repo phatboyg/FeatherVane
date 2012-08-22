@@ -36,9 +36,20 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelegatingVaneContext.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
+    <Compile Include="MissingContextProvider.cs" />
+    <Compile Include="NextVaneHandleExtensions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NextVaneHandleExtensions.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Util\ContextCache.cs" />
+    <Compile Include="VaneContext.cs" />
+    <Compile Include="VaneContextExtensions.cs" />
+    <Compile Include="VaneContextImpl.cs" />
     <Compile Include="VaneHandlerExtensions.cs" />
     <Compile Include="VaneHandlers\InterceptVaneHandler.cs" />
     <Compile Include="VaneHandlers\CombineVaneHandler.cs" />
@@ -53,15 +64,26 @@
     <Compile Include="VaneHandler.cs" />
     <Compile Include="VaneHandlers\Success.cs" />
     <Compile Include="VaneHandlers\Unhandled.cs" />
-    <Compile Include="Vanes\SuccessVane.cs" />
+    <Compile Include="Vanes\Lambda.cs" />
+    <Compile Include="Vanes\Success.cs" />
     <Compile Include="Vanes\Profiler.cs" />
     <Compile Include="Vanes\Logger.cs" />
     <Compile Include="Vanes\Transaction.cs" />
-    <Compile Include="Vanes\UnhandledVane.cs" />
+    <Compile Include="Vanes\TypeRouter.cs" />
+    <Compile Include="Vanes\Unhandled.cs" />
     <Compile Include="Vanes\WireTap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NextVaneHandleExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NextVaneHandleExtensions.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

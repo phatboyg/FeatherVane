@@ -15,6 +15,7 @@ namespace FeatherVane.Vanes
 
     public class Transaction<T> :
         Vane<T>
+        where T : class
     {
         TransactionScopeOption _scopeOptions;
 
@@ -23,7 +24,7 @@ namespace FeatherVane.Vanes
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        public VaneHandler<T> GetHandler(T context, NextVane<T> next)
+        public VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next)
         {
             VaneHandler<T> nextHandler = next.GetHandler(context);
 
@@ -42,7 +43,7 @@ namespace FeatherVane.Vanes
                 _nextHandler = nextHandler;
             }
 
-            public void Handle(T context)
+            public void Handle(VaneContext<T> context)
             {
                 using (var scope = new TransactionScope(_options))
                 {

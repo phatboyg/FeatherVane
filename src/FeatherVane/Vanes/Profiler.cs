@@ -17,6 +17,7 @@ namespace FeatherVane.Vanes
 
     public class Profiler<T> :
         Vane<T>
+        where T : class
     {
         readonly ProfilerSettings _settings;
 
@@ -25,7 +26,7 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public VaneHandler<T> GetHandler(T context, NextVane<T> next)
+        public VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next)
         {
             return new ProfilerVaneHandler(_settings, context, next);
         }
@@ -52,7 +53,7 @@ namespace FeatherVane.Vanes
             readonly Stopwatch _stopwatch;
             readonly Guid _timingId;
 
-            public ProfilerVaneHandler(ProfilerSettings settings, T context, NextVane<T> next)
+            public ProfilerVaneHandler(ProfilerSettings settings, VaneContext<T> context, NextVane<T> next)
             {
                 _settings = settings;
                 _timingId = Guid.NewGuid();
@@ -62,7 +63,7 @@ namespace FeatherVane.Vanes
                 _handler = next.GetHandler(context);
             }
 
-            public void Handle(T context)
+            public void Handle(VaneContext<T> context)
             {
                 try
                 {

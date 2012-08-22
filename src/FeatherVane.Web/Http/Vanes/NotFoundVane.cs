@@ -17,22 +17,26 @@ namespace FeatherVane.Web.Http.Vanes
     /// routing
     /// </summary>
     public class NotFoundVane :
-        Vane<ConnectionContext>
+        Vane<Connection>
     {
-        public VaneHandler<ConnectionContext> GetHandler(ConnectionContext context, NextVane<ConnectionContext> next)
+        public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
         {
             return new NotFoundVaneHandler();
         }
 
         class NotFoundVaneHandler :
-            VaneHandler<ConnectionContext>
+            VaneHandler<Connection>
         {
-            public void Handle(ConnectionContext context)
+            public void Handle(VaneContext<Connection> context)
             {
-                context.Response.StatusCode = 404;
-                context.Response.StatusDescription = "Not Found";
-                context.Response.WriteHtml(
-                    @"<body><h1>Your request was not processed</h1><p>The URI specified was not recognized by any registered handler.</p></body>");
+                ResponseContext response;
+                if(context.TryGetContext(out response))
+                {
+                    response.StatusCode = 404;
+                    response.StatusDescription = "Not Found";
+                    response.WriteHtml(
+                        @"<body><h1>Your request was not processed</h1><p>The URI specified was not recognized by any registered handler.</p></body>");
+                }
             }
         }
     }

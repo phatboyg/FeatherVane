@@ -16,24 +16,25 @@ namespace FeatherVane.Vanes
 
     public class Logger<T> :
         Vane<T>
+        where T : class
     {
-        readonly Func<T, string> _getLogMessage;
+        readonly Func<VaneContext<T>, string> _getLogMessage;
         readonly TextWriter _output;
 
-        public Logger(TextWriter output, Func<T, string> getLogMessage)
+        public Logger(TextWriter output, Func<VaneContext<T>, string> getLogMessage)
         {
             _output = output;
             _getLogMessage = getLogMessage;
         }
 
-        public VaneHandler<T> GetHandler(T context, NextVane<T> next)
+        public VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next)
         {
             VaneHandler<T> nextHandler = next.GetHandler(context);
 
             return nextHandler.InterceptWith(TraceHandler);
         }
 
-        void TraceHandler(T context, VaneHandler<T> nextHandler)
+        void TraceHandler(VaneContext<T> context, VaneHandler<T> nextHandler)
         {
             string message = _getLogMessage(context);
             _output.WriteLine(message);

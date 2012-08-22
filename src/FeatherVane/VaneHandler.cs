@@ -19,8 +19,9 @@ namespace FeatherVane
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface VaneHandler<in T>
+        where T : class
     {
-        void Handle(T context);
+        void Handle(VaneContext<T> context);
     }
 
     /// <summary>
@@ -34,12 +35,14 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The handler type</typeparam>
         /// <returns></returns>
-        public static VaneHandler<T> Success<T>()
+        public static VaneHandler<T> Success<T>() 
+            where T : class
         {
             return new Success<T>();
         }
 
-        public static VaneHandler<T> Unhandled<T>()
+        public static VaneHandler<T> Unhandled<T>() 
+            where T : class
         {
             return new Unhandled<T>();
         }

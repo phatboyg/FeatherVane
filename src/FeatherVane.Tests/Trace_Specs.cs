@@ -21,27 +21,23 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_be_called_during_the_final_execution_state()
         {
-            int expected = 27;
-            int? called = null;
+            string expected = "47";
+            string called = null;
 
-            Vane<int> logger = new Logger<int>(Console.Out, x =>
+            Vane<string> logger = new Logger<string>(Console.Out, x =>
                 {
-                    called = x;
-                    return x.ToString();
+                    called = x.Body;
+                    return x.Body;
                 });
 
-            Vane<int> profiler = new Profiler<int>(Console.Error, TimeSpan.FromMilliseconds(2));
+            Vane<string> profiler = new Profiler<string>(Console.Error, TimeSpan.FromMilliseconds(2));
 
-            NextVane<int> vane = NextVane.Connect(new SuccessVane<int>(), profiler, logger);
+            NextVane<string> vane = NextVane.Connect(new Success<string>(), profiler, logger);
 
-            VaneHandler<int> handler = vane.GetHandler(expected);
+            vane.Handle(expected);
 
-            Assert.IsFalse(called.HasValue);
-
-            handler.Handle(expected);
-
-            Assert.IsTrue(called.HasValue);
-            Assert.AreEqual(expected, called.Value);
+            Assert.IsFalse(string.IsNullOrEmpty(called));
+            Assert.AreEqual(expected, called);
         }
     }
 }

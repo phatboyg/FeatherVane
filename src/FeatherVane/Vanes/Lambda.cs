@@ -11,26 +11,38 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
-    /// <summary>
-    /// A WireTap passes the context to another Vane so that it can be observed
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class WireTap<T> :
+    using System;
+
+    public class LambdaAction<T> :
         Vane<T>
         where T : class
     {
-        readonly NextVane<T> _tap;
+        readonly Action<VaneContext<T>> _handler;
 
-        public WireTap(NextVane<T> tap)
+        public LambdaAction(Action<VaneContext<T>> handler)
         {
-            _tap = tap;
+            _handler = handler;
         }
 
         public VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next)
         {
-            VaneHandler<T> tapHandler = _tap.GetHandler(context);
+            return new LambdaActionHandler(_handler);
+        }
 
-            return tapHandler.CombineWith(next.GetHandler(context));
+        class LambdaActionHandler :
+            VaneHandler<T>
+        {
+            readonly Action<VaneContext<T>> _handler;
+
+            public LambdaActionHandler(Action<VaneContext<T>> handler)
+            {
+                _handler = handler;
+            }
+
+            public void Handle(VaneContext<T> context)
+            {
+                _handler(context);
+            }
         }
     }
 }

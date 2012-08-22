@@ -17,7 +17,7 @@ namespace FeatherVane.Web.Http
     using System.Net;
     using System.Text;
 
-    public interface RequestContext
+    public interface Request
     {
         /// <summary>
         /// The headers submitted as part of the request

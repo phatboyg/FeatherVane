@@ -46,7 +46,9 @@
     </Compile>
     <Compile Include="HttpTests\Http_Specs.cs" />
     <Compile Include="HttpTests\RequestHandling_Specs.cs" />
+    <Compile Include="StreamDecorator_Specs.cs" />
     <Compile Include="Trace_Specs.cs" />
+    <Compile Include="TypeRouter_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
