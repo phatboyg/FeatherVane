@@ -1,13 +1,11 @@
 COPYRIGHT = "Copyright 2012 Chris Patterson & Dru Sellers, All rights reserved."
 
 
-internal_files = Dir["#{File.dirname(__FILE__)}/src/FeatherVane/Internals/*.cs"]
+internal_files = Dir[File.join(File.expand_path("src"), 'FeatherVane/Internals/**/*.cs')]
 if(!internal_files.any?)
   #you didn't git submodule update --init - here let me help you
   sh 'git submodule update --init' unless internal_files.any?
 end
-
-
 
 require File.dirname(__FILE__) + "/build_support/BuildUtils.rb"
 require File.dirname(__FILE__) + "/build_support/util.rb"
