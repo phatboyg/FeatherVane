@@ -9,7 +9,7 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.ContextUtils
+namespace FeatherVane.Payloads
 {
     using System;
     using Internals.Caching;
@@ -19,25 +19,25 @@ namespace FeatherVane.ContextUtils
     /// Keep track of context types, keeping logic separate from the VaneContext where
     /// it is used
     /// </summary>
-    public class ContextCache
+    public class PayloadContextCache
     {
-        readonly Cache<Type, CachedContext> _contextCache;
+        readonly Cache<Type, CachedContext> _cache;
 
-        public ContextCache()
+        public PayloadContextCache()
         {
-            _contextCache = new ConcurrentCache<Type, CachedContext>();
+            _cache = new ConcurrentCache<Type, CachedContext>();
         }
 
         public bool HasContext(Type contextType)
         {
-            return _contextCache.Has(contextType);
+            return _cache.Has(contextType);
         }
 
         public bool TryGetContext<TContext>(out TContext context)
             where TContext : class
         {
             CachedContext cachedContext;
-            if (_contextCache.TryGetValue(typeof(TContext), out cachedContext))
+            if (_cache.TryGetValue(typeof(TContext), out cachedContext))
             {
                 context = cachedContext.GetContext<TContext>();
                 return true;
@@ -47,24 +47,32 @@ namespace FeatherVane.ContextUtils
             return false;
         }
 
-        public TContext GetContext<TContext>(MissingContextProvider<TContext> missingContextProvider)
+        public TContext GetContext<TContext>(ContextFactory<TContext> contextFactory)
             where TContext : class
         {
             CachedContext cachedContext;
-            if (_contextCache.TryGetValue(typeof(TContext), out cachedContext))
+            if (_cache.TryGetValue(typeof(TContext), out cachedContext))
             {
                 return cachedContext.GetContext<TContext>();
             }
 
-            TContext context = missingContextProvider();
-            if (context != default(TContext))
+            try
             {
-                _contextCache.Add(typeof(TContext), new CachedContext<TContext>(context));
-                return context;
+                TContext context = contextFactory();
+                if (context != default(TContext))
+                {
+                    _cache.Add(typeof(TContext), new CachedContext<TContext>(context));
+                    return context;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ContextFactoryException("The context factory threw an exception creating a missing context: "
+                                                  + typeof(TContext).GetTypeName(), ex);
             }
 
-            throw new ArgumentException("The specified context was not found: " + typeof(TContext).GetTypeName(),
-                "TContext");
+            throw new ContextNotFoundException("The request context was not found and could not be created: "
+                                               + typeof(TContext).GetTypeName());
         }
 
         interface CachedContext
@@ -91,7 +99,8 @@ namespace FeatherVane.ContextUtils
                 if (cachedContext != null)
                     return cachedContext._context;
 
-                throw new ArgumentException("Unexpected context type specified: " + typeof(TContext).GetTypeName(), "T");
+                throw new InternalFeatherVaneException("The context type did not match the expected type: "
+                                                       + typeof(TContext).GetTypeName());
             }
         }
     }

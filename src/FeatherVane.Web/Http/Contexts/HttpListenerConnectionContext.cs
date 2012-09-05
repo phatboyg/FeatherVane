@@ -16,7 +16,7 @@ namespace FeatherVane.Web.Http.Contexts
     using System.Security.Principal;
 
     public class HttpListenerConnectionContext :
-        Connection
+        ConnectionContext
     {
         readonly DateTime _acceptedAt;
         readonly HttpListenerContext _httpContext;

@@ -36,34 +36,38 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContextUtils\DelegatingVaneContext.cs" />
+    <Compile Include="Exceptions\ContextFactoryException.cs" />
+    <Compile Include="Exceptions\ContextNotFoundException.cs" />
+    <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
+    <Compile Include="Handler.cs" />
+    <Compile Include="Payloads\DelegatingPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
-    <Compile Include="MissingContextProvider.cs" />
-    <Compile Include="NextVaneHandleExtensions.cs">
+    <Compile Include="ContextFactory.cs" />
+    <Compile Include="VaneHandleExtensions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>NextVaneHandleExtensions.tt</DependentUpon>
+      <DependentUpon>VaneHandleExtensions.tt</DependentUpon>
     </Compile>
-    <Compile Include="ContextUtils\ContextCache.cs" />
-    <Compile Include="VaneContext.cs" />
-    <Compile Include="VaneContextExtensions.cs" />
-    <Compile Include="VaneContextImpl.cs" />
+    <Compile Include="Payloads\PayloadContextCache.cs" />
+    <Compile Include="Payload.cs" />
+    <Compile Include="PayloadExtensions.cs" />
+    <Compile Include="PayloadImpl.cs" />
     <Compile Include="VaneHandlerExtensions.cs" />
-    <Compile Include="VaneHandlers\InterceptVaneHandler.cs" />
-    <Compile Include="VaneHandlers\CombineVaneHandler.cs" />
+    <Compile Include="VaneHandlers\InterceptHandler.cs" />
+    <Compile Include="VaneHandlers\SeriesHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="NextVane.cs" />
     <Compile Include="Vane.cs" />
+    <Compile Include="FeatherVane.cs" />
     <Compile Include="VaneExtensions.cs" />
-    <Compile Include="VaneHandler.cs" />
-    <Compile Include="VaneHandlers\Success.cs" />
-    <Compile Include="VaneHandlers\Unhandled.cs" />
+    <Compile Include="Handlers.cs" />
+    <Compile Include="VaneHandlers\SuccessHandler.cs" />
+    <Compile Include="VaneHandlers\UnhandledHandler.cs" />
     <Compile Include="Vanes\Lambda.cs" />
     <Compile Include="Vanes\Success.cs" />
     <Compile Include="Vanes\Profiler.cs" />
@@ -77,9 +81,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NextVaneHandleExtensions.tt">
+    <None Include="VaneHandleExtensions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>NextVaneHandleExtensions.cs</LastGenOutput>
+      <LastGenOutput>VaneHandleExtensions.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

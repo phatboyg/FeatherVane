@@ -11,10 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    using System;
-    using ContextUtils;
+    using Payloads;
 
-    public static class VaneContextExtensions
+    public static class PayloadExtensions
     {
         /// <summary>
         /// Provide a default implementation of missing that returns null (perhaps an exception is a better
@@ -23,19 +22,21 @@ namespace FeatherVane
         /// <typeparam name="TContext"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static TContext Get<TContext>(this VaneContext context)
+        public static TContext Get<TContext>(this Payload context)
             where TContext : class
         {
-            MissingContextProvider<TContext> missingContextProvider =
-                () => { throw new ArgumentException("The specified context was not found.", "TContext"); };
-
-            return context.Get(missingContextProvider);
+            return context.GetOrAdd(ContextNotFoundContextFactory<TContext>);
         }
 
-        public static VaneContext<T> CreateDelegatingVaneContext<T>(this VaneContext context, T body)
+        static TContext ContextNotFoundContextFactory<TContext>() where TContext : class
+        {
+            throw new ContextNotFoundException("No context factory provided.");
+        }
+
+        public static Payload<T> CreateDelegatingPayload<T>(this Payload context, T body)
             where T : class
         {
-            return new DelegatingVaneContext<T>(context, body);
+            return new DelegatingPayload<T>(context, body);
         }
     }
 }

@@ -4,22 +4,22 @@
 <#@ import namespace="System.Linq" #>
 namespace FeatherVane
 {
-    public static class NextVaneHandleExtensions
+    public static class VaneHandleExtensions
     {
         /// <summary>
-        /// Handles a context body with a vane
+        /// Handles a payload with a vane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static void Handle<T>(this NextVane<T> vane, T body)
+        public static void Handle<T>(this Vane<T> vane, T body)
             where T : class
         {
-            var context = new VaneContextImpl<T>(body);
+            var payload = new PayloadImpl<T>(body);
 
-            VaneHandler<T> handler = vane.GetHandler(context);
+            Handler<T> handler = vane.GetHandler(payload);
 
-            handler.Handle(context);
+            handler.Handle(payload);
         }
 
 <# for(int i=1; i<=16; i++){
@@ -29,22 +29,22 @@ namespace FeatherVane
     var tParms = String.Join(", ", Enumerable.Range(1,i).Select(it=>String.Format("T{0} ctx{0}",it)));
 #>
         /// <summary>
-        /// Handles a context body with a vane, supplying additional context
+        /// Handles a payload body with a vane, supplying additional context
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static void Handle<T<#=tInputArgs#>>(this NextVane<T> vane, T body, <#=tParms#>) 
+        public static void Handle<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
             where T : class
             <#=tWheres#>
         {
-            var context = new VaneContextImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
-            context.GetContext(() => ctx<#=j#>);<# } #>
+            var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
+            payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
 
-            VaneHandler<T> handler = vane.GetHandler(context);
+            Handler<T> handler = vane.GetHandler(payload);
 
-            handler.Handle(context);
+            handler.Handle(payload);
         }
 
 <# 

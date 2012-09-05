@@ -45,7 +45,7 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Http\Connection.cs" />
+    <Compile Include="Http\ConnectionContext.cs" />
     <Compile Include="Http\Contexts\HttpListenerConnectionContext.cs" />
     <Compile Include="Http\Contexts\HttpListenerRequestContext.cs" />
     <Compile Include="Http\Contexts\HttpListenerResponseContext.cs" />
@@ -55,9 +55,9 @@
     <Compile Include="Http\RequestContext.cs" />
     <Compile Include="Http\ResponseContext.cs" />
     <Compile Include="Http\ServerContext.cs" />
-    <Compile Include="Http\Vanes\CompressionVane.cs" />
+    <Compile Include="Http\Vanes\CompressionFeatherVane.cs" />
     <Compile Include="Http\Vanes\TextEncoding.cs" />
-    <Compile Include="Http\Vanes\NotFoundVane.cs" />
+    <Compile Include="Http\Vanes\NotFoundFeatherVane.cs" />
     <Compile Include="Util\StreamStack.cs" />
   </ItemGroup>
   <ItemGroup>

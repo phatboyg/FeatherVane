@@ -12,12 +12,12 @@
 namespace FeatherVane.Vanes
 {
     public class Success<T> :
-        NextVane<T>
+        Vane<T>
         where T : class
     {
-        public VaneHandler<T> GetHandler(VaneContext<T> context)
+        public Handler<T> GetHandler(Payload<T> context)
         {
-            return VaneHandler.Success<T>();
+            return Handlers.Success<T>();
         }
     }
 }

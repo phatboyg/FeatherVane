@@ -111,31 +111,31 @@ namespace FeatherVane.Tests.HttpTests
                 (threads*iterations))).ToString("F0"));
         }
 
-        protected override NextVane<Connection> CreateMainVane()
+        protected override Vane<ConnectionContext> CreateMainVane()
         {
-            return NextVane.Connect(new Unhandled<Connection>(),
-                new Profiler<Connection>(Console.Out, TimeSpan.FromMilliseconds(2)),
-                new HelloVane(),
-                new NotFoundVane());
+            return Vane.Connect(new Unhandled<ConnectionContext>(),
+                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(2)),
+                new HelloFeatherVane(),
+                new NotFoundFeatherVane());
         }
 
-        class HelloVane :
-            Vane<Connection>
+        class HelloFeatherVane :
+            FeatherVane<ConnectionContext>
         {
-            public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
+            public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
             {
-                if (context.Get<RequestContext>().Url.ToString().EndsWith("hello"))
-                    return new HelloVaneHandler();
+                if (payload.Get<RequestContext>().Url.ToString().EndsWith("hello"))
+                    return new HelloHandler();
 
-                return next.GetHandler(context);
+                return next.GetHandler(payload);
             }
 
-            class HelloVaneHandler : VaneHandler<Connection>
+            class HelloHandler : Handler<ConnectionContext>
             {
-                public void Handle(VaneContext<Connection> context)
+                public void Handle(Payload<ConnectionContext> payload)
                 {
                     ResponseContext response;
-                    if (context.TryGet(out response))
+                    if (payload.TryGet(out response))
                     {
                         response.StatusCode = 200;
                         response.Write("Hello!");

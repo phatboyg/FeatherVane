@@ -22,13 +22,13 @@ namespace FeatherVane.Web.Http
         ServerContext
     {
         readonly Uri _uri;
-        readonly NextVane<Connection> _vane;
+        readonly Vane<ConnectionContext> _vane;
         bool _closing;
         int _concurrentConnectionLimit = 100000;
         int _connectionCount;
         HttpListener _httpListener;
 
-        public HttpServer(Uri uri, NextVane<Connection> vane)
+        public HttpServer(Uri uri, Vane<ConnectionContext> vane)
         {
             _uri = uri;
             _vane = vane;
@@ -84,7 +84,7 @@ namespace FeatherVane.Web.Http
 
                 Interlocked.Increment(ref _connectionCount);
 
-                var connectionTask = new Task<Connection>(() => HandleConnection(acceptedAt, context));
+                var connectionTask = new Task<ConnectionContext>(() => HandleConnection(acceptedAt, context));
                 connectionTask.ContinueWith(task => ConnectionComplete(task.Result));
                 connectionTask.Start();
             }
@@ -100,7 +100,7 @@ namespace FeatherVane.Web.Http
             }
         }
 
-        Connection HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
+        ConnectionContext HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
         {
             var connectionContext = new HttpListenerConnectionContext(this, httpContext, acceptedAt);
 
@@ -163,7 +163,7 @@ namespace FeatherVane.Web.Http
                 _httpListener.Abort();
         }
 
-        void ConnectionComplete(Connection connectionContext)
+        void ConnectionComplete(ConnectionContext connectionContext)
         {
             connectionContext.End();
 

@@ -11,23 +11,13 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using System;
     using VaneHandlers;
-
-    /// <summary>
-    /// A Vane returns a VaneHandler when it is able to handle the inbound context. A
-    /// VaneHandler can be anything from a simple delegate, to a more complex object.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface VaneHandler<in T>
-        where T : class
-    {
-        void Handle(VaneContext<T> context);
-    }
 
     /// <summary>
     /// Class used to create some of the more commonly used VaneHandler types.
     /// </summary>
-    public static class VaneHandler
+    public static class Handlers
     {
         /// <summary>
         /// A simple no-operation, no-exception, do-nothing handler that merely
@@ -35,16 +25,22 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The handler type</typeparam>
         /// <returns></returns>
-        public static VaneHandler<T> Success<T>() 
+        public static Handler<T> Success<T>()
             where T : class
         {
-            return new Success<T>();
+            return new SuccessHandler<T>();
         }
 
-        public static VaneHandler<T> Unhandled<T>() 
+        public static Handler<T> Unhandled<T>()
             where T : class
         {
-            return new Unhandled<T>();
+            return new UnhandledHandler<T>();
+        }
+
+        public static Handler<T> Intercept<T>(Handler<T> handler, Action<Payload<T>, Handler<T>> interceptor)
+            where T : class
+        {
+            return new InterceptHandler<T>(handler, interceptor);
         }
     }
 }

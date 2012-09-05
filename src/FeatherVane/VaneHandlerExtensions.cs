@@ -22,10 +22,10 @@ namespace FeatherVane
         /// <param name="first"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        public static VaneHandler<T> CombineWith<T>(this VaneHandler<T> first, VaneHandler<T> next) 
+        public static Handler<T> CombineWith<T>(this Handler<T> first, Handler<T> next) 
             where T : class
         {
-            return new CombineVaneHandler<T>(first, next);
+            return new SeriesHandler<T>(first, next);
         }
 
         /// <summary>
@@ -35,10 +35,10 @@ namespace FeatherVane
         /// <param name="innerHandler"></param>
         /// <param name="interceptor"></param>
         /// <returns></returns>
-        public static VaneHandler<T> InterceptWith<T>(this VaneHandler<T> innerHandler, Action<VaneContext<T>, VaneHandler<T>> interceptor)
+        public static Handler<T> InterceptWith<T>(this Handler<T> innerHandler, Action<Payload<T>, Handler<T>> interceptor)
             where T : class
         {
-            return new InterceptVaneHandler<T>(innerHandler, interceptor);
+            return new InterceptHandler<T>(innerHandler, interceptor);
         }
     }
 }

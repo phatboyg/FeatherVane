@@ -14,34 +14,34 @@ namespace FeatherVane.Vanes
     using System;
 
     public class LambdaAction<T> :
-        Vane<T>
+        FeatherVane<T>
         where T : class
     {
-        readonly Action<VaneContext<T>> _handler;
+        readonly Action<Payload<T>> _handler;
 
-        public LambdaAction(Action<VaneContext<T>> handler)
+        public LambdaAction(Action<Payload<T>> handler)
         {
             _handler = handler;
         }
 
-        public VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next)
+        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
         {
             return new LambdaActionHandler(_handler);
         }
 
         class LambdaActionHandler :
-            VaneHandler<T>
+            Handler<T>
         {
-            readonly Action<VaneContext<T>> _handler;
+            readonly Action<Payload<T>> _handler;
 
-            public LambdaActionHandler(Action<VaneContext<T>> handler)
+            public LambdaActionHandler(Action<Payload<T>> handler)
             {
                 _handler = handler;
             }
 
-            public void Handle(VaneContext<T> context)
+            public void Handle(Payload<T> payload)
             {
-                _handler(context);
+                _handler(payload);
             }
         }
     }

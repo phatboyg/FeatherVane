@@ -9,23 +9,18 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Web.Http
+namespace FeatherVane.VaneHandlers
 {
-    using System.Security.Principal;
-
     /// <summary>
-    /// An Http connection 
+    /// A simple, do-nothing vane handler that can be used to indicate a successful operation
+    /// that did absolutely nothing.
     /// </summary>
-    public interface Connection
+    public class SuccessHandler<T> :
+        Handler<T>
+        where T : class
     {
-        /// <summary>
-        /// The user context under which the connection was established
-        /// </summary>
-        IPrincipal User { get; }
-
-        /// <summary>
-        /// Ends the processing for the connection
-        /// </summary>
-        void End();
+        public void Handle(Payload<T> payload)
+        {
+        }
     }
 }

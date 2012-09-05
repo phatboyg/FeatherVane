@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,44 @@ namespace FeatherVane
     public interface Vane<T>
         where T : class
     {
-        VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next);
+        Handler<T> GetHandler(Payload<T> context);
+    }
+
+    public static class Vane
+    {
+        public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes) where T : class
+        {
+            Vane<T> next = last;
+            for (int i = vanes.Length - 1; i >= 0; i--)
+            {
+                next = vanes[i].ConnectTo(next);
+            }
+
+            return next;
+        }
+
+        public static Vane<T> Connect<T>(FeatherVane<T> vane, Vane<T> next) where T : class
+        {
+            return new ConnectVane<T>(vane, next);
+        }
+
+        class ConnectVane<T> :
+            Vane<T>
+            where T : class
+        {
+            readonly Vane<T> _nextVane;
+            readonly FeatherVane<T> _vane;
+
+            public ConnectVane(FeatherVane<T> vane, Vane<T> nextVane)
+            {
+                _vane = vane;
+                _nextVane = nextVane;
+            }
+
+            public Handler<T> GetHandler(Payload<T> context)
+            {
+                return _vane.GetHandler(context, _nextVane);
+            }
+        }
     }
 }

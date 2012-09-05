@@ -9,15 +9,8 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneHandlers
+namespace FeatherVane
 {
-    public class Unhandled<T> :
-        VaneHandler<T>
-        where T : class
-    {
-        public void Handle(VaneContext<T> context)
-        {
-            throw UnhandledException.New(context);
-        }
-    }
+    public delegate T ContextFactory<out T>()
+        where T : class;
 }

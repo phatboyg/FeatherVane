@@ -15,7 +15,7 @@ namespace FeatherVane.Web.Http.Vanes
     using System.Text.RegularExpressions;
 
     public class TextEncoding :
-        Vane<Connection>
+        FeatherVane<ConnectionContext>
     {
         TextEncodingSettings _settings;
 
@@ -28,29 +28,29 @@ namespace FeatherVane.Web.Http.Vanes
                 };
         }
 
-        public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
+        public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
         {
-            var nextHandler = next.GetHandler(context);
+            var nextHandler = next.GetHandler(payload);
 
             return new TextEncodingHandler(_settings, nextHandler);
         }
 
         class TextEncodingHandler :
-            VaneHandler<Connection>
+            Handler<ConnectionContext>
         {
             readonly TextEncodingSettings _settings;
-            readonly VaneHandler<Connection> _nextHandler;
+            readonly Handler<ConnectionContext> _nextHandler;
 
-            public TextEncodingHandler(TextEncodingSettings settings, VaneHandler<Connection> nextHandler)
+            public TextEncodingHandler(TextEncodingSettings settings, Handler<ConnectionContext> nextHandler)
             {
                 _settings = settings;
                 _nextHandler = nextHandler;
             }
 
-            public void Handle(VaneContext<Connection> context)
+            public void Handle(Payload<ConnectionContext> payload)
             {
                 RequestContext request;
-                if(context.TryGet(out request))
+                if(payload.TryGet(out request))
                 {
                     Encoding encoding = GetEncoding(request);
                 }
@@ -59,7 +59,7 @@ namespace FeatherVane.Web.Http.Vanes
                 // context.Request.ContentEncoding = encoding;
 
                 // probably need to decorate the forms/body with a decoder to convert to the proper encoding
-                _nextHandler.Handle(context);
+                _nextHandler.Handle(payload);
             }
 
             Encoding GetEncoding(RequestContext context)

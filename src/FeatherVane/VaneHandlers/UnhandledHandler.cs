@@ -11,24 +11,13 @@
 // permissions and limitations under the License.
 namespace FeatherVane.VaneHandlers
 {
-    using System;
-
-    public class InterceptVaneHandler<T> :
-        VaneHandler<T>
+    public class UnhandledHandler<T> :
+        Handler<T>
         where T : class
     {
-        readonly VaneHandler<T> _innerHandler;
-        readonly Action<VaneContext<T>, VaneHandler<T>> _intercepter;
-
-        public InterceptVaneHandler(VaneHandler<T> innerHandler, Action<VaneContext<T>, VaneHandler<T>> intercepter)
+        public void Handle(Payload<T> payload)
         {
-            _innerHandler = innerHandler;
-            _intercepter = intercepter;
-        }
-
-        public void Handle(VaneContext<T> context)
-        {
-            _intercepter(context, _innerHandler);
+            throw UnhandledException.New(payload);
         }
     }
 }

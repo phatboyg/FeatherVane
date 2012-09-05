@@ -24,71 +24,71 @@ namespace FeatherVane.Vanes
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class TypeRouter<T> :
-        Vane<T>
+        FeatherVane<T>
         where T : class
     {
-        readonly Func<VaneContext<T>, Type> _typeSelector;
-        readonly Cache<Type, NextVane<T>> _typeVanes;
+        readonly Func<Payload<T>, Type> _typeSelector;
+        readonly Cache<Type, Vane<T>> _typeVanes;
 
-        public TypeRouter(Func<VaneContext<T>, Type> typeSelector)
+        public TypeRouter(Func<Payload<T>, Type> typeSelector)
         {
             _typeSelector = typeSelector;
-            _typeVanes = new ConcurrentCache<Type, NextVane<T>>();
+            _typeVanes = new ConcurrentCache<Type, Vane<T>>();
         }
 
-        public VaneHandler<T> GetHandler(VaneContext<T> context, NextVane<T> next)
+        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
         {
-            Type contextType = _typeSelector(context);
+            Type contextType = _typeSelector(payload);
 
-            NextVane<T> typeVane = _typeVanes.Get(contextType, x => next);
+            Vane<T> typeVane = _typeVanes.Get(contextType, x => next);
 
-            return typeVane.GetHandler(context);
+            return typeVane.GetHandler(payload);
         }
 
-        public void Add<TOutput>(NextVane<TOutput> nextVane, Func<VaneContext<T>, VaneContext<TOutput>> converter) 
+        public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter) 
             where TOutput : class
         {
             _typeVanes.Add(typeof(TOutput), new TypeConverter<T, TOutput>(nextVane, converter));
         }
 
         class TypeConverter<T, TOutput> :
-            NextVane<T>
+            Vane<T>
             where T : class
             where TOutput : class
         {
-            readonly Func<VaneContext<T>, VaneContext<TOutput>> _converter;
-            readonly NextVane<TOutput> _vane;
+            readonly Func<Payload<T>, Payload<TOutput>> _converter;
+            readonly Vane<TOutput> _vane;
 
-            public TypeConverter(NextVane<TOutput> vane, Func<VaneContext<T>, VaneContext<TOutput>> converter)
+            public TypeConverter(Vane<TOutput> vane, Func<Payload<T>, Payload<TOutput>> converter)
             {
                 _vane = vane;
                 _converter = converter;
             }
 
-            public VaneHandler<T> GetHandler(VaneContext<T> context)
+            public Handler<T> GetHandler(Payload<T> context)
             {
-                VaneContext<TOutput> output = _converter(context);
+                Payload<TOutput> output = _converter(context);
 
-                VaneHandler<TOutput> handler = _vane.GetHandler(output);
+                Handler<TOutput> handler = _vane.GetHandler(output);
 
                 return new TypeConverterHandler(handler, _converter);
             }
 
             class TypeConverterHandler :
-                VaneHandler<T>
+                Handler<T>
             {
-                readonly Func<VaneContext<T>, VaneContext<TOutput>> _converter;
-                readonly VaneHandler<TOutput> _handler;
+                readonly Func<Payload<T>, Payload<TOutput>> _converter;
+                readonly Handler<TOutput> _handler;
 
-                public TypeConverterHandler(VaneHandler<TOutput> handler, Func<VaneContext<T>, VaneContext<TOutput>> converter)
+                public TypeConverterHandler(Handler<TOutput> handler, Func<Payload<T>, Payload<TOutput>> converter)
                 {
                     _handler = handler;
                     _converter = converter;
                 }
 
-                public void Handle(VaneContext<T> context)
+                public void Handle(Payload<T> payload)
                 {
-                    VaneContext<TOutput> output = _converter(context);
+                    Payload<TOutput> output = _converter(payload);
 
                     _handler.Handle(output);
                 }

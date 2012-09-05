@@ -9,17 +9,31 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneHandlers
+namespace FeatherVane
 {
-    /// <summary>
-    /// A simple, do-nothing vane handler that can be used to indicate a successful operation
-    /// that did absolutely nothing.
-    /// </summary>
-    public class Success<T> :
-        VaneHandler<T>
-        where T : class
+    using System;
+    using System.Runtime.Serialization;
+
+    [Serializable]
+    public class ContextNotFoundException :
+        FeatherVaneException
     {
-        public void Handle(VaneContext<T> context)
+        public ContextNotFoundException()
+        {
+        }
+
+        public ContextNotFoundException(string message)
+            : base(message)
+        {
+        }
+
+        public ContextNotFoundException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected ContextNotFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

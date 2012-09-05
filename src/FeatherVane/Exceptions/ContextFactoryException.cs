@@ -9,28 +9,32 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane
 {
-    /// <summary>
-    /// A WireTap passes the context to another Vane so that it can be observed
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class WireTap<T> :
-        FeatherVane<T>
-        where T : class
-    {
-        readonly Vane<T> _tap;
+    using System;
+    using System.Runtime.Serialization;
 
-        public WireTap(Vane<T> tap)
+    [Serializable]
+    public class ContextFactoryException :
+        FeatherVaneException
+    {
+        public ContextFactoryException()
         {
-            _tap = tap;
         }
 
-        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
+        public ContextFactoryException(string message)
+            : base(message)
         {
-            Handler<T> tapHandler = _tap.GetHandler(payload);
+        }
 
-            return tapHandler.CombineWith(next.GetHandler(payload));
+        public ContextFactoryException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected ContextFactoryException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

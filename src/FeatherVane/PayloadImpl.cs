@@ -12,20 +12,20 @@
 namespace FeatherVane
 {
     using System;
-    using ContextUtils;
+    using Payloads;
 
 
-    public class VaneContextImpl<T> :
-        VaneContext<T>
+    public class PayloadImpl<T> :
+        Payload<T>
         where T : class
     {
-        readonly ContextCache _contextCache;
+        readonly PayloadContextCache _contextCache;
         readonly T _body;
 
-        public VaneContextImpl(T body)
+        public PayloadImpl(T body)
         {
             _body = body;
-            _contextCache = new ContextCache();
+            _contextCache = new PayloadContextCache();
         }
 
         public Type BodyType
@@ -35,7 +35,7 @@ namespace FeatherVane
 
         public Type VaneType
         {
-            get { return typeof(Vane<T>); }
+            get { return typeof(FeatherVane<T>); }
         }
 
         public bool Has(Type contextType)
@@ -49,10 +49,10 @@ namespace FeatherVane
             return _contextCache.TryGetContext(out context);
         }
 
-        public TContext Get<TContext>(MissingContextProvider<TContext> missingContextProvider)
+        public TContext GetOrAdd<TContext>(ContextFactory<TContext> contextFactory)
             where TContext : class
         {
-            return _contextCache.GetContext(missingContextProvider);
+            return _contextCache.GetContext(contextFactory);
         }
 
         public T Body

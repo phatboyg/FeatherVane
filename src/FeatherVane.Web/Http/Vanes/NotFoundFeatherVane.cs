@@ -16,21 +16,21 @@ namespace FeatherVane.Web.Http.Vanes
     /// along the channel network to handle things like authentication and ultimately
     /// routing
     /// </summary>
-    public class NotFoundVane :
-        Vane<Connection>
+    public class NotFoundFeatherVane :
+        FeatherVane<ConnectionContext>
     {
-        public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
+        public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
         {
-            return new NotFoundVaneHandler();
+            return new NotFoundHandler();
         }
 
-        class NotFoundVaneHandler :
-            VaneHandler<Connection>
+        class NotFoundHandler :
+            Handler<ConnectionContext>
         {
-            public void Handle(VaneContext<Connection> context)
+            public void Handle(Payload<ConnectionContext> payload)
             {
                 ResponseContext response;
-                if(context.TryGet(out response))
+                if(payload.TryGet(out response))
                 {
                     response.StatusCode = 404;
                     response.StatusDescription = "Not Found";

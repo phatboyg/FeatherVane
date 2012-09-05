@@ -13,10 +13,10 @@ namespace FeatherVane
 {
     public static class VaneExtensions
     {
-        public static NextVane<T> ConnectTo<T>(this Vane<T> vane, NextVane<T> next)
+        public static Vane<T> ConnectTo<T>(this FeatherVane<T> vane, Vane<T> next)
             where T : class
         {
-            return NextVane.Connect(vane, next);
+            return Vane.Connect(vane, next);
         }
 
     }

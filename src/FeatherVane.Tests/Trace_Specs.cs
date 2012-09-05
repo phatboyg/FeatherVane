@@ -24,15 +24,15 @@ namespace FeatherVane.Tests
             string expected = "47";
             string called = null;
 
-            Vane<string> logger = new Logger<string>(Console.Out, x =>
+            FeatherVane<string> logger = new Logger<string>(Console.Out, x =>
                 {
                     called = x.Body;
                     return x.Body;
                 });
 
-            Vane<string> profiler = new Profiler<string>(Console.Error, TimeSpan.FromMilliseconds(2));
+            FeatherVane<string> profiler = new Profiler<string>(Console.Error, TimeSpan.FromMilliseconds(2));
 
-            NextVane<string> vane = NextVane.Connect(new Success<string>(), profiler, logger);
+            Vane<string> vane = Vane.Connect(new Success<string>(), profiler, logger);
 
             vane.Handle(expected);
 

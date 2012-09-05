@@ -14,19 +14,19 @@ namespace FeatherVane.Web.Http.Vanes
     using System;
     using System.IO.Compression;
 
-    public class CompressionVane :
-        Vane<Connection>
+    public class CompressionFeatherVane :
+        FeatherVane<ConnectionContext>
     {
-        public VaneHandler<Connection> GetHandler(VaneContext<Connection> context, NextVane<Connection> next)
+        public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
         {
-            var request = context.Get<RequestContext>();
-            var response = context.Get<ResponseContext>();
+            var request = payload.Get<RequestContext>();
+            var response = payload.Get<ResponseContext>();
 
             response.Headers["Vary"] = "Accept-Encoding";
 
             ApplyCompressionIfAppropriate(request, response);
 
-            return next.GetHandler(context);
+            return next.GetHandler(payload);
         }
 
         void ApplyCompressionIfAppropriate(RequestContext request, ResponseContext response)

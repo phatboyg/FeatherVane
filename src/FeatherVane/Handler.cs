@@ -9,29 +9,16 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneHandlers
+namespace FeatherVane
 {
     /// <summary>
-    /// Combines two VaneHandlers into a single, calling them in order first, second.
-    /// No special exception handling is performed.
+    /// A Vane returns a Handler when it is able to handle the inbound context. A
+    /// Handler can be anything from a simple delegate, to a more complex object.
     /// </summary>
-    public class CombineVaneHandler<T> :
-        VaneHandler<T>
+    /// <typeparam name="T"></typeparam>
+    public interface Handler<in T>
         where T : class
     {
-        readonly VaneHandler<T> _first;
-        readonly VaneHandler<T> _next;
-
-        public CombineVaneHandler(VaneHandler<T> first, VaneHandler<T> next)
-        {
-            _first = first;
-            _next = next;
-        }
-
-        public void Handle(VaneContext<T> context)
-        {
-            _first.Handle(context);
-            _next.Handle(context);
-        }
+        void Handle(Payload<T> payload);
     }
 }
