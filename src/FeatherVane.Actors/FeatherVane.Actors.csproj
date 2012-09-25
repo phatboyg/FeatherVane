@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{99A2CB0C-3176-4151-A9F9-ADDFC70AF74C}</ProjectGuid>
+    <ProjectGuid>{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FeatherVane.Tests</RootNamespace>
-    <AssemblyName>FeatherVane.Tests</AssemblyName>
+    <RootNamespace>FeatherVane.Actors</RootNamespace>
+    <AssemblyName>FeatherVane.Actors</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,52 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Benchmarque">
-      <HintPath>..\packages\Benchmarque.0.2.0\lib\net40\Benchmarque.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionVersion.cs">
-      <Link>SolutionVersion.cs</Link>
-    </Compile>
-    <Compile Include="Actors\Actor_Specs.cs" />
-    <Compile Include="FFFeatherVane.cs" />
-    <Compile Include="FFVane.cs" />
-    <Compile Include="HttpTests\Http_Specs.cs" />
-    <Compile Include="HttpTests\RequestHandling_Specs.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="Message_Specs.cs" />
-    <Compile Include="Plan_Specs.cs" />
-    <Compile Include="PushVane_Specs.cs" />
-    <Compile Include="StreamDecorator_Specs.cs" />
-    <Compile Include="Trace_Specs.cs" />
-    <Compile Include="TypeRouter_Specs.cs" />
-    <Compile Include="VaneCommand.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessagePayload.cs" />
+    <Compile Include="Payloads\Exit.cs" />
+    <Compile Include="Payloads\ExitPayload.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FeatherVane.Actors\FeatherVane.Actors.csproj">
-      <Project>{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}</Project>
-      <Name>FeatherVane.Actors</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FeatherVane.Web\FeatherVane.Web.csproj">
-      <Project>{F1851622-9293-4FB3-A6B8-CB7F81B06096}</Project>
-      <Name>FeatherVane.Web</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FeatherVane\FeatherVane.csproj">
       <Project>{0851B204-7FD1-4EEC-BCB4-B4B78DB2D1A5}</Project>
       <Name>FeatherVane</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

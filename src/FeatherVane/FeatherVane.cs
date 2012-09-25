@@ -14,6 +14,6 @@ namespace FeatherVane
     public interface FeatherVane<T>
         where T : class
     {
-        Handler<T> GetHandler(Payload<T> payload, Vane<T> next);
+        Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next);
     }
 }

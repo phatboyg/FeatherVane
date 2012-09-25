@@ -28,7 +28,8 @@ namespace FeatherVane
             return context.GetOrAdd(ContextNotFoundContextFactory<TContext>);
         }
 
-        static TContext ContextNotFoundContextFactory<TContext>() where TContext : class
+        static TContext ContextNotFoundContextFactory<TContext>()
+            where TContext : class
         {
             throw new ContextNotFoundException("No context factory provided.");
         }

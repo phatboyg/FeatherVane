@@ -15,9 +15,9 @@ namespace FeatherVane.Vanes
         Vane<T>
         where T : class
     {
-        public Handler<T> GetHandler(Payload<T> context)
+        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
         {
-            return Handlers.Success<T>();
+            return planner.CreatePlan(payload);
         }
     }
 }

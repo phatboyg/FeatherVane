@@ -26,9 +26,13 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
+        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
-            return new ProfilerHandler(_settings, payload, next);
+            var step = new ProfilerStep(_settings);
+
+            planner.Add(step);
+
+            return next.AssignPlan(planner, payload);
         }
 
         class ProfilerSettings
@@ -44,30 +48,27 @@ namespace FeatherVane.Vanes
             public TextWriter Writer { get; private set; }
         }
 
-        class ProfilerHandler :
-            Handler<T>
+        class ProfilerStep :
+            Step<T>
         {
-            readonly Handler<T> _handler;
             readonly ProfilerSettings _settings;
             readonly DateTime _startTime;
             readonly Stopwatch _stopwatch;
             readonly Guid _timingId;
 
-            public ProfilerHandler(ProfilerSettings settings, Payload<T> context, Vane<T> next)
+            public ProfilerStep(ProfilerSettings settings)
             {
                 _settings = settings;
                 _timingId = Guid.NewGuid();
                 _startTime = DateTime.UtcNow;
                 _stopwatch = Stopwatch.StartNew();
-
-                _handler = next.GetHandler(context);
             }
 
-            public void Handle(Payload<T> payload)
+            public bool Execute(Plan<T> plan)
             {
                 try
                 {
-                    _handler.Handle(payload);
+                    return plan.Execute();
                 }
                 finally
                 {
@@ -80,6 +81,11 @@ namespace FeatherVane.Vanes
                                                    + _stopwatch.ElapsedMilliseconds + "ms");
                     }
                 }
+            }
+
+            public bool Compensate(Plan<T> plan)
+            {
+                return plan.Compensate();
             }
         }
     }

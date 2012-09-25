@@ -20,15 +20,15 @@ namespace FeatherVane
         where T : class
     {
         readonly PayloadContextCache _contextCache;
-        readonly T _body;
+        readonly T _data;
 
-        public PayloadImpl(T body)
+        public PayloadImpl(T data)
         {
-            _body = body;
+            _data = data;
             _contextCache = new PayloadContextCache();
         }
 
-        public Type BodyType
+        public Type DataType
         {
             get { return typeof(T); }
         }
@@ -55,9 +55,9 @@ namespace FeatherVane
             return _contextCache.GetContext(contextFactory);
         }
 
-        public T Body
+        public T Data
         {
-            get { return _body; }
+            get { return _data; }
         }
     }
 }

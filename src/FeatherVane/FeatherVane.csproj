@@ -45,6 +45,9 @@
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
     <Compile Include="ContextFactory.cs" />
+    <Compile Include="Plan.cs" />
+    <Compile Include="Planner.cs" />
+    <Compile Include="Step.cs" />
     <Compile Include="VaneHandleExtensions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -65,9 +68,8 @@
     <Compile Include="Vane.cs" />
     <Compile Include="FeatherVane.cs" />
     <Compile Include="VaneExtensions.cs" />
-    <Compile Include="Handlers.cs" />
-    <Compile Include="VaneHandlers\SuccessHandler.cs" />
-    <Compile Include="VaneHandlers\UnhandledHandler.cs" />
+    <Compile Include="VanePlan.cs" />
+    <Compile Include="VanePlanner.cs" />
     <Compile Include="Vanes\Lambda.cs" />
     <Compile Include="Vanes\Success.cs" />
     <Compile Include="Vanes\Profiler.cs" />

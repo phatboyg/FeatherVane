@@ -11,33 +11,42 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Web.Http.Vanes
 {
+    using System;
+
     /// <summary>
     /// Handles a connection inside of a channel, allowing handlers to be injected
     /// along the channel network to handle things like authentication and ultimately
     /// routing
     /// </summary>
     public class NotFoundFeatherVane :
-        FeatherVane<ConnectionContext>
+        FeatherVane<ConnectionContext>,
+        Step<ConnectionContext>
     {
-        public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
+        public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+            Vane<ConnectionContext> next)
         {
-            return new NotFoundHandler();
+            throw new NotImplementedException();
         }
 
-        class NotFoundHandler :
-            Handler<ConnectionContext>
+        public bool Execute(Plan<ConnectionContext> plan)
         {
-            public void Handle(Payload<ConnectionContext> payload)
+            ResponseContext response;
+            if (plan.Payload.TryGet(out response))
             {
-                ResponseContext response;
-                if(payload.TryGet(out response))
-                {
-                    response.StatusCode = 404;
-                    response.StatusDescription = "Not Found";
-                    response.WriteHtml(
-                        @"<body><h1>Your request was not processed</h1><p>The URI specified was not recognized by any registered handler.</p></body>");
-                }
+                response.StatusCode = 404;
+                response.StatusDescription = "Not Found";
+                response.WriteHtml(
+                    @"<body><h1>Your request was not processed</h1><p>The URI specified was not recognized by any registered handler.</p></body>");
+
+                return true;
             }
+
+            return false;
+        }
+
+        public bool Compensate(Plan<ConnectionContext> plan)
+        {
+            return plan.Compensate();
         }
     }
 }

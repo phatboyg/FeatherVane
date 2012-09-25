@@ -14,44 +14,41 @@ namespace FeatherVane.Vanes
     using System.Transactions;
 
     public class Transaction<T> :
-        FeatherVane<T>
+        FeatherVane<T>,
+        Step<T>
         where T : class
     {
-        TransactionScopeOption _scopeOptions;
+        readonly TransactionScopeOption _scopeOptions;
 
         public Transaction()
         {
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
+        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
-            Handler<T> nextHandler = next.GetHandler(payload);
+            planner.Add(this);
 
-            return new TransactionHandler(_scopeOptions, nextHandler);
+            return next.AssignPlan(planner, payload);
         }
 
-        class TransactionHandler :
-            Handler<T>
+        public bool Execute(Plan<T> plan)
         {
-            readonly Handler<T> _nextHandler;
-            readonly TransactionScopeOption _options;
-
-            public TransactionHandler(TransactionScopeOption options, Handler<T> nextHandler)
+            bool ok;
+            using (var scope = new TransactionScope(_scopeOptions))
             {
-                _options = options;
-                _nextHandler = nextHandler;
-            }
+                ok = plan.Execute();
 
-            public void Handle(Payload<T> payload)
-            {
-                using (var scope = new TransactionScope(_options))
-                {
-                    _nextHandler.Handle(payload);
-
+                if (ok)
                     scope.Complete();
-                }
             }
+
+            return ok;
+        }
+
+        public bool Compensate(Plan<T> plan)
+        {
+            return plan.Compensate();
         }
     }
 }

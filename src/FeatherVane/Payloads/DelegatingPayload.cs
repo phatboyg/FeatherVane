@@ -23,16 +23,16 @@ namespace FeatherVane.Payloads
         Payload<T>
         where T : class
     {
-        readonly T _body;
+        readonly T _data;
         readonly Payload _originalPayload;
 
-        public DelegatingPayload(Payload originalPayload, T body)
+        public DelegatingPayload(Payload originalPayload, T data)
         {
             _originalPayload = originalPayload;
-            _body = body;
+            _data = data;
         }
 
-        public Type BodyType
+        public Type DataType
         {
             get { return typeof(T); }
         }
@@ -59,9 +59,9 @@ namespace FeatherVane.Payloads
             return _originalPayload.GetOrAdd(contextFactory);
         }
 
-        public T Body
+        public T Data
         {
-            get { return _body; }
+            get { return _data; }
         }
     }
 }

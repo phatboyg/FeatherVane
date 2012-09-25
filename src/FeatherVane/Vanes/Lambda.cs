@@ -14,7 +14,8 @@ namespace FeatherVane.Vanes
     using System;
 
     public class LambdaAction<T> :
-        FeatherVane<T>
+        FeatherVane<T>,
+        Step<T>
         where T : class
     {
         readonly Action<Payload<T>> _handler;
@@ -24,25 +25,23 @@ namespace FeatherVane.Vanes
             _handler = handler;
         }
 
-        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
+        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
-            return new LambdaActionHandler(_handler);
+            planner.Add(this);
+
+            return next.AssignPlan(planner, payload);
         }
 
-        class LambdaActionHandler :
-            Handler<T>
+        public bool Execute(Plan<T> plan)
         {
-            readonly Action<Payload<T>> _handler;
+            _handler(plan.Payload);
 
-            public LambdaActionHandler(Action<Payload<T>> handler)
-            {
-                _handler = handler;
-            }
+            return plan.Execute();
+        }
 
-            public void Handle(Payload<T> payload)
-            {
-                _handler(payload);
-            }
+        public bool Compensate(Plan<T> plan)
+        {
+            return plan.Compensate();
         }
     }
 }

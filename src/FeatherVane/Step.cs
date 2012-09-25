@@ -9,28 +9,18 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane
 {
-    public class Unhandled<T> :
-        Vane<T>,
-        Step<T>
+    public interface Step<in T> :
+        Step
         where T : class
     {
-        public bool Execute(Plan<T> plan)
-        {
-            throw UnhandledException.New(plan.Payload);
-        }
+        bool Execute(Plan<T> plan);
 
-        public bool Compensate(Plan<T> plan)
-        {
-            return plan.Compensate();
-        }
+        bool Compensate(Plan<T> plan);
+    }
 
-        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
-        {
-            planner.Add(this);
-
-            return planner.CreatePlan(payload);
-        }
+    public interface Step
+    {
     }
 }

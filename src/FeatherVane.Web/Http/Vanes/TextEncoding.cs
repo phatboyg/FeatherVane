@@ -15,7 +15,8 @@ namespace FeatherVane.Web.Http.Vanes
     using System.Text.RegularExpressions;
 
     public class TextEncoding :
-        FeatherVane<ConnectionContext>
+        FeatherVane<ConnectionContext>,
+        Step<ConnectionContext>
     {
         TextEncodingSettings _settings;
 
@@ -28,52 +29,45 @@ namespace FeatherVane.Web.Http.Vanes
                 };
         }
 
-        public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
-        {
-            var nextHandler = next.GetHandler(payload);
 
-            return new TextEncodingHandler(_settings, nextHandler);
+        public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+            Vane<ConnectionContext> next)
+        {
+            RequestContext request;
+            if (payload.TryGet(out request))
+            {
+                Encoding encoding = GetEncoding(request);
+            }
+
+            // this is sad, because HttpListener does this by default
+            // context.Request.ContentEncoding = encoding;
+
+            // probably need to decorate the forms/body with a decoder to convert to the proper encoding
+            return next.AssignPlan(planner, payload);
         }
 
-        class TextEncodingHandler :
-            Handler<ConnectionContext>
+        public bool Execute(Plan<ConnectionContext> plan)
         {
-            readonly TextEncodingSettings _settings;
-            readonly Handler<ConnectionContext> _nextHandler;
+            // we don't do anything yet
+            return plan.Execute();
+        }
 
-            public TextEncodingHandler(TextEncodingSettings settings, Handler<ConnectionContext> nextHandler)
-            {
-                _settings = settings;
-                _nextHandler = nextHandler;
-            }
+        public bool Compensate(Plan<ConnectionContext> plan)
+        {
+            return plan.Compensate();
+        }
 
-            public void Handle(Payload<ConnectionContext> payload)
-            {
-                RequestContext request;
-                if(payload.TryGet(out request))
-                {
-                    Encoding encoding = GetEncoding(request);
-                }
+        Encoding GetEncoding(RequestContext context)
+        {
+            string contentType = context.Headers["Content-Type"];
+            if (contentType == null)
+                return _settings.DefaultTextEncoding;
 
-                // this is sad, because HttpListener does this by default
-                // context.Request.ContentEncoding = encoding;
+            Match match = _settings.CharSetPattern.Match(contentType);
+            if (match.Success == false)
+                return _settings.DefaultTextEncoding;
 
-                // probably need to decorate the forms/body with a decoder to convert to the proper encoding
-                _nextHandler.Handle(payload);
-            }
-
-            Encoding GetEncoding(RequestContext context)
-            {
-                string contentType = context.Headers["Content-Type"];
-                if (contentType == null)
-                    return _settings.DefaultTextEncoding;
-
-                Match match = _settings.CharSetPattern.Match(contentType);
-                if (match.Success == false)
-                    return _settings.DefaultTextEncoding;
-
-                return Encoding.GetEncoding(match.Groups[1].Value);
-            }
+            return Encoding.GetEncoding(match.Groups[1].Value);
         }
 
         class TextEncodingSettings

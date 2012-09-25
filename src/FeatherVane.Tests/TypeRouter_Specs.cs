@@ -10,15 +10,15 @@
         [Test]
         public void Should_allow_the_type_to_be_dispatched()
         {
-            var lambda = new LambdaAction<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Body.Body.Value));
+            var lambda = new LambdaAction<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
 
             Vane<ConsumeContext<A>> messageAVane = Vane.Connect(new Success<ConsumeContext<A>>(), lambda);
 
-            var typeRouter = new TypeRouter<ConsumeContext>(context => context.Body.ContextType);
+            var typeRouter = new TypeRouter<ConsumeContext>(context => context.Data.ContextType);
             typeRouter.Add(messageAVane, x =>
                 {
                     ConsumeContext<A> context;
-                    x.Body.TryGetContext(out context);
+                    x.Data.TryGetContext(out context);
 
                     return x.CreateDelegatingPayload(context);
                 });

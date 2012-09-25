@@ -15,7 +15,8 @@ namespace FeatherVane.Vanes
     using System.IO;
 
     public class Logger<T> :
-        FeatherVane<T>
+        FeatherVane<T>,
+        Step<T>
         where T : class
     {
         readonly Func<Payload<T>, string> _getLogMessage;
@@ -27,19 +28,26 @@ namespace FeatherVane.Vanes
             _getLogMessage = getLogMessage;
         }
 
-        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
+        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
-            Handler<T> nextHandler = next.GetHandler(payload);
+            planner.Add(this);
 
-            return Handlers.Intercept(nextHandler, TraceHandler);
+            return next.AssignPlan(planner, payload);
         }
 
-        void TraceHandler(Payload<T> context, Handler<T> nextHandler)
+        public bool Execute(Plan<T> plan)
         {
-            string message = _getLogMessage(context);
+            Payload<T> payload = plan.Payload;
+
+            string message = _getLogMessage(payload);
             _output.WriteLine(message);
 
-            nextHandler.Handle(context);
+            return plan.Execute();
+        }
+
+        public bool Compensate(Plan<T> plan)
+        {
+            return plan.Compensate();
         }
     }
 }

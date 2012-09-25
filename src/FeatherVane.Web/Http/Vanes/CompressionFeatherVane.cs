@@ -17,19 +17,29 @@ namespace FeatherVane.Web.Http.Vanes
     public class CompressionFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
+        readonly Step<ConnectionContext> _deflate;
+        readonly Step<ConnectionContext> _gzip;
+
+        public CompressionFeatherVane()
+        {
+            _gzip = new GZipStep();
+            _deflate = new DeflateStep();
+        }
+
+        public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+            Vane<ConnectionContext> next)
         {
             var request = payload.Get<RequestContext>();
             var response = payload.Get<ResponseContext>();
 
             response.Headers["Vary"] = "Accept-Encoding";
 
-            ApplyCompressionIfAppropriate(request, response);
+            ApplyCompressionIfAppropriate(request, planner);
 
-            return next.GetHandler(payload);
+            return next.AssignPlan(planner, payload);
         }
 
-        void ApplyCompressionIfAppropriate(RequestContext request, ResponseContext response)
+        void ApplyCompressionIfAppropriate(RequestContext request, Planner<ConnectionContext> planner)
         {
             if (request.HttpMethod == "HEAD")
                 return;
@@ -41,15 +51,49 @@ namespace FeatherVane.Web.Http.Vanes
             if ((accept.IndexOf("gzip", StringComparison.OrdinalIgnoreCase) != -1)
                 || accept.Trim().Equals("*"))
             {
-                response.Headers["Content-Encoding"] = "gzip";
-                response.AddBodyStreamFilter(x => new GZipStream(x, CompressionMode.Compress, true));
+                planner.Add(_gzip);
                 return;
             }
 
             if (accept.IndexOf("deflate", StringComparison.OrdinalIgnoreCase) != -1)
             {
+                planner.Add(_deflate);
+            }
+        }
+
+        class DeflateStep :
+            Step<ConnectionContext>
+        {
+            public bool Execute(Plan<ConnectionContext> plan)
+            {
+                var response = plan.Payload.Get<ResponseContext>();
                 response.Headers["Content-Encoding"] = "deflate";
                 response.AddBodyStreamFilter(x => new DeflateStream(x, CompressionMode.Compress, true));
+
+                return plan.Execute();
+            }
+
+            public bool Compensate(Plan<ConnectionContext> plan)
+            {
+                return plan.Compensate();
+            }
+        }
+
+        class GZipStep :
+            Step<ConnectionContext>
+        {
+            public bool Execute(Plan<ConnectionContext> plan)
+            {
+                var response = plan.Payload.Get<ResponseContext>();
+                response.Headers["Content-Encoding"] = "gzip";
+                response.AddBodyStreamFilter(x => new GZipStream(x, CompressionMode.Compress, true));
+
+                return plan.Execute();
+            }
+
+            public bool Compensate(Plan<ConnectionContext> plan)
+            {
+                return plan.Compensate();
             }
         }
     }

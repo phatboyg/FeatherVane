@@ -36,16 +36,16 @@ namespace FeatherVane.Vanes
             _typeVanes = new ConcurrentCache<Type, Vane<T>>();
         }
 
-        public Handler<T> GetHandler(Payload<T> payload, Vane<T> next)
+        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             Type contextType = _typeSelector(payload);
 
             Vane<T> typeVane = _typeVanes.Get(contextType, x => next);
 
-            return typeVane.GetHandler(payload);
+            return typeVane.AssignPlan(planner, payload);
         }
 
-        public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter) 
+        public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter)
             where TOutput : class
         {
             _typeVanes.Add(typeof(TOutput), new TypeConverter<T, TOutput>(nextVane, converter));
@@ -65,32 +65,37 @@ namespace FeatherVane.Vanes
                 _converter = converter;
             }
 
-            public Handler<T> GetHandler(Payload<T> context)
+            public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
             {
-                Payload<TOutput> output = _converter(context);
+                Payload<TOutput> output = _converter(payload);
 
-                Handler<TOutput> handler = _vane.GetHandler(output);
+                var outputPlanner = new VanePlanner<TOutput>();
 
-                return new TypeConverterHandler(handler, _converter);
+                Plan<TOutput> outputPlan = _vane.AssignPlan(outputPlanner, output);
+
+                planner.Add(new TypeConverterStep(outputPlan));
+
+                return planner.CreatePlan(payload);
             }
 
-            class TypeConverterHandler :
-                Handler<T>
+            class TypeConverterStep :
+                Step<T>
             {
-                readonly Func<Payload<T>, Payload<TOutput>> _converter;
-                readonly Handler<TOutput> _handler;
+                readonly Plan<TOutput> _plan;
 
-                public TypeConverterHandler(Handler<TOutput> handler, Func<Payload<T>, Payload<TOutput>> converter)
+                public TypeConverterStep(Plan<TOutput> plan)
                 {
-                    _handler = handler;
-                    _converter = converter;
+                    _plan = plan;
                 }
 
-                public void Handle(Payload<T> payload)
+                public bool Execute(Plan<T> plan)
                 {
-                    Payload<TOutput> output = _converter(payload);
+                    return _plan.Execute();
+                }
 
-                    _handler.Handle(output);
+                public bool Compensate(Plan<T> plan)
+                {
+                    return _plan.Compensate();
                 }
             }
         }

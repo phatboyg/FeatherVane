@@ -26,30 +26,9 @@ namespace FeatherVane.Tests.HttpTests
         HttpServerTest
     {
         [Test]
-        public void Should_get_not_found()
-        {
-            var webRequest = (HttpWebRequest)WebRequest.Create(ServerUri);
-            HttpWebResponse _webResponse;
-            try
-            {
-                _webResponse = (HttpWebResponse)webRequest.GetResponse();
-            }
-            catch (WebException ex)
-            {
-                _webResponse = (HttpWebResponse)ex.Response;
-            }
-            using (_webResponse)
-            {
-                Assert.AreEqual(HttpStatusCode.NotFound, _webResponse.StatusCode);
-
-                _webResponse.Close();
-            }
-        }
-
-        [Test]
         public void Should_get_a_200()
         {
-            Uri requestUri = new Uri(ServerUri + "/hello");
+            var requestUri = new Uri(ServerUri + "/hello");
 
             var webRequest = (HttpWebRequest)WebRequest.Create(requestUri);
             HttpWebResponse _webResponse;
@@ -72,14 +51,14 @@ namespace FeatherVane.Tests.HttpTests
         [Test]
         public void Should_get_a_whole_lot_of_200s()
         {
-            Uri requestUri = new Uri(ServerUri + "/hello");
+            var requestUri = new Uri(ServerUri + "/hello");
 
             Stopwatch start = Stopwatch.StartNew();
 
-            int threads = Environment.ProcessorCount * 2;
+            int threads = Environment.ProcessorCount*2;
             int iterations = 2000;
 
-            var tasks = Enumerable.Range(0, threads).Select(x => Task.Factory.StartNew(() =>
+            Task[] tasks = Enumerable.Range(0, threads).Select(x => Task.Factory.StartNew(() =>
                 {
                     for (int i = 0; i < iterations; i++)
                     {
@@ -108,7 +87,28 @@ namespace FeatherVane.Tests.HttpTests
 
             Console.WriteLine("Elapsed Time: {0}ms", start.ElapsedMilliseconds);
             Console.WriteLine("Requests/second: {0}", (Stopwatch.Frequency/((decimal)start.ElapsedTicks/
-                (threads*iterations))).ToString("F0"));
+                                                                            (threads*iterations))).ToString("F0"));
+        }
+
+        [Test]
+        public void Should_get_not_found()
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(ServerUri);
+            HttpWebResponse _webResponse;
+            try
+            {
+                _webResponse = (HttpWebResponse)webRequest.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                _webResponse = (HttpWebResponse)ex.Response;
+            }
+            using (_webResponse)
+            {
+                Assert.AreEqual(HttpStatusCode.NotFound, _webResponse.StatusCode);
+
+                _webResponse.Close();
+            }
         }
 
         protected override Vane<ConnectionContext> CreateMainVane()
@@ -122,24 +122,38 @@ namespace FeatherVane.Tests.HttpTests
         class HelloFeatherVane :
             FeatherVane<ConnectionContext>
         {
-            public Handler<ConnectionContext> GetHandler(Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
+            public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner,
+                Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
             {
                 if (payload.Get<RequestContext>().Url.ToString().EndsWith("hello"))
-                    return new HelloHandler();
+                {
+                    planner.Add(new HelloStep());
+                    return planner.CreatePlan(payload);
+                }
 
-                return next.GetHandler(payload);
+                return next.AssignPlan(planner, payload);
             }
 
-            class HelloHandler : Handler<ConnectionContext>
+            class HelloStep :
+                Step<ConnectionContext>
             {
-                public void Handle(Payload<ConnectionContext> payload)
+                public bool Execute(Plan<ConnectionContext> plan)
                 {
                     ResponseContext response;
-                    if (payload.TryGet(out response))
+                    if (plan.Payload.TryGet(out response))
                     {
                         response.StatusCode = 200;
                         response.Write("Hello!");
+
+                        return plan.Execute();
                     }
+
+                    throw new InvalidOperationException("Response context not available");
+                }
+
+                public bool Compensate(Plan<ConnectionContext> plan)
+                {
+                    return plan.Compensate();
                 }
             }
         }

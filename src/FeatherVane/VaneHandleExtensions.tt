@@ -12,14 +12,16 @@ namespace FeatherVane
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static void Handle<T>(this Vane<T> vane, T body)
+        public static bool Handle<T>(this Vane<T> vane, T body)
             where T : class
         {
             var payload = new PayloadImpl<T>(body);
 
-            Handler<T> handler = vane.GetHandler(payload);
+            var planner = new VanePlanner<T>();
 
-            handler.Handle(payload);
+            Plan<T> plan = vane.AssignPlan(planner, payload);
+
+            return plan.Execute();
         }
 
 <# for(int i=1; i<=16; i++){
@@ -34,17 +36,18 @@ namespace FeatherVane
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static void Handle<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
+        public static bool Handle<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
             where T : class
             <#=tWheres#>
         {
             var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
+            var planner = new VanePlanner<T>();
 
-            Handler<T> handler = vane.GetHandler(payload);
+            Plan<T> plan = vane.AssignPlan(planner, payload);
 
-            handler.Handle(payload);
+            return plan.Execute();
         }
 
 <# 

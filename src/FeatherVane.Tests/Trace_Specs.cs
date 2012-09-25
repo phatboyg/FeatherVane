@@ -26,8 +26,8 @@ namespace FeatherVane.Tests
 
             FeatherVane<string> logger = new Logger<string>(Console.Out, x =>
                 {
-                    called = x.Body;
-                    return x.Body;
+                    called = x.Data;
+                    return x.Data;
                 });
 
             FeatherVane<string> profiler = new Profiler<string>(Console.Error, TimeSpan.FromMilliseconds(2));

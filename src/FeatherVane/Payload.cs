@@ -23,7 +23,7 @@ namespace FeatherVane
         /// <summary>
         /// The type of the generic context that is being passed by the vane
         /// </summary>
-        Type BodyType { get; }
+        Type DataType { get; }
 
         /// <summary>
         /// The type of the Vane, include the Vane<typeparam name="T">T</typeparam> interface
@@ -71,6 +71,6 @@ namespace FeatherVane
         /// <summary>
         /// The body of the payload could a command, an event, the actual content of the request
         /// </summary>
-        T Body { get; }
+        T Data { get; }
     }
 }

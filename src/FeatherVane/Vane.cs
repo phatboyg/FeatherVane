@@ -14,7 +14,7 @@ namespace FeatherVane
     public interface Vane<T>
         where T : class
     {
-        Handler<T> GetHandler(Payload<T> context);
+        Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload);
     }
 
     public static class Vane
@@ -24,7 +24,7 @@ namespace FeatherVane
             Vane<T> next = last;
             for (int i = vanes.Length - 1; i >= 0; i--)
             {
-                next = vanes[i].ConnectTo(next);
+                next = vanes[i].Append(next);
             }
 
             return next;
@@ -39,18 +39,18 @@ namespace FeatherVane
             Vane<T>
             where T : class
         {
-            readonly Vane<T> _nextVane;
+            readonly Vane<T> _next;
             readonly FeatherVane<T> _vane;
 
-            public ConnectVane(FeatherVane<T> vane, Vane<T> nextVane)
+            public ConnectVane(FeatherVane<T> vane, Vane<T> next)
             {
                 _vane = vane;
-                _nextVane = nextVane;
+                _next = next;
             }
 
-            public Handler<T> GetHandler(Payload<T> context)
+            public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
             {
-                return _vane.GetHandler(context, _nextVane);
+                return _vane.AssignPlan(planner, payload, _next);
             }
         }
     }
