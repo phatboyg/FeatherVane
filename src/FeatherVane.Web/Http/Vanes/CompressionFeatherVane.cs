@@ -36,7 +36,7 @@ namespace FeatherVane.Web.Http.Vanes
 
             ApplyCompressionIfAppropriate(request, planner);
 
-            return next.AssignPlan(planner, payload);
+            return next.Plan(planner, payload);
         }
 
         void ApplyCompressionIfAppropriate(RequestContext request, Planner<ConnectionContext> planner)

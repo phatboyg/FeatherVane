@@ -11,15 +11,26 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using Vanes;
+
     public interface Vane<T>
         where T : class
     {
-        Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload);
+        Agenda<T> Plan(Planner<T> planner, Payload<T> payload);
     }
 
     public static class Vane
     {
-        public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes) where T : class
+        public static Vane<T> Success<T>(params FeatherVane<T>[] vanes)
+            where T : class
+        {
+            var success = new Success<T>();
+
+            return Connect(success, vanes);
+        }
+
+        public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes)
+            where T : class
         {
             Vane<T> next = last;
             for (int i = vanes.Length - 1; i >= 0; i--)
@@ -30,7 +41,8 @@ namespace FeatherVane
             return next;
         }
 
-        public static Vane<T> Connect<T>(FeatherVane<T> vane, Vane<T> next) where T : class
+        public static Vane<T> Connect<T>(FeatherVane<T> vane, Vane<T> next)
+            where T : class
         {
             return new ConnectVane<T>(vane, next);
         }
@@ -48,7 +60,7 @@ namespace FeatherVane
                 _next = next;
             }
 
-            public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload)
+            public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
             {
                 return _vane.AssignPlan(planner, payload, _next);
             }

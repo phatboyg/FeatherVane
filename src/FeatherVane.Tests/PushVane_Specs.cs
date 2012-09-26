@@ -38,7 +38,7 @@ namespace FeatherVane.Tests
             {
                 Console.WriteLine("Original: {0}", payload.Data);
 
-                return next.AssignPlan(planner, payload);
+                return next.Plan(planner, payload);
             }
         }
 
@@ -49,7 +49,7 @@ namespace FeatherVane.Tests
             {
                 Console.WriteLine("Decorator: {0}", payload.Data);
 
-                return next.AssignPlan(planner, payload);
+                return next.Plan(planner, payload);
             }
         }
     }

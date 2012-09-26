@@ -43,7 +43,7 @@ namespace FeatherVane.Web.Http.Vanes
             // context.Request.ContentEncoding = encoding;
 
             // probably need to decorate the forms/body with a decoder to convert to the proper encoding
-            return next.AssignPlan(planner, payload);
+            return next.Plan(planner, payload);
         }
 
         public bool Execute(Agenda<ConnectionContext> agenda)

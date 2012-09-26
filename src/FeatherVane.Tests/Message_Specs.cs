@@ -28,7 +28,7 @@ namespace FeatherVane.Tests
 
             var planner = new VanePlanner<Message>();
 
-            Agenda<Message> agenda = vane.AssignPlan(planner, payload);
+            Agenda<Message> agenda = vane.Plan(planner, payload);
         }
 
         class MessageVane :
@@ -42,7 +42,7 @@ namespace FeatherVane.Tests
                     planner.Add(new AlphaAgendaItem());
                 }
 
-                return next.AssignPlan(planner, payload);
+                return next.Plan(planner, payload);
             }
 
             class AlphaAgendaItem :

@@ -31,7 +31,7 @@ namespace FeatherVane.Vanes
         {
             planner.Add(this);
 
-            return next.AssignPlan(planner, payload);
+            return next.Plan(planner, payload);
         }
 
         public bool Execute(Agenda<T> agenda)

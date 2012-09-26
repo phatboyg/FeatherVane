@@ -131,7 +131,7 @@ namespace FeatherVane.Tests.HttpTests
                     return planner.CreatePlan(payload);
                 }
 
-                return next.AssignPlan(planner, payload);
+                return next.Plan(planner, payload);
             }
 
             class HelloAgendaItem :

@@ -31,14 +31,14 @@ namespace FeatherVane.Vanes
         {
             planner.Add(this);
 
-            return next.AssignPlan(planner, payload);
+            return next.Plan(planner, payload);
         }
 
         public bool Execute(Agenda<T> agenda)
         {
             var planner = new VanePlanner<T>();
 
-            Agenda<T> tapAgenda = _tap.AssignPlan(planner, agenda.Payload);
+            Agenda<T> tapAgenda = _tap.Plan(planner, agenda.Payload);
 
             tapAgenda.Execute();
 

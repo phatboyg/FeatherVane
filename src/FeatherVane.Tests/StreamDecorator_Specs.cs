@@ -16,7 +16,6 @@ namespace FeatherVane.Tests
     using System.IO.Compression;
     using System.Text;
     using NUnit.Framework;
-    using Web;
     using Web.Util;
 
     [TestFixture]
@@ -31,7 +30,7 @@ namespace FeatherVane.Tests
                 {
                     streams.Push(x => new GZipStream(x, CompressionMode.Compress, true));
 
-                    var bytes = Encoding.UTF8.GetBytes(new string('-', 1000));
+                    byte[] bytes = Encoding.UTF8.GetBytes(new string('-', 1000));
                     streams.Write(bytes, 0, bytes.Length);
                 }
 

@@ -15,7 +15,7 @@
 
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -34,7 +34,7 @@
             payload.GetOrAdd(() => ctx1);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -55,7 +55,7 @@
             payload.GetOrAdd(() => ctx2);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -78,7 +78,7 @@
             payload.GetOrAdd(() => ctx3);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -103,7 +103,7 @@
             payload.GetOrAdd(() => ctx4);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -130,7 +130,7 @@
             payload.GetOrAdd(() => ctx5);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -159,7 +159,7 @@
             payload.GetOrAdd(() => ctx6);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -190,7 +190,7 @@
             payload.GetOrAdd(() => ctx7);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -223,7 +223,7 @@
             payload.GetOrAdd(() => ctx8);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -258,7 +258,7 @@
             payload.GetOrAdd(() => ctx9);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -295,7 +295,7 @@
             payload.GetOrAdd(() => ctx10);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -334,7 +334,7 @@
             payload.GetOrAdd(() => ctx11);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -375,7 +375,7 @@
             payload.GetOrAdd(() => ctx12);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -418,7 +418,7 @@
             payload.GetOrAdd(() => ctx13);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -463,7 +463,7 @@
             payload.GetOrAdd(() => ctx14);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -510,7 +510,7 @@
             payload.GetOrAdd(() => ctx15);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -559,7 +559,7 @@
             payload.GetOrAdd(() => ctx16);
             var planner = new VanePlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }

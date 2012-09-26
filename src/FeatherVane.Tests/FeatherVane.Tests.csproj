@@ -45,8 +45,6 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actors\Actor_Specs.cs" />
-    <Compile Include="FFFeatherVane.cs" />
-    <Compile Include="FFVane.cs" />
     <Compile Include="HttpTests\Http_Specs.cs" />
     <Compile Include="HttpTests\RequestHandling_Specs.cs" />
     <Compile Include="Message_Specs.cs" />

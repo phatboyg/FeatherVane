@@ -42,7 +42,7 @@ namespace FeatherVane.Vanes
 
             Vane<T> typeVane = _typeVanes.Get(contextType, x => next);
 
-            return typeVane.AssignPlan(planner, payload);
+            return typeVane.Plan(planner, payload);
         }
 
         public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter)
@@ -65,13 +65,13 @@ namespace FeatherVane.Vanes
                 _converter = converter;
             }
 
-            public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload)
+            public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
             {
                 Payload<TOutput> output = _converter(payload);
 
                 var outputPlanner = new VanePlanner<TOutput>();
 
-                Agenda<TOutput> outputAgenda = _vane.AssignPlan(outputPlanner, output);
+                Agenda<TOutput> outputAgenda = _vane.Plan(outputPlanner, output);
 
                 planner.Add(new TypeConverterAgendaItem(outputAgenda));
 

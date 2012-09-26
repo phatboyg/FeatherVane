@@ -32,7 +32,7 @@ namespace FeatherVane.Vanes
 
             planner.Add(step);
 
-            return next.AssignPlan(planner, payload);
+            return next.Plan(planner, payload);
         }
 
         class ProfilerSettings
