@@ -90,7 +90,7 @@ namespace FeatherVane.Tests.HttpTests
                                                                             (threads*iterations))).ToString("F0"));
         }
 
-        [Test]
+        [Test, Explicit]
         public void Should_get_not_found()
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(ServerUri);
