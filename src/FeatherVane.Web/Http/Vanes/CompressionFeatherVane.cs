@@ -26,7 +26,7 @@ namespace FeatherVane.Web.Http.Vanes
             _deflate = new DeflateAgendaItem();
         }
 
-        public Agenda<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+        public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             var request = payload.Get<RequestContext>();

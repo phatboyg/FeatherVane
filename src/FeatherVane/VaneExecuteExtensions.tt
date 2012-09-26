@@ -4,7 +4,9 @@
 <#@ import namespace="System.Linq" #>
 namespace FeatherVane
 {
-    public static class VaneHandleExtensions
+    using Execution;
+
+    public static class VaneExecuteExtensions
     {
         /// <summary>
         /// Handles a payload with a vane
@@ -17,9 +19,9 @@ namespace FeatherVane
         {
             var payload = new PayloadImpl<T>(body);
 
-            var planner = new VanePlanner<T>();
+            var planner = new AgendaPlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }
@@ -43,9 +45,9 @@ namespace FeatherVane
             var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
-            var planner = new VanePlanner<T>();
+            var planner = new AgendaPlanner<T>();
 
-            Agenda<T> agenda = vane.AssignPlan(planner, payload);
+            Agenda<T> agenda = vane.Plan(planner, payload);
 
             return agenda.Execute();
         }

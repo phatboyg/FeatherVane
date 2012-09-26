@@ -18,6 +18,6 @@ namespace FeatherVane
     public interface FeatherVane<T>
         where T : class
     {
-        Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next);
+        Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next);
     }
 }

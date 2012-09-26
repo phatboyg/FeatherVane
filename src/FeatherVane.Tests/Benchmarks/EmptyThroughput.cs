@@ -9,18 +9,23 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Tests.Benchmarks
 {
-    public enum CompensateResult
-    {
-        /// <summary>
-        /// Continue compensating executed items
-        /// </summary>
-        Continue = 0,
+    using System.Text;
 
-        /// <summary>
-        /// Resume execution of the agenda
-        /// </summary>
-        Execute = 1,
+    public class EmptyThroughput :
+        Throughput
+    {
+        readonly Vane<Subject> _vane;
+
+        public EmptyThroughput()
+        {
+            _vane = Vane.Success<Subject>();
+        }
+
+        public void Execute(Subject subject)
+        {
+            _vane.Execute(subject);
+        }
     }
 }

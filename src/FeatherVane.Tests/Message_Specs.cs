@@ -11,6 +11,7 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+    using Execution;
     using FeatherVane.Actors;
     using NUnit.Framework;
     using Vanes;
@@ -26,7 +27,7 @@ namespace FeatherVane.Tests
 
             var payload = new MessagePayload<Alpha>(new Alpha());
 
-            var planner = new VanePlanner<Message>();
+            var planner = new AgendaPlanner<Message>();
 
             Agenda<Message> agenda = vane.Plan(planner, payload);
         }
@@ -34,7 +35,7 @@ namespace FeatherVane.Tests
         class MessageVane :
             FeatherVane<Message>
         {
-            public Agenda<Message> AssignPlan(Planner<Message> planner, Payload<Message> payload, Vane<Message> next)
+            public Agenda<Message> Plan(Planner<Message> planner, Payload<Message> payload, Vane<Message> next)
             {
                 Message<Alpha> alphaMessage;
                 if (payload.Data.TryGet(out alphaMessage))

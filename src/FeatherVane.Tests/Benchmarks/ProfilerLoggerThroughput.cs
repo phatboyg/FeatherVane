@@ -9,18 +9,28 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Tests.Benchmarks
 {
-    public enum ExecuteResult
-    {
-        /// <summary>
-        /// The agenda item executed normally
-        /// </summary>
-        Ok = 0,
+    using System;
+    using System.IO;
+    using Vanes;
 
-        /// <summary>
-        /// The agenda item failed, and compensate should commence
-        /// </summary>
-        Fail = 1,
+    public class ProfilerLoggerThroughput :
+        Throughput
+    {
+        readonly Vane<Subject> _vane;
+
+        public ProfilerLoggerThroughput()
+        {
+            var ms = new MemoryStream();
+            var sw = new StreamWriter(ms);
+            _vane = Vane.Success(new Logger<Subject>(sw, x => ""),
+                new Profiler<Subject>(sw, TimeSpan.FromMilliseconds(2)));
+        }
+
+        public void Execute(Subject subject)
+        {
+            _vane.Execute(subject);
+        }
     }
 }

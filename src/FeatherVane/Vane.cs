@@ -62,7 +62,7 @@ namespace FeatherVane
 
             public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
             {
-                return _vane.AssignPlan(planner, payload, _next);
+                return _vane.Plan(planner, payload, _next);
             }
         }
     }

@@ -11,6 +11,8 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
+    using Execution;
+
     /// <summary>
     /// A WireTap passes the context to another Vane so that it can be observed
     /// </summary>
@@ -27,7 +29,7 @@ namespace FeatherVane.Vanes
             _tap = tap;
         }
 
-        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             planner.Add(this);
 
@@ -36,7 +38,7 @@ namespace FeatherVane.Vanes
 
         public bool Execute(Agenda<T> agenda)
         {
-            var planner = new VanePlanner<T>();
+            var planner = new AgendaPlanner<T>();
 
             Agenda<T> tapAgenda = _tap.Plan(planner, agenda.Payload);
 

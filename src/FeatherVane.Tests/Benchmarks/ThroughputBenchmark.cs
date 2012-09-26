@@ -9,28 +9,36 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.Tests.Benchmarks
 {
-    public class Unhandled<T> :
-        Vane<T>,
-        AgendaItem<T>
-        where T : class
+    using System.Collections.Generic;
+    using Benchmarque;
+
+    public class ThroughputBenchmark :
+        Benchmark<Throughput>
     {
-        public bool Execute(Agenda<T> agenda)
+        public void WarmUp(Throughput instance)
         {
-            throw UnhandledException.New(agenda.Payload);
+            instance.Execute(new Subject());
         }
 
-        public bool Compensate(Agenda<T> agenda)
+        public void Shutdown(Throughput instance)
         {
-            return agenda.Compensate();
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
+        public void Run(Throughput instance, int iterationCount)
         {
-            planner.Add(this);
+            var subject = new Subject();
 
-            return planner.CreateAgenda(payload);
+            for (int i = 0; i < iterationCount; i++)
+            {
+                instance.Execute(subject);
+            }
+        }
+
+        public IEnumerable<int> Iterations
+        {
+            get { return new[] {10000, 50000}; }
         }
     }
 }

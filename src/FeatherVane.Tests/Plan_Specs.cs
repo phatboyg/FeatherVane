@@ -145,7 +145,7 @@ namespace FeatherVane.Tests
                 return agenda.Compensate();
             }
 
-            public Agenda<Address> AssignPlan(Planner<Address> planner, Payload<Address> payload, Vane<Address> next)
+            public Agenda<Address> Plan(Planner<Address> planner, Payload<Address> payload, Vane<Address> next)
             {
                 AssignCalled = true;
 
@@ -183,7 +183,7 @@ namespace FeatherVane.Tests
 
                 AssignCalled = true;
 
-                return planner.CreatePlan(payload);
+                return planner.CreateAgenda(payload);
             }
         }
 
@@ -196,7 +196,7 @@ namespace FeatherVane.Tests
             {
                 AssignCalled = true;
 
-                return planner.CreatePlan(payload);
+                return planner.CreateAgenda(payload);
             }
         }
 

@@ -12,6 +12,7 @@
 namespace FeatherVane.Vanes
 {
     using System;
+    using Execution;
     using Internals.Caching;
 
     /// <summary>
@@ -36,7 +37,7 @@ namespace FeatherVane.Vanes
             _typeVanes = new ConcurrentCache<Type, Vane<T>>();
         }
 
-        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             Type contextType = _typeSelector(payload);
 
@@ -69,13 +70,13 @@ namespace FeatherVane.Vanes
             {
                 Payload<TOutput> output = _converter(payload);
 
-                var outputPlanner = new VanePlanner<TOutput>();
+                var outputPlanner = new AgendaPlanner<TOutput>();
 
                 Agenda<TOutput> outputAgenda = _vane.Plan(outputPlanner, output);
 
                 planner.Add(new TypeConverterAgendaItem(outputAgenda));
 
-                return planner.CreatePlan(payload);
+                return planner.CreateAgenda(payload);
             }
 
             class TypeConverterAgendaItem :

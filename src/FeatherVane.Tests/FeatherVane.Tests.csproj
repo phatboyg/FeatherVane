@@ -45,6 +45,13 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actors\Actor_Specs.cs" />
+    <Compile Include="Benchmarks\EmptyThroughput.cs" />
+    <Compile Include="Benchmarks\LoggerThroughput.cs" />
+    <Compile Include="Benchmarks\ProfilerLoggerThroughput.cs" />
+    <Compile Include="Benchmarks\Subject.cs" />
+    <Compile Include="Benchmarks\Throughput.cs" />
+    <Compile Include="Benchmarks\ThroughputBenchmark.cs" />
+    <Compile Include="Benchmarks\TransactionProfilerLoggerThroughput.cs" />
     <Compile Include="HttpTests\Http_Specs.cs" />
     <Compile Include="HttpTests\RequestHandling_Specs.cs" />
     <Compile Include="Message_Specs.cs" />

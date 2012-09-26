@@ -122,13 +122,13 @@ namespace FeatherVane.Tests.HttpTests
         class HelloFeatherVane :
             FeatherVane<ConnectionContext>
         {
-            public Agenda<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner,
+            public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner,
                 Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
             {
                 if (payload.Get<RequestContext>().Url.ToString().EndsWith("hello"))
                 {
                     planner.Add(new HelloAgendaItem());
-                    return planner.CreatePlan(payload);
+                    return planner.CreateAgenda(payload);
                 }
 
                 return next.Plan(planner, payload);

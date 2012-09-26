@@ -18,8 +18,17 @@ namespace FeatherVane
     public interface Planner<T>
         where T : class
     {
+        /// <summary>
+        /// Add an item to the agenda
+        /// </summary>
+        /// <param name="agendaItem"></param>
         void Add(AgendaItem<T> agendaItem);
 
-        Agenda<T> CreatePlan(Payload<T> payload);
+        /// <summary>
+        /// Creates the agenda using the items added and the payload
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        Agenda<T> CreateAgenda(Payload<T> payload);
     }
 }

@@ -36,7 +36,9 @@ namespace FeatherVane
         Agenda
         where T : class
     {
+        /// <summary>
+        /// The payload contained in this agenda instance
+        /// </summary>
         Payload<T> Payload { get; }
-
     }
 }

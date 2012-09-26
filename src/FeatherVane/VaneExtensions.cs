@@ -24,6 +24,5 @@ namespace FeatherVane
         {
             return Vane.Connect(front, existing);
         }
-
     }
 }

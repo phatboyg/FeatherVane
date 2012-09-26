@@ -9,15 +9,10 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.Tests.Benchmarks
 {
-    public class Success<T> :
-        Vane<T>
-        where T : class
+    public interface Throughput
     {
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
-        {
-            return planner.CreateAgenda(payload);
-        }
+        void Execute(Subject subject);
     }
 }

@@ -48,7 +48,7 @@ namespace FeatherVane.Vanes
             return agenda.Compensate();
         }
 
-        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             planner.Add(this);
 

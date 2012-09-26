@@ -9,28 +9,29 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.Tests.Benchmarks
 {
-    public class Unhandled<T> :
-        Vane<T>,
-        AgendaItem<T>
-        where T : class
+    using System;
+    using System.IO;
+    using Vanes;
+
+    public class TransactionProfilerLoggerThroughput :
+        Throughput
     {
-        public bool Execute(Agenda<T> agenda)
+        readonly Vane<Subject> _vane;
+
+        public TransactionProfilerLoggerThroughput()
         {
-            throw UnhandledException.New(agenda.Payload);
+            var ms = new MemoryStream();
+            var sw = new StreamWriter(ms);
+            _vane = Vane.Success(new Logger<Subject>(sw, x => ""),
+                new Profiler<Subject>(sw, TimeSpan.FromMilliseconds(2)),
+                new Transaction<Subject>());
         }
 
-        public bool Compensate(Agenda<T> agenda)
+        public void Execute(Subject subject)
         {
-            return agenda.Compensate();
-        }
-
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
-        {
-            planner.Add(this);
-
-            return planner.CreateAgenda(payload);
+            _vane.Execute(subject);
         }
     }
 }

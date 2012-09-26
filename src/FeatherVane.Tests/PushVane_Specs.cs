@@ -34,7 +34,7 @@ namespace FeatherVane.Tests
         class Original :
             FeatherVane<string>
         {
-            public Agenda<string> AssignPlan(Planner<string> planner, Payload<string> payload, Vane<string> next)
+            public Agenda<string> Plan(Planner<string> planner, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Original: {0}", payload.Data);
 
@@ -45,7 +45,7 @@ namespace FeatherVane.Tests
         class Decorator :
             FeatherVane<string>
         {
-            public Agenda<string> AssignPlan(Planner<string> planner, Payload<string> payload, Vane<string> next)
+            public Agenda<string> Plan(Planner<string> planner, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Decorator: {0}", payload.Data);
 

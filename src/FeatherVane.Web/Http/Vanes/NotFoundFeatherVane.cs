@@ -43,7 +43,7 @@ namespace FeatherVane.Web.Http.Vanes
             return agenda.Compensate();
         }
 
-        public Agenda<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner,
+        public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner,
             Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {

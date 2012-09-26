@@ -26,7 +26,7 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             var step = new ProfilerAgendaItem(_settings);
 
