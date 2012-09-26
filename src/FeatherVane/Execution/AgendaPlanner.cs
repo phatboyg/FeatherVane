@@ -18,16 +18,16 @@ namespace FeatherVane.Execution
         Planner<T>
         where T : class
     {
-        IList<AgendaItem<T>> _steps = new List<AgendaItem<T>>();
+        readonly IList<AgendaItem<T>> _items = new List<AgendaItem<T>>();
 
         public void Add(AgendaItem<T> agendaItem)
         {
-            _steps.Add(agendaItem);
+            _items.Add(agendaItem);
         }
 
         public Agenda<T> CreateAgenda(Payload<T> payload)
         {
-            return new AgendaImpl<T>(_steps.ToArray(), payload);
+            return new AgendaImpl<T>(_items.ToArray(), payload);
         }
     }
 }

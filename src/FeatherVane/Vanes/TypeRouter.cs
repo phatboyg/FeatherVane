@@ -49,12 +49,11 @@ namespace FeatherVane.Vanes
         public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter)
             where TOutput : class
         {
-            _typeVanes.Add(typeof(TOutput), new TypeConverter<T, TOutput>(nextVane, converter));
+            _typeVanes.Add(typeof(TOutput), new TypeConverter<TOutput>(nextVane, converter));
         }
 
-        class TypeConverter<T, TOutput> :
+        class TypeConverter<TOutput> :
             Vane<T>
-            where T : class
             where TOutput : class
         {
             readonly Func<Payload<T>, Payload<TOutput>> _converter;
