@@ -18,8 +18,8 @@ namespace FeatherVane
     public interface Planner<T>
         where T : class
     {
-        void Add(Step<T> step);
+        void Add(AgendaItem<T> agendaItem);
 
-        Plan<T> CreatePlan(Payload<T> payload);
+        Agenda<T> CreatePlan(Payload<T> payload);
     }
 }

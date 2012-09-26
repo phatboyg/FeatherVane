@@ -24,17 +24,17 @@ namespace FeatherVane.Tests
             Vane<string> original = Vane.Connect(new Success<string>(),
                 new Original());
 
-            original.Handle("First");
+            original.Execute("First");
 
             Vane<string> decorated = original.Push(new Decorator());
 
-            decorated.Handle("Second");
+            decorated.Execute("Second");
         }
 
         class Original :
             FeatherVane<string>
         {
-            public Plan<string> AssignPlan(Planner<string> planner, Payload<string> payload, Vane<string> next)
+            public Agenda<string> AssignPlan(Planner<string> planner, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Original: {0}", payload.Data);
 
@@ -45,7 +45,7 @@ namespace FeatherVane.Tests
         class Decorator :
             FeatherVane<string>
         {
-            public Plan<string> AssignPlan(Planner<string> planner, Payload<string> payload, Vane<string> next)
+            public Agenda<string> AssignPlan(Planner<string> planner, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Decorator: {0}", payload.Data);
 

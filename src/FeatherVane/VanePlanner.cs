@@ -7,17 +7,17 @@ namespace FeatherVane
         Planner<T>
         where T : class
     {
-        IList<Step<T>> _steps = new List<Step<T>>();
+        IList<AgendaItem<T>> _steps = new List<AgendaItem<T>>();
 
-        public void Add(Step<T> step)
+        public void Add(AgendaItem<T> agendaItem)
         {
-            _steps.Add(step);
+            _steps.Add(agendaItem);
 
         }
 
-        public Plan<T> CreatePlan(Payload<T> payload)
+        public Agenda<T> CreatePlan(Payload<T> payload)
         {
-            return new VanePlan<T>(_steps.ToArray(), payload);
+            return new AgendaImpl<T>(_steps.ToArray(), payload);
         }
     }
 }

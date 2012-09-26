@@ -17,16 +17,16 @@ namespace FeatherVane.Web.Http.Vanes
     public class CompressionFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        readonly Step<ConnectionContext> _deflate;
-        readonly Step<ConnectionContext> _gzip;
+        readonly AgendaItem<ConnectionContext> _deflate;
+        readonly AgendaItem<ConnectionContext> _gzip;
 
         public CompressionFeatherVane()
         {
-            _gzip = new GZipStep();
-            _deflate = new DeflateStep();
+            _gzip = new GZipAgendaItem();
+            _deflate = new DeflateAgendaItem();
         }
 
-        public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+        public Agenda<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             var request = payload.Get<RequestContext>();
@@ -61,39 +61,39 @@ namespace FeatherVane.Web.Http.Vanes
             }
         }
 
-        class DeflateStep :
-            Step<ConnectionContext>
+        class DeflateAgendaItem :
+            AgendaItem<ConnectionContext>
         {
-            public bool Execute(Plan<ConnectionContext> plan)
+            public bool Execute(Agenda<ConnectionContext> agenda)
             {
-                var response = plan.Payload.Get<ResponseContext>();
+                var response = agenda.Payload.Get<ResponseContext>();
                 response.Headers["Content-Encoding"] = "deflate";
                 response.AddBodyStreamFilter(x => new DeflateStream(x, CompressionMode.Compress, true));
 
-                return plan.Execute();
+                return agenda.Execute();
             }
 
-            public bool Compensate(Plan<ConnectionContext> plan)
+            public bool Compensate(Agenda<ConnectionContext> agenda)
             {
-                return plan.Compensate();
+                return agenda.Compensate();
             }
         }
 
-        class GZipStep :
-            Step<ConnectionContext>
+        class GZipAgendaItem :
+            AgendaItem<ConnectionContext>
         {
-            public bool Execute(Plan<ConnectionContext> plan)
+            public bool Execute(Agenda<ConnectionContext> agenda)
             {
-                var response = plan.Payload.Get<ResponseContext>();
+                var response = agenda.Payload.Get<ResponseContext>();
                 response.Headers["Content-Encoding"] = "gzip";
                 response.AddBodyStreamFilter(x => new GZipStream(x, CompressionMode.Compress, true));
 
-                return plan.Execute();
+                return agenda.Execute();
             }
 
-            public bool Compensate(Plan<ConnectionContext> plan)
+            public bool Compensate(Agenda<ConnectionContext> agenda)
             {
-                return plan.Compensate();
+                return agenda.Compensate();
             }
         }
     }

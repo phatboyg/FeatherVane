@@ -49,7 +49,6 @@
     <Compile Include="FFVane.cs" />
     <Compile Include="HttpTests\Http_Specs.cs" />
     <Compile Include="HttpTests\RequestHandling_Specs.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Message_Specs.cs" />
     <Compile Include="Plan_Specs.cs" />
     <Compile Include="PushVane_Specs.cs" />

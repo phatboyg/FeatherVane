@@ -36,18 +36,20 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompensateResult.cs" />
     <Compile Include="Exceptions\ContextFactoryException.cs" />
     <Compile Include="Exceptions\ContextNotFoundException.cs" />
+    <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
-    <Compile Include="Handler.cs" />
+    <Compile Include="ExecuteResult.cs" />
     <Compile Include="Payloads\DelegatingPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
     <Compile Include="ContextFactory.cs" />
-    <Compile Include="Plan.cs" />
+    <Compile Include="Agenda.cs" />
     <Compile Include="Planner.cs" />
-    <Compile Include="Step.cs" />
+    <Compile Include="AgendaItem.cs" />
     <Compile Include="VaneHandleExtensions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -57,9 +59,6 @@
     <Compile Include="Payload.cs" />
     <Compile Include="PayloadExtensions.cs" />
     <Compile Include="PayloadImpl.cs" />
-    <Compile Include="VaneHandlerExtensions.cs" />
-    <Compile Include="VaneHandlers\InterceptHandler.cs" />
-    <Compile Include="VaneHandlers\SeriesHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionVersion.cs">
@@ -68,9 +67,10 @@
     <Compile Include="Vane.cs" />
     <Compile Include="FeatherVane.cs" />
     <Compile Include="VaneExtensions.cs" />
-    <Compile Include="VanePlan.cs" />
+    <Compile Include="AgendaImpl.cs" />
     <Compile Include="VanePlanner.cs" />
-    <Compile Include="Vanes\Lambda.cs" />
+    <Compile Include="Vanes\ExecuteCompensateAction.cs" />
+    <Compile Include="Vanes\ExecuteAction.cs" />
     <Compile Include="Vanes\Success.cs" />
     <Compile Include="Vanes\Profiler.cs" />
     <Compile Include="Vanes\Logger.cs" />
@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="VaneHandlers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="VaneHandleExtensions.tt">

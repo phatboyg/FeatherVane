@@ -13,20 +13,20 @@ namespace FeatherVane.Vanes
 {
     public class Unhandled<T> :
         Vane<T>,
-        Step<T>
+        AgendaItem<T>
         where T : class
     {
-        public bool Execute(Plan<T> plan)
+        public bool Execute(Agenda<T> agenda)
         {
-            throw UnhandledException.New(plan.Payload);
+            throw UnhandledException.New(agenda.Payload);
         }
 
-        public bool Compensate(Plan<T> plan)
+        public bool Compensate(Agenda<T> agenda)
         {
-            return plan.Compensate();
+            return agenda.Compensate();
         }
 
-        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
+        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload)
         {
             planner.Add(this);
 

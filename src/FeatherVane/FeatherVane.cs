@@ -11,9 +11,13 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    /// <summary>
+    /// A FeatherVane is an autonomous vane that can be composed into a network of vanes.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface FeatherVane<T>
         where T : class
     {
-        Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next);
+        Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next);
     }
 }

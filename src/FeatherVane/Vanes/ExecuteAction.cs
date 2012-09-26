@@ -13,35 +13,35 @@ namespace FeatherVane.Vanes
 {
     using System;
 
-    public class LambdaAction<T> :
+    public class ExecuteAction<T> :
         FeatherVane<T>,
-        Step<T>
+        AgendaItem<T>
         where T : class
     {
         readonly Action<Payload<T>> _handler;
 
-        public LambdaAction(Action<Payload<T>> handler)
+        public ExecuteAction(Action<Payload<T>> handler)
         {
             _handler = handler;
         }
 
-        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             planner.Add(this);
 
             return next.AssignPlan(planner, payload);
         }
 
-        public bool Execute(Plan<T> plan)
+        public bool Execute(Agenda<T> agenda)
         {
-            _handler(plan.Payload);
+            _handler(agenda.Payload);
 
-            return plan.Execute();
+            return agenda.Execute();
         }
 
-        public bool Compensate(Plan<T> plan)
+        public bool Compensate(Agenda<T> agenda)
         {
-            return plan.Compensate();
+            return agenda.Compensate();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,20 +12,19 @@
 namespace FeatherVane.Vanes
 {
     using System;
-    using System.IO;
 
-    public class Logger<T> :
+    public class ExecuteCompensateAction<T> :
         FeatherVane<T>,
         AgendaItem<T>
         where T : class
     {
-        readonly Func<Payload<T>, string> _getLogMessage;
-        readonly TextWriter _output;
+        readonly Action<Agenda<T>> _compensateAction;
+        readonly Action<Payload<T>> _executeAction;
 
-        public Logger(TextWriter output, Func<Payload<T>, string> getLogMessage)
+        public ExecuteCompensateAction(Action<Payload<T>> executeAction, Action<Agenda<T>> compensateAction)
         {
-            _output = output;
-            _getLogMessage = getLogMessage;
+            _executeAction = executeAction;
+            _compensateAction = compensateAction;
         }
 
         public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
@@ -37,16 +36,15 @@ namespace FeatherVane.Vanes
 
         public bool Execute(Agenda<T> agenda)
         {
-            Payload<T> payload = agenda.Payload;
-
-            string message = _getLogMessage(payload);
-            _output.WriteLine(message);
+            _executeAction(agenda.Payload);
 
             return agenda.Execute();
         }
 
         public bool Compensate(Agenda<T> agenda)
         {
+            _compensateAction(agenda);
+
             return agenda.Compensate();
         }
     }

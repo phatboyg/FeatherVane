@@ -34,7 +34,7 @@ namespace FeatherVane.Tests
 
             Vane<string> vane = Vane.Connect(new Success<string>(), profiler, logger);
 
-            vane.Handle(expected);
+            vane.Execute(expected);
 
             Assert.IsFalse(string.IsNullOrEmpty(called));
             Assert.AreEqual(expected, called);

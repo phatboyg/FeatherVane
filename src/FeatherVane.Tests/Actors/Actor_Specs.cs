@@ -26,7 +26,7 @@ namespace FeatherVane.Tests.Actors
         class ExitHandler :
             FeatherVane<Exit>
         {
-            public Plan<Exit> AssignPlan(Planner<Exit> planner, Payload<Exit> payload, Vane<Exit> next)
+            public Agenda<Exit> AssignPlan(Planner<Exit> planner, Payload<Exit> payload, Vane<Exit> next)
             {
                 throw new NotImplementedException();
             }

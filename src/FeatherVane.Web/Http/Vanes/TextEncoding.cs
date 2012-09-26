@@ -16,7 +16,7 @@ namespace FeatherVane.Web.Http.Vanes
 
     public class TextEncoding :
         FeatherVane<ConnectionContext>,
-        Step<ConnectionContext>
+        AgendaItem<ConnectionContext>
     {
         TextEncodingSettings _settings;
 
@@ -30,7 +30,7 @@ namespace FeatherVane.Web.Http.Vanes
         }
 
 
-        public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+        public Agenda<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             RequestContext request;
@@ -46,15 +46,15 @@ namespace FeatherVane.Web.Http.Vanes
             return next.AssignPlan(planner, payload);
         }
 
-        public bool Execute(Plan<ConnectionContext> plan)
+        public bool Execute(Agenda<ConnectionContext> agenda)
         {
             // we don't do anything yet
-            return plan.Execute();
+            return agenda.Execute();
         }
 
-        public bool Compensate(Plan<ConnectionContext> plan)
+        public bool Compensate(Agenda<ConnectionContext> agenda)
         {
-            return plan.Compensate();
+            return agenda.Compensate();
         }
 
         Encoding GetEncoding(RequestContext context)

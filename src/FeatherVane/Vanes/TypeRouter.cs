@@ -36,7 +36,7 @@ namespace FeatherVane.Vanes
             _typeVanes = new ConcurrentCache<Type, Vane<T>>();
         }
 
-        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
             Type contextType = _typeSelector(payload);
 
@@ -65,37 +65,37 @@ namespace FeatherVane.Vanes
                 _converter = converter;
             }
 
-            public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
+            public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload)
             {
                 Payload<TOutput> output = _converter(payload);
 
                 var outputPlanner = new VanePlanner<TOutput>();
 
-                Plan<TOutput> outputPlan = _vane.AssignPlan(outputPlanner, output);
+                Agenda<TOutput> outputAgenda = _vane.AssignPlan(outputPlanner, output);
 
-                planner.Add(new TypeConverterStep(outputPlan));
+                planner.Add(new TypeConverterAgendaItem(outputAgenda));
 
                 return planner.CreatePlan(payload);
             }
 
-            class TypeConverterStep :
-                Step<T>
+            class TypeConverterAgendaItem :
+                AgendaItem<T>
             {
-                readonly Plan<TOutput> _plan;
+                readonly Agenda<TOutput> _agenda;
 
-                public TypeConverterStep(Plan<TOutput> plan)
+                public TypeConverterAgendaItem(Agenda<TOutput> agenda)
                 {
-                    _plan = plan;
+                    _agenda = agenda;
                 }
 
-                public bool Execute(Plan<T> plan)
+                public bool Execute(Agenda<T> agenda)
                 {
-                    return _plan.Execute();
+                    return _agenda.Execute();
                 }
 
-                public bool Compensate(Plan<T> plan)
+                public bool Compensate(Agenda<T> agenda)
                 {
-                    return _plan.Compensate();
+                    return _agenda.Compensate();
                 }
             }
         }

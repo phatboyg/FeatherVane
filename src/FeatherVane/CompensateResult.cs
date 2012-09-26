@@ -11,14 +11,16 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    /// <summary>
-    /// A Vane returns a Handler when it is able to handle the inbound context. A
-    /// Handler can be anything from a simple delegate, to a more complex object.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface Handler<in T>
-        where T : class
+    public enum CompensateResult
     {
-        void Handle(Payload<T> payload);
+        /// <summary>
+        /// Continue compensating executed items
+        /// </summary>
+        Continue = 0,
+
+        /// <summary>
+        /// Resume execution of the agenda
+        /// </summary>
+        Execute = 1,
     }
 }

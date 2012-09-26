@@ -14,31 +14,31 @@ namespace FeatherVane
     using System;
     using System.Collections.Generic;
 
-    public class VanePlan<T> :
-        Plan<T>
+    public class AgendaImpl<T> :
+        Agenda<T>
         where T : class
     {
+        readonly IList<Exception> _exceptions;
+        readonly IList<AgendaItem<T>> _items;
         readonly Payload<T> _payload;
-        IList<Exception> _exceptions;
-        int _nextStep;
-        Step<T>[] _steps;
+        int _index = -1;
 
-        public VanePlan(Step<T>[] steps, Payload<T> payload)
+        public AgendaImpl(IEnumerable<AgendaItem<T>> agendaItems, Payload<T> payload)
         {
-            _steps = steps;
-            _payload = payload;
-            
+            _items = new List<AgendaItem<T>>(agendaItems);
             _exceptions = new List<Exception>();
+
+            _payload = payload;
         }
 
         public bool IsCompleted
         {
-            get { return _nextStep >= _steps.Length; }
+            get { return _index + 1 == _items.Count; }
         }
 
         public bool IsExecuting
         {
-            get { return _nextStep > 0; }
+            get { return _index > 0; }
         }
 
         public bool Execute()
@@ -46,34 +46,38 @@ namespace FeatherVane
             if (IsCompleted)
                 return true;
 
-            Step<T> step = _steps[_nextStep++];
-            bool ok = false;
+            AgendaItem<T> agendaItem = _items[++_index];
             try
             {
-                ok = step.Execute(this);
+                bool result = agendaItem.Execute(this);
+                if (result)
+                    return true;
             }
             catch (Exception ex)
             {
                 _exceptions.Add(ex);
             }
 
-            return ok || Compensate();
+            Compensate();
+
+            return false;
         }
 
         public bool Compensate()
         {
             if (!IsExecuting)
-                return false;
+                throw new AgendaExecutionException(_exceptions).Flatten();
 
-            Step<T> step = _steps[--_nextStep];
-  
-            // TODO need to capture this stuff
-            return step.Compensate(this);
-        }
-
-        public int Length
-        {
-            get { return _steps.Length; }
+            AgendaItem<T> agendaItem = _items[--_index];
+            try
+            {
+                return agendaItem.Compensate(this);
+            }
+            catch (Exception ex)
+            {
+                _exceptions.Add(ex);
+                return Compensate();
+            }
         }
 
         public Payload<T> Payload

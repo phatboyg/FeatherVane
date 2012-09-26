@@ -11,7 +11,13 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    public interface Plan
+    /// <summary>
+    /// An Agenda contains a list of items to be executed. The items are executed sequentially,
+    /// and completes once the final agenda item is executed. If an exception occurs within the 
+    /// agenda, previously executed agenda items are given the opportunity to compensate their
+    /// actions.
+    /// </summary>
+    public interface Agenda
     {
         /// <summary>
         /// Execute the next step in the plan, if there are no more steps the plan executes the finishing move
@@ -24,17 +30,13 @@ namespace FeatherVane
         /// </summary>
         /// <returns></returns>
         bool Compensate();
-
-        /// <summary>
-        /// The number of steps in the plan
-        /// </summary>
-        int Length { get; }
     }
 
-    public interface Plan<out T> :
-        Plan
+    public interface Agenda<out T> :
+        Agenda
         where T : class
     {
         Payload<T> Payload { get; }
+
     }
 }

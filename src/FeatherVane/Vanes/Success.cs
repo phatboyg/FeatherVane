@@ -15,7 +15,7 @@ namespace FeatherVane.Vanes
         Vane<T>
         where T : class
     {
-        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
+        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload)
         {
             return planner.CreatePlan(payload);
         }

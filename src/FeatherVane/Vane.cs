@@ -14,7 +14,7 @@ namespace FeatherVane
     public interface Vane<T>
         where T : class
     {
-        Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload);
+        Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload);
     }
 
     public static class Vane
@@ -48,7 +48,7 @@ namespace FeatherVane
                 _next = next;
             }
 
-            public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload)
+            public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload)
             {
                 return _vane.AssignPlan(planner, payload, _next);
             }

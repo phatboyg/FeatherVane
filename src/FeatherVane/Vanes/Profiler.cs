@@ -26,9 +26,9 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public Plan<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public Agenda<T> AssignPlan(Planner<T> planner, Payload<T> payload, Vane<T> next)
         {
-            var step = new ProfilerStep(_settings);
+            var step = new ProfilerAgendaItem(_settings);
 
             planner.Add(step);
 
@@ -48,15 +48,15 @@ namespace FeatherVane.Vanes
             public TextWriter Writer { get; private set; }
         }
 
-        class ProfilerStep :
-            Step<T>
+        class ProfilerAgendaItem :
+            AgendaItem<T>
         {
             readonly ProfilerSettings _settings;
             readonly DateTime _startTime;
             readonly Stopwatch _stopwatch;
             readonly Guid _timingId;
 
-            public ProfilerStep(ProfilerSettings settings)
+            public ProfilerAgendaItem(ProfilerSettings settings)
             {
                 _settings = settings;
                 _timingId = Guid.NewGuid();
@@ -64,11 +64,11 @@ namespace FeatherVane.Vanes
                 _stopwatch = Stopwatch.StartNew();
             }
 
-            public bool Execute(Plan<T> plan)
+            public bool Execute(Agenda<T> agenda)
             {
                 try
                 {
-                    return plan.Execute();
+                    return agenda.Execute();
                 }
                 finally
                 {
@@ -83,9 +83,9 @@ namespace FeatherVane.Vanes
                 }
             }
 
-            public bool Compensate(Plan<T> plan)
+            public bool Compensate(Agenda<T> agenda)
             {
-                return plan.Compensate();
+                return agenda.Compensate();
             }
         }
     }

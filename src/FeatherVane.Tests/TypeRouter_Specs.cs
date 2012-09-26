@@ -10,7 +10,7 @@
         [Test]
         public void Should_allow_the_type_to_be_dispatched()
         {
-            var lambda = new LambdaAction<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
+            var lambda = new ExecuteAction<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
 
             Vane<ConsumeContext<A>> messageAVane = Vane.Connect(new Success<ConsumeContext<A>>(), lambda);
 
@@ -27,7 +27,7 @@
 
             var message = new MessageConsumeContext<A>(new A {Value = "Hello!"});
 
-            messageVane.Handle(message);
+            messageVane.Execute(message);
         }
 
         interface ConsumeContext

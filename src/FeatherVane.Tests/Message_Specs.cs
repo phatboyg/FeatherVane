@@ -28,36 +28,34 @@ namespace FeatherVane.Tests
 
             var planner = new VanePlanner<Message>();
 
-            Plan<Message> plan = vane.AssignPlan(planner, payload);
-
-            Assert.AreEqual(1, plan.Length);
+            Agenda<Message> agenda = vane.AssignPlan(planner, payload);
         }
 
         class MessageVane :
             FeatherVane<Message>
         {
-            public Plan<Message> AssignPlan(Planner<Message> planner, Payload<Message> payload, Vane<Message> next)
+            public Agenda<Message> AssignPlan(Planner<Message> planner, Payload<Message> payload, Vane<Message> next)
             {
                 Message<Alpha> alphaMessage;
                 if (payload.Data.TryGet(out alphaMessage))
                 {
-                    planner.Add(new AlphaStep());
+                    planner.Add(new AlphaAgendaItem());
                 }
 
                 return next.AssignPlan(planner, payload);
             }
 
-            class AlphaStep :
-                Step<Message>
+            class AlphaAgendaItem :
+                AgendaItem<Message>
             {
-                public bool Execute(Plan<Message> plan)
+                public bool Execute(Agenda<Message> agenda)
                 {
-                    return plan.Execute();
+                    return agenda.Execute();
                 }
 
-                public bool Compensate(Plan<Message> plan)
+                public bool Compensate(Agenda<Message> agenda)
                 {
-                    return plan.Compensate();
+                    return agenda.Compensate();
                 }
             }
         }

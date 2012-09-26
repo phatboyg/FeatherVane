@@ -9,29 +9,13 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneHandlers
+namespace FeatherVane
 {
-    /// <summary>
-    /// Combines two handlers into a single Handler, which calls the handlers in series.
-    /// No special exception handling is performed.
-    /// </summary>
-    public class SeriesHandler<T> :
-        Handler<T>
+    public interface AgendaItem<in T>
         where T : class
     {
-        readonly Handler<T> _first;
-        readonly Handler<T> _next;
+        bool Execute(Agenda<T> agenda);
 
-        public SeriesHandler(Handler<T> first, Handler<T> next)
-        {
-            _first = first;
-            _next = next;
-        }
-
-        public void Handle(Payload<T> payload)
-        {
-            _first.Handle(payload);
-            _next.Handle(payload);
-        }
+        bool Compensate(Agenda<T> agenda);
     }
 }

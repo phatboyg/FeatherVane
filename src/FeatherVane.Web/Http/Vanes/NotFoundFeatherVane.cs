@@ -20,18 +20,12 @@ namespace FeatherVane.Web.Http.Vanes
     /// </summary>
     public class NotFoundFeatherVane :
         FeatherVane<ConnectionContext>,
-        Step<ConnectionContext>
+        AgendaItem<ConnectionContext>
     {
-        public Plan<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
-            Vane<ConnectionContext> next)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Execute(Plan<ConnectionContext> plan)
+        public bool Execute(Agenda<ConnectionContext> agenda)
         {
             ResponseContext response;
-            if (plan.Payload.TryGet(out response))
+            if (agenda.Payload.TryGet(out response))
             {
                 response.StatusCode = 404;
                 response.StatusDescription = "Not Found";
@@ -41,12 +35,19 @@ namespace FeatherVane.Web.Http.Vanes
                 return true;
             }
 
-            return false;
+            throw new InvalidOperationException("No response context was available");
         }
 
-        public bool Compensate(Plan<ConnectionContext> plan)
+        public bool Compensate(Agenda<ConnectionContext> agenda)
         {
-            return plan.Compensate();
+            return agenda.Compensate();
+        }
+
+        public Agenda<ConnectionContext> AssignPlan(Planner<ConnectionContext> planner,
+            Payload<ConnectionContext> payload,
+            Vane<ConnectionContext> next)
+        {
+            throw new NotImplementedException();
         }
     }
 }

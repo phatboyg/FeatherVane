@@ -9,26 +9,18 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneHandlers
+namespace FeatherVane
 {
-    using System;
-
-    public class InterceptHandler<T> :
-        Handler<T>
-        where T : class
+    public enum ExecuteResult
     {
-        readonly Handler<T> _innerHandler;
-        readonly Action<Payload<T>, Handler<T>> _intercepter;
+        /// <summary>
+        /// The agenda item executed normally
+        /// </summary>
+        Ok = 0,
 
-        public InterceptHandler(Handler<T> innerHandler, Action<Payload<T>, Handler<T>> intercepter)
-        {
-            _innerHandler = innerHandler;
-            _intercepter = intercepter;
-        }
-
-        public void Handle(Payload<T> payload)
-        {
-            _intercepter(payload, _innerHandler);
-        }
+        /// <summary>
+        /// The agenda item failed, and compensate should commence
+        /// </summary>
+        Fail = 1,
     }
 }

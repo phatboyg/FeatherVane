@@ -104,7 +104,7 @@ namespace FeatherVane.Web.Http
         {
             var connectionContext = new HttpListenerConnectionContext(this, httpContext, acceptedAt);
 
-            _vane.Handle(connectionContext, connectionContext.Request, connectionContext.Response,
+            _vane.Execute(connectionContext, connectionContext.Request, connectionContext.Response,
                 connectionContext.Server);
 
             return connectionContext;
