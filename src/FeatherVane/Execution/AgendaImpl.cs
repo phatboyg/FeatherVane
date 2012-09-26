@@ -13,10 +13,10 @@ namespace FeatherVane.Execution
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public class AgendaImpl<T> :
         Agenda<T>
-        where T : class
     {
         readonly IList<Exception> _exceptions;
         readonly IList<AgendaItem<T>> _items;
@@ -31,16 +31,19 @@ namespace FeatherVane.Execution
             _payload = payload;
         }
 
+        //[DebuggerNonUserCode]
         public bool IsCompleted
         {
             get { return _index + 1 == _items.Count; }
         }
 
+        //[DebuggerNonUserCode]
         public bool IsExecuting
         {
             get { return _index > 0; }
         }
 
+        //[DebuggerNonUserCode]
         public bool Execute()
         {
             if (IsCompleted)
@@ -58,11 +61,10 @@ namespace FeatherVane.Execution
                 _exceptions.Add(ex);
             }
 
-            Compensate();
-
-            return false;
+            return Compensate();
         }
 
+        //[DebuggerNonUserCode]
         public bool Compensate()
         {
             if (!IsExecuting)

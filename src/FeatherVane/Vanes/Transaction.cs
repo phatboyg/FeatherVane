@@ -16,7 +16,6 @@ namespace FeatherVane.Vanes
     public class Transaction<T> :
         FeatherVane<T>,
         AgendaItem<T>
-        where T : class
     {
         readonly TransactionScopeOption _scopeOptions;
 

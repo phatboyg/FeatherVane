@@ -16,7 +16,6 @@ namespace FeatherVane
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface Planner<T>
-        where T : class
     {
         /// <summary>
         /// Add an item to the agenda

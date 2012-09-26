@@ -11,17 +11,15 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
-    using System;
-
-    public class ExecuteAction<T> :
+    public class Rescue<T> :
         FeatherVane<T>,
         AgendaItem<T>
     {
-        readonly Action<Payload<T>> _handler;
+        readonly Vane<T> _rescueVane;
 
-        public ExecuteAction(Action<Payload<T>> handler)
+        public Rescue(Vane<T> rescueVane)
         {
-            _handler = handler;
+            _rescueVane = rescueVane;
         }
 
         public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
@@ -33,14 +31,12 @@ namespace FeatherVane.Vanes
 
         public bool Execute(Agenda<T> agenda)
         {
-            _handler(agenda.Payload);
-
             return agenda.Execute();
         }
 
         public bool Compensate(Agenda<T> agenda)
         {
-            return agenda.Compensate();
+            return _rescueVane.Execute(agenda.Payload);
         }
     }
 }

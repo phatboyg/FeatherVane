@@ -16,7 +16,6 @@ namespace FeatherVane.Execution
 
     public class AgendaPlanner<T> :
         Planner<T>
-        where T : class
     {
         readonly IList<AgendaItem<T>> _items = new List<AgendaItem<T>>();
 

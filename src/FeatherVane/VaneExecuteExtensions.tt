@@ -4,8 +4,11 @@
 <#@ import namespace="System.Linq" #>
 namespace FeatherVane
 {
+    using System.Diagnostics;
     using Execution;
+    using Payloads;
 
+    [DebuggerNonUserCode]
     public static class VaneExecuteExtensions
     {
         /// <summary>
@@ -15,10 +18,24 @@ namespace FeatherVane
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
         public static bool Execute<T>(this Vane<T> vane, T body)
-            where T : class
         {
             var payload = new PayloadImpl<T>(body);
 
+            var planner = new AgendaPlanner<T>();
+
+            Agenda<T> agenda = vane.Plan(planner, payload);
+
+            return agenda.Execute();
+        }
+
+        /// <summary>
+        /// Handles a payload with a vane
+        /// </summary>
+        /// <typeparam name="T">The context type of the Vane</typeparam>
+        /// <param name="vane">The vane itself</param>
+        /// <param name="body">The body to deliver</param>
+        public static bool Execute<T>(this Vane<T> vane, Payload<T> payload)
+        {
             var planner = new AgendaPlanner<T>();
 
             Agenda<T> agenda = vane.Plan(planner, payload);
@@ -39,7 +56,6 @@ namespace FeatherVane
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
         public static bool Execute<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
-            where T : class
             <#=tWheres#>
         {
             var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 

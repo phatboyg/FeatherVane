@@ -57,7 +57,12 @@
     <Compile Include="Message_Specs.cs" />
     <Compile Include="Plan_Specs.cs" />
     <Compile Include="PushVane_Specs.cs" />
+    <Compile Include="Rescue_Specs.cs" />
     <Compile Include="StreamDecorator_Specs.cs" />
+    <Compile Include="TestFail.cs" />
+    <Compile Include="TestSubject.cs" />
+    <Compile Include="TestSuccess.cs" />
+    <Compile Include="TestVane.cs" />
     <Compile Include="Trace_Specs.cs" />
     <Compile Include="TypeRouter_Specs.cs" />
     <Compile Include="VaneCommand.cs" />

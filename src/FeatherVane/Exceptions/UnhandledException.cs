@@ -39,7 +39,6 @@ namespace FeatherVane
         }
 
         public static UnhandledException New<T>(Payload<T> payload) 
-            where T : class
         {
             return new UnhandledException("The context was not handled: " + typeof(T).GetTypeName());
         }

@@ -13,7 +13,6 @@ namespace FeatherVane.Vanes
 {
     public class Success<T> :
         Vane<T>
-        where T : class
     {
         public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
         {

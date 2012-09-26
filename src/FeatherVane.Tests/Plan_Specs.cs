@@ -19,10 +19,10 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_create_the_plan_for_fail()
         {
-            var fail = new Fail();
-            Vane<Address> vane = Vane.Connect(fail);
+            var fail = new TestFail();
+            Vane<TestSubject> vane = Vane.Connect(fail);
 
-            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_address));
+            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
 
             Assert.AreEqual(0, exception.InnerExceptionCount);
         }
@@ -30,10 +30,10 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_create_the_plan_for_success()
         {
-            var success = new Success();
+            var success = new TestSuccess();
 
-            Vane<Address> vane = Vane.Connect(success);
-            vane.Execute(_address);
+            Vane<TestSubject> vane = Vane.Connect(success);
+            vane.Execute(_testSubject);
 
             Assert.IsTrue(success.AssignCalled);
         }
@@ -41,11 +41,11 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_execute_and_compensate_on_fail()
         {
-            var fail = new Fail();
-            var log = new Logging();
-            Vane<Address> vane = Vane.Connect(fail, log);
+            var fail = new TestFail();
+            var log = new TestVane();
+            Vane<TestSubject> vane = Vane.Connect(fail, log);
 
-            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_address));
+            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
 
             Assert.AreEqual(0, exception.InnerExceptionCount);
 
@@ -61,12 +61,12 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_execute_two_and_compensate_on_fail()
         {
-            var fail = new Fail();
-            var log = new Logging();
-            var log2 = new Logging();
-            Vane<Address> vane = Vane.Connect(fail, log, log2);
+            var fail = new TestFail();
+            var log = new TestVane();
+            var log2 = new TestVane();
+            Vane<TestSubject> vane = Vane.Connect(fail, log, log2);
 
-            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_address));
+            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
 
             Assert.AreEqual(0, exception.InnerExceptionCount);
 
@@ -86,11 +86,11 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_execute_both_vanes()
         {
-            var success = new Success();
-            var log = new Logging();
-            Vane<Address> vane = Vane.Connect(success, log);
+            var success = new TestSuccess();
+            var log = new TestVane();
+            Vane<TestSubject> vane = Vane.Connect(success, log);
 
-            vane.Execute(_address);
+            vane.Execute(_testSubject);
 
             Assert.IsTrue(success.AssignCalled);
 
@@ -102,12 +102,12 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_execute_three_vanes()
         {
-            var success = new Success();
-            var log = new Logging();
-            var log2 = new Logging();
-            Vane<Address> vane = Vane.Connect(success, log, log2);
+            var success = new TestSuccess();
+            var log = new TestVane();
+            var log2 = new TestVane();
+            Vane<TestSubject> vane = Vane.Connect(success, log, log2);
 
-            vane.Execute(_address);
+            vane.Execute(_testSubject);
 
             Assert.IsTrue(success.AssignCalled);
 
@@ -120,90 +120,6 @@ namespace FeatherVane.Tests
             Assert.IsFalse(log2.CompensateCalled);
         }
 
-        Address _address = new Address {Street = "123"};
-
-
-        class Logging :
-            FeatherVane<Address>,
-            AgendaItem<Address>
-        {
-            public bool AssignCalled { get; set; }
-            public bool ExecuteCalled { get; set; }
-            public bool CompensateCalled { get; set; }
-
-            public bool Execute(Agenda<Address> agenda)
-            {
-                ExecuteCalled = true;
-
-                return agenda.Execute();
-            }
-
-            public bool Compensate(Agenda<Address> agenda)
-            {
-                CompensateCalled = true;
-
-                return agenda.Compensate();
-            }
-
-            public Agenda<Address> Plan(Planner<Address> planner, Payload<Address> payload, Vane<Address> next)
-            {
-                AssignCalled = true;
-
-                planner.Add(this);
-
-                return next.Plan(planner, payload);
-            }
-        }
-
-
-        class Fail :
-            Vane<Address>,
-            AgendaItem<Address>
-        {
-            public bool AssignCalled { get; set; }
-            public bool ExecuteCalled { get; set; }
-            public bool CompensateCalled { get; set; }
-
-            public bool Execute(Agenda<Address> agenda)
-            {
-                ExecuteCalled = true;
-                return false;
-            }
-
-            public bool Compensate(Agenda<Address> agenda)
-            {
-                CompensateCalled = true;
-
-                return agenda.Compensate();
-            }
-
-            public Agenda<Address> Plan(Planner<Address> planner, Payload<Address> payload)
-            {
-                planner.Add(this);
-
-                AssignCalled = true;
-
-                return planner.CreateAgenda(payload);
-            }
-        }
-
-        class Success :
-            Vane<Address>
-        {
-            public bool AssignCalled { get; set; }
-
-            public Agenda<Address> Plan(Planner<Address> planner, Payload<Address> payload)
-            {
-                AssignCalled = true;
-
-                return planner.CreateAgenda(payload);
-            }
-        }
-
-
-        class Address
-        {
-            public string Street { get; set; }
-        }
+        TestSubject _testSubject = new TestSubject {Street = "123"};
     }
 }

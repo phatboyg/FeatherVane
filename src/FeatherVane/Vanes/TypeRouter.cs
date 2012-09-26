@@ -26,7 +26,6 @@ namespace FeatherVane.Vanes
     /// <typeparam name="T"></typeparam>
     public class TypeRouter<T> :
         FeatherVane<T>
-        where T : class
     {
         readonly Func<Payload<T>, Type> _typeSelector;
         readonly Cache<Type, Vane<T>> _typeVanes;

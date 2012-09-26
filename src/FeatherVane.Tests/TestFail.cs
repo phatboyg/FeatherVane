@@ -9,25 +9,34 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.Tests
 {
-    public class Unhandled<T> :
-        Vane<T>,
-        AgendaItem<T>
+    class TestFail :
+        Vane<TestSubject>,
+        AgendaItem<TestSubject>
     {
-        public bool Execute(Agenda<T> agenda)
+        public bool AssignCalled { get; set; }
+        public bool ExecuteCalled { get; set; }
+        public bool CompensateCalled { get; set; }
+
+        public bool Execute(Agenda<TestSubject> agenda)
         {
-            throw UnhandledException.New(agenda.Payload);
+            ExecuteCalled = true;
+            return false;
         }
 
-        public bool Compensate(Agenda<T> agenda)
+        public bool Compensate(Agenda<TestSubject> agenda)
         {
+            CompensateCalled = true;
+
             return agenda.Compensate();
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
+        public Agenda<TestSubject> Plan(Planner<TestSubject> planner, Payload<TestSubject> payload)
         {
             planner.Add(this);
+
+            AssignCalled = true;
 
             return planner.CreateAgenda(payload);
         }

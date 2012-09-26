@@ -34,7 +34,6 @@ namespace FeatherVane
 
     public interface Agenda<out T> :
         Agenda
-        where T : class
     {
         /// <summary>
         /// The payload contained in this agenda instance

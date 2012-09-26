@@ -12,7 +12,6 @@
 namespace FeatherVane
 {
     public interface AgendaItem<in T>
-        where T : class
     {
         bool Execute(Agenda<T> agenda);
 

@@ -16,7 +16,6 @@ namespace FeatherVane.Vanes
     public class ExecuteCompensateAction<T> :
         FeatherVane<T>,
         AgendaItem<T>
-        where T : class
     {
         readonly Action<Agenda<T>> _compensateAction;
         readonly Action<Payload<T>> _executeAction;

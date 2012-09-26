@@ -17,7 +17,6 @@ namespace FeatherVane.Vanes
 
     public class Profiler<T> :
         FeatherVane<T>
-        where T : class
     {
         readonly ProfilerSettings _settings;
 

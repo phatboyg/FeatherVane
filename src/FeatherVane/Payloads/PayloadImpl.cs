@@ -15,7 +15,6 @@ namespace FeatherVane.Payloads
 
     public class PayloadImpl<T> :
         Payload<T>
-        where T : class
     {
         readonly PayloadContextCache _contextCache;
         readonly T _data;

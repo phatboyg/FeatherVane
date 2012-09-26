@@ -69,6 +69,7 @@
     <Compile Include="VaneExtensions.cs" />
     <Compile Include="Vanes\ExecuteCompensateAction.cs" />
     <Compile Include="Vanes\ExecuteAction.cs" />
+    <Compile Include="Vanes\Rescue.cs" />
     <Compile Include="Vanes\Success.cs" />
     <Compile Include="Vanes\Profiler.cs" />
     <Compile Include="Vanes\Logger.cs" />

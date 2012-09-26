@@ -14,7 +14,6 @@ namespace FeatherVane
     using Vanes;
 
     public interface Vane<T>
-        where T : class
     {
         Agenda<T> Plan(Planner<T> planner, Payload<T> payload);
     }
@@ -22,7 +21,6 @@ namespace FeatherVane
     public static class Vane
     {
         public static Vane<T> Success<T>(params FeatherVane<T>[] vanes)
-            where T : class
         {
             var success = new Success<T>();
 
@@ -30,7 +28,6 @@ namespace FeatherVane
         }
 
         public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes)
-            where T : class
         {
             Vane<T> next = last;
             for (int i = vanes.Length - 1; i >= 0; i--)
@@ -42,14 +39,12 @@ namespace FeatherVane
         }
 
         public static Vane<T> Connect<T>(FeatherVane<T> vane, Vane<T> next)
-            where T : class
         {
             return new ConnectVane<T>(vane, next);
         }
 
         class ConnectVane<T> :
             Vane<T>
-            where T : class
         {
             readonly Vane<T> _next;
             readonly FeatherVane<T> _vane;

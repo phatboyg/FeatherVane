@@ -21,7 +21,6 @@ namespace FeatherVane.Payloads
     /// <typeparam name="T"></typeparam>
     public class DelegatingPayload<T> :
         Payload<T>
-        where T : class
     {
         readonly T _data;
         readonly Payload _originalPayload;

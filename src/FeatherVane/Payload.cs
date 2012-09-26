@@ -66,7 +66,6 @@ namespace FeatherVane
     /// <typeparam name="T"></typeparam>
     public interface Payload<out T> :
         Payload
-        where T : class
     {
         /// <summary>
         /// The body of the payload could a command, an event, the actual content of the request

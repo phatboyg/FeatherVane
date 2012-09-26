@@ -20,7 +20,6 @@ namespace FeatherVane.Vanes
     public class WireTap<T> :
         FeatherVane<T>,
         AgendaItem<T>
-        where T : class
     {
         readonly Vane<T> _tap;
 

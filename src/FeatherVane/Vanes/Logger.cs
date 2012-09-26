@@ -17,7 +17,6 @@ namespace FeatherVane.Vanes
     public class Logger<T> :
         FeatherVane<T>,
         AgendaItem<T>
-        where T : class
     {
         readonly Func<Payload<T>, string> _getLogMessage;
         readonly TextWriter _output;
