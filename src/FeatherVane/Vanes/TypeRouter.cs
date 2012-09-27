@@ -12,6 +12,7 @@
 namespace FeatherVane.Vanes
 {
     using System;
+    using System.Linq;
     using Execution;
     using Internals.Caching;
 
@@ -25,7 +26,8 @@ namespace FeatherVane.Vanes
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class TypeRouter<T> :
-        FeatherVane<T>
+        FeatherVane<T>,
+        AcceptVaneVisitor
     {
         readonly Func<Payload<T>, Type> _typeSelector;
         readonly Cache<Type, Vane<T>> _typeVanes;
@@ -34,6 +36,11 @@ namespace FeatherVane.Vanes
         {
             _typeSelector = typeSelector;
             _typeVanes = new ConcurrentCache<Type, Vane<T>>();
+        }
+
+        public bool Accept(VaneVisitor visitor)
+        {
+            return visitor.Visit(this, x => _typeVanes.All(visitor.Visit));
         }
 
         public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)

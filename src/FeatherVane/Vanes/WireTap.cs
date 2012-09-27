@@ -19,7 +19,8 @@ namespace FeatherVane.Vanes
     /// <typeparam name="T"></typeparam>
     public class WireTap<T> :
         FeatherVane<T>,
-        AgendaItem<T>
+        AgendaItem<T>,
+        AcceptVaneVisitor
     {
         readonly Vane<T> _tap;
 
@@ -28,11 +29,9 @@ namespace FeatherVane.Vanes
             _tap = tap;
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public bool Accept(VaneVisitor visitor)
         {
-            planner.Add(this);
-
-            return next.Plan(planner, payload);
+            return visitor.Visit(this, x => visitor.Visit(_tap));
         }
 
         public bool Execute(Agenda<T> agenda)
@@ -49,6 +48,13 @@ namespace FeatherVane.Vanes
         public bool Compensate(Agenda<T> agenda)
         {
             return agenda.Compensate();
+        }
+
+        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        {
+            planner.Add(this);
+
+            return next.Plan(planner, payload);
         }
     }
 }

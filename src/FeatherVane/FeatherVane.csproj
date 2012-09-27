@@ -40,8 +40,10 @@
     <Compile Include="Exceptions\ContextNotFoundException.cs" />
     <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
+    <Compile Include="Execution\AcceptVaneVisitor.cs" />
     <Compile Include="Execution\AgendaImpl.cs" />
     <Compile Include="Execution\AgendaPlanner.cs" />
+    <Compile Include="Execution\VaneVisitor.cs" />
     <Compile Include="Payloads\DelegatingPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
@@ -59,6 +61,8 @@
     <Compile Include="Payloads\PayloadContextCache.cs" />
     <Compile Include="Payload.cs" />
     <Compile Include="PayloadExtensions.cs" />
+    <Compile Include="Vanes\ConnectVane.cs" />
+    <Compile Include="Visualization\StringVaneVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionVersion.cs">

@@ -9,20 +9,16 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Tests
+namespace FeatherVane.Execution
 {
-    public interface ISubjectA
-    {
-    }
+    using System;
 
-    public interface ISubjectB
+    public interface VaneVisitor
     {
-    }
+        bool Visit<T>(Vane<T> vane);
+        bool Visit<T>(Vane<T> vane, Func<Vane<T>, bool> next);
 
-    public class TestSubject :
-        ISubjectA,
-        ISubjectB
-    {
-        public string Street { get; set; }
+        bool Visit<T>(FeatherVane<T> vane);
+        bool Visit<T>(FeatherVane<T> vane, Func<FeatherVane<T>, bool> next);
     }
 }

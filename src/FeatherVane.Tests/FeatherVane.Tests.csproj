@@ -66,6 +66,7 @@
     <Compile Include="Trace_Specs.cs" />
     <Compile Include="TypeRouter_Specs.cs" />
     <Compile Include="VaneCommand.cs" />
+    <Compile Include="Visitor_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

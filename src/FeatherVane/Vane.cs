@@ -42,23 +42,5 @@ namespace FeatherVane
         {
             return new ConnectVane<T>(vane, next);
         }
-
-        class ConnectVane<T> :
-            Vane<T>
-        {
-            readonly Vane<T> _next;
-            readonly FeatherVane<T> _vane;
-
-            public ConnectVane(FeatherVane<T> vane, Vane<T> next)
-            {
-                _vane = vane;
-                _next = next;
-            }
-
-            public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
-            {
-                return _vane.Plan(planner, payload, _next);
-            }
-        }
     }
 }
