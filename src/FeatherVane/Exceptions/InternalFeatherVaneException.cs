@@ -14,7 +14,9 @@ namespace FeatherVane
     using System;
     using System.Runtime.Serialization;
 
+#if !NETFX_CORE
     [Serializable]
+#endif
     public class InternalFeatherVaneException :
         FeatherVaneException
     {
@@ -32,9 +34,11 @@ namespace FeatherVane
         {
         }
 
+#if !NETFX_CORE
         protected InternalFeatherVaneException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
+#endif
     }
 }

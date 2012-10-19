@@ -22,7 +22,10 @@ namespace FeatherVane
     /// Throws when an AgendaItem within an Agenda throws an exception, and includes any additional
     /// exceptions that may have been thrown by compensations
     /// </summary>
-    [Serializable, DebuggerDisplay("Count = {InnerExceptionCount}")]
+#if !NETFX_CORE
+    [Serializable]
+#endif
+    [DebuggerDisplay("Count = {InnerExceptionCount}")]
     public class AgendaExecutionException :
         Exception
     {
@@ -86,6 +89,7 @@ namespace FeatherVane
             _innerExceptions = exceptions;
         }
 
+#if !NETFX_CORE
         [SecurityCritical]
         protected AgendaExecutionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
@@ -99,6 +103,7 @@ namespace FeatherVane
 
             _innerExceptions = innerExceptions;
         }
+#endif
 
         public IEnumerable<Exception> InnerExceptions
         {
@@ -110,6 +115,7 @@ namespace FeatherVane
             get { return _innerExceptions.Length; }
         }
 
+#if !NETFX_CORE
         [SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -123,6 +129,7 @@ namespace FeatherVane
 
             info.AddValue("InnerExceptions", innerExceptions, typeof(Exception[]));
         }
+#endif
 
         public override Exception GetBaseException()
         {
