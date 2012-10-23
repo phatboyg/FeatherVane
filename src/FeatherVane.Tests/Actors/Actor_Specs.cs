@@ -13,12 +13,24 @@ namespace FeatherVane.Tests.Actors
 {
     using System;
     using FeatherVane.Actors.Payloads;
+#if !NETFX_CORE
     using NUnit.Framework;
+#else
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class When_an_actor_is_built_on_top_of_feathervane
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_be_appropriate()
         {
         }

@@ -13,13 +13,25 @@ namespace FeatherVane.Tests
 {
     using Execution;
     using FeatherVane.Actors;
+#if !NETFX_CORE
     using NUnit.Framework;
+#else
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
     using Vanes;
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class When_sending_a_message
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_be_able_to_get_the_message_type()
         {
             Vane<Message> vane = Vane.Connect(new Success<Message>(),

@@ -12,6 +12,7 @@
 namespace FeatherVane.Actors
 {
     using System;
+    using System.Reflection;
     using Execution;
     using FeatherVane.Payloads;
 
@@ -42,7 +43,11 @@ namespace FeatherVane.Actors
 
         bool Message.Has(Type messageType)
         {
+#if !NETFX_CORE
             return messageType.IsInstanceOfType(_body);
+#else
+            return _body.GetType().GetTypeInfo().GetElementType() == messageType;
+#endif
         }
 
         bool Message.TryGet<T>(out Message<T> context)

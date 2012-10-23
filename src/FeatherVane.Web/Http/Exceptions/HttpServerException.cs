@@ -14,7 +14,9 @@ namespace FeatherVane.Web.Http
     using System;
     using System.Runtime.Serialization;
 
+#if !NETFX_CORE
     [Serializable]
+#endif
     public class HttpServerException :
         Exception
     {

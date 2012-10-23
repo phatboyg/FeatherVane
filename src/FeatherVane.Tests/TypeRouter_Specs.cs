@@ -1,17 +1,33 @@
 ﻿namespace FeatherVane.Tests
 {
     using System;
+    using System.Diagnostics;
+#if !NETFX_CORE
     using NUnit.Framework;
+#else
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
     using Vanes;
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class Using_the_type_router_with_a_type_wrapping_context
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_allow_the_type_to_be_dispatched()
         {
+#if !NETFX_CORE
             var lambda = new ExecuteAction<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
-
+#else
+            var lambda = new ExecuteAction<ConsumeContext<A>>(context => Debug.WriteLine("Body: {0}", context.Data.Body.Value));
+#endif
             Vane<ConsumeContext<A>> messageAVane = Vane.Connect(new Success<ConsumeContext<A>>(), lambda);
 
             var typeRouter = new TypeRouter<ConsumeContext>(context => context.Data.ContextType);

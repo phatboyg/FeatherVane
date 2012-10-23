@@ -15,13 +15,22 @@ namespace FeatherVane.Tests
     using System.IO;
     using System.IO.Compression;
     using System.Text;
+#if !NETFX_CORE
     using NUnit.Framework;
     using Web.Util;
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class StreamDecorator_Specs
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void FirstTestName()
         {
             using (var memoryStream = new MemoryStream())
@@ -38,4 +47,5 @@ namespace FeatherVane.Tests
             }
         }
     }
+#endif
 }

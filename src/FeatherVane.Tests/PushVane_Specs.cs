@@ -11,14 +11,27 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+#if !NETFX_CORE
     using System;
     using NUnit.Framework;
+#else
+    using System.Diagnostics;
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
     using Vanes;
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class When_intercepting_a_vane
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_be_able_to_push_in_front()
         {
             Vane<string> original = Vane.Connect(new Success<string>(),
@@ -36,8 +49,11 @@ namespace FeatherVane.Tests
         {
             public Agenda<string> Plan(Planner<string> planner, Payload<string> payload, Vane<string> next)
             {
+#if !NETFX_CORE
                 Console.WriteLine("Original: {0}", payload.Data);
-
+#else
+                Debug.WriteLine("Original: {0}", payload.Data);
+#endif
                 return next.Plan(planner, payload);
             }
         }
@@ -47,8 +63,11 @@ namespace FeatherVane.Tests
         {
             public Agenda<string> Plan(Planner<string> planner, Payload<string> payload, Vane<string> next)
             {
+#if !NETFX_CORE
                 Console.WriteLine("Decorator: {0}", payload.Data);
-
+#else
+                Debug.WriteLine("Decorator: {0}", payload.Data);
+#endif
                 return next.Plan(planner, payload);
             }
         }
