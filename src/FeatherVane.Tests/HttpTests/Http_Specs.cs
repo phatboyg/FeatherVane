@@ -12,11 +12,11 @@
 namespace FeatherVane.Tests.HttpTests
 {
     using System;
-    using NUnit.Framework;
     using Vanes;
+#if !NETFX_CORE
+    using NUnit.Framework;
     using Web.Http;
     using Web.Http.Vanes;
-
     [TestFixture]
     public class HttpServerTest
     {
@@ -53,4 +53,5 @@ namespace FeatherVane.Tests.HttpTests
                 new NotFoundFeatherVane());
         }
     }
+#endif
 }

@@ -14,7 +14,7 @@ namespace FeatherVane.Tests.Benchmarks
     using System;
     using System.IO;
     using Vanes;
-
+#if !NETFX_CORE
     public class TransactionProfilerLoggerThroughput :
         Throughput
     {
@@ -34,4 +34,5 @@ namespace FeatherVane.Tests.Benchmarks
             _vane.Execute(subject);
         }
     }
+#endif
 }

@@ -11,13 +11,25 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+#if !NETFX_CORE
     using NUnit.Framework;
+#else
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
     using Vanes;
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class When_the_main_vane_fails
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_complete_the_rescue_vane()
         {
             var success = new TestSuccess();

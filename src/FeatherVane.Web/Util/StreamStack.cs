@@ -4,7 +4,6 @@ namespace FeatherVane.Web.Util
     using System.Collections.Generic;
     using System.IO;
     using System.Runtime.Remoting;
-
     public class StreamStack :
         Stream
     {
@@ -85,7 +84,6 @@ namespace FeatherVane.Web.Util
 
             base.Dispose(disposing);
         }
-
         public override object InitializeLifetimeService()
         {
             return _streams.Peek().InitializeLifetimeService();
@@ -95,7 +93,6 @@ namespace FeatherVane.Web.Util
         {
             return _streams.Peek().CreateObjRef(requestedType);
         }
-
         public override void Close()
         {
             _streams.Peek().Close();

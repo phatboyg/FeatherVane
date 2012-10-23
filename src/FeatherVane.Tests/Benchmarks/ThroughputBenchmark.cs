@@ -12,6 +12,7 @@
 namespace FeatherVane.Tests.Benchmarks
 {
     using System.Collections.Generic;
+#if !NETFX_CORE 
     using Benchmarque;
 
     public class ThroughputBenchmark :
@@ -41,4 +42,5 @@ namespace FeatherVane.Tests.Benchmarks
             get { return new[] {10000, 50000}; }
         }
     }
+#endif
 }

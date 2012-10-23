@@ -11,23 +11,43 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+#if !NETFX_CORE
     using NUnit.Framework;
+#else
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class When_building_a_plan
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_create_the_plan_for_fail()
         {
             var fail = new TestFail();
             Vane<TestSubject> vane = Vane.Connect(fail);
 
+#if !NETFX_CORE
             var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
+#else
+            var exception = Assert.ThrowsException<AgendaExecutionException>(() => vane.Execute(_testSubject));
+#endif
 
             Assert.AreEqual(0, exception.InnerExceptionCount);
         }
 
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_create_the_plan_for_success()
         {
             var success = new TestSuccess();
@@ -38,14 +58,22 @@ namespace FeatherVane.Tests
             Assert.IsTrue(success.AssignCalled);
         }
 
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_execute_and_compensate_on_fail()
         {
             var fail = new TestFail();
             var log = new TestVane();
             Vane<TestSubject> vane = Vane.Connect(fail, log);
 
+#if !NETFX_CORE
             var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
+#else
+            var exception = Assert.ThrowsException<AgendaExecutionException>(() => vane.Execute(_testSubject));
+#endif
 
             Assert.AreEqual(0, exception.InnerExceptionCount);
 
@@ -58,7 +86,11 @@ namespace FeatherVane.Tests
             Assert.IsTrue(log.CompensateCalled);
         }
 
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_execute_two_and_compensate_on_fail()
         {
             var fail = new TestFail();
@@ -66,7 +98,11 @@ namespace FeatherVane.Tests
             var log2 = new TestVane();
             Vane<TestSubject> vane = Vane.Connect(fail, log, log2);
 
+#if !NETFX_CORE
             var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
+#else
+            var exception = Assert.ThrowsException<AgendaExecutionException>(() => vane.Execute(_testSubject));
+#endif
 
             Assert.AreEqual(0, exception.InnerExceptionCount);
 
@@ -83,7 +119,11 @@ namespace FeatherVane.Tests
             Assert.IsTrue(log2.CompensateCalled);
         }
 
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_execute_both_vanes()
         {
             var success = new TestSuccess();
@@ -99,7 +139,11 @@ namespace FeatherVane.Tests
             Assert.IsFalse(log.CompensateCalled);
         }
 
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_execute_three_vanes()
         {
             var success = new TestSuccess();

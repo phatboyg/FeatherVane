@@ -11,13 +11,14 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
+#if !NETFX_CORE
     using System.Transactions;
 
     public class Transaction<T> :
         FeatherVane<T>,
         AgendaItem<T>
     {
-        readonly TransactionScopeOption _scopeOptions;
+        private readonly TransactionScopeOption _scopeOptions;
 
         public Transaction()
         {
@@ -53,5 +54,7 @@ namespace FeatherVane.Vanes
 
             return next.Plan(planner, payload);
         }
+
     }
+#endif
 }

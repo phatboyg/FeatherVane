@@ -16,8 +16,9 @@ namespace FeatherVane.Tests.HttpTests
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
-    using NUnit.Framework;
     using Vanes;
+#if !NETFX_CORE
+    using NUnit.Framework;
     using Web.Http;
     using Web.Http.Vanes;
 
@@ -158,4 +159,5 @@ namespace FeatherVane.Tests.HttpTests
             }
         }
     }
+#endif
 }

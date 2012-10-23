@@ -12,25 +12,39 @@
 namespace FeatherVane.Tests
 {
     using System;
+    using System.Diagnostics;
+    using System.IO;
+#if !NETFX_CORE
     using NUnit.Framework;
+#else
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
     using Vanes;
 
+#if !NETFX_CORE
     [TestFixture]
+#else
+    [TestClass]
+#endif
     public class Using_a_trace_vane
     {
+#if !NETFX_CORE
         [Test]
+#else
+         [TestMethod]
+#endif
         public void Should_be_called_during_the_final_execution_state()
         {
             string expected = "47";
             string called = null;
 
-            FeatherVane<string> logger = new Logger<string>(Console.Out, x =>
+            FeatherVane<string> logger = new Logger<string>(new StreamWriter(new MemoryStream()), x =>
                 {
                     called = x.Data;
                     return x.Data;
                 });
 
-            FeatherVane<string> profiler = new Profiler<string>(Console.Error, TimeSpan.FromMilliseconds(2));
+            FeatherVane<string> profiler = new Profiler<string>(new StreamWriter(new MemoryStream()), TimeSpan.FromMilliseconds(2));
 
             Vane<string> vane = Vane.Success(profiler, logger);
 
