@@ -5,7 +5,7 @@
 namespace FeatherVane
 {
     using System.Diagnostics;
-    using Execution;
+    using System.Threading.Tasks;
     using Payloads;
 
     [DebuggerNonUserCode]
@@ -21,11 +21,28 @@ namespace FeatherVane
         {
             var payload = new PayloadImpl<T>(body);
 
-            var planner = new AgendaPlanner<T>();
+            var builder = new TaskBuilder<T>();
 
-            vane.Plan(planner, payload);
+            vane.Build(builder, payload);
 
-            planner.Build().Wait();
+            builder.Build().Wait();
+        }
+
+        /// <summary>
+        /// Executes a payload asynchronously without waiting
+        /// </summary>
+        /// <typeparam name="T">The context type of the Vane</typeparam>
+        /// <param name="vane">The vane itself</param>
+        /// <param name="body">The body to deliver</param>
+        public static Task ExecuteAsync<T>(this Vane<T> vane, T body)
+        {
+            var payload = new PayloadImpl<T>(body);
+
+            var builder = new TaskBuilder<T>();
+
+            vane.Build(builder, payload);
+
+            return builder.Build();
         }
 
         /// <summary>
@@ -36,11 +53,26 @@ namespace FeatherVane
         /// <param name="body">The body to deliver</param>
         public static void Execute<T>(this Vane<T> vane, Payload<T> payload)
         {
-            var planner = new AgendaPlanner<T>();
+            var builder = new TaskBuilder<T>();
 
-            vane.Plan(planner, payload);
+            vane.Build(builder, payload);
 
-            planner.Build().Wait();
+            builder.Build().Wait();
+        }  
+        
+        /// <summary>
+        /// Handles a payload with a vane
+        /// </summary>
+        /// <typeparam name="T">The context type of the Vane</typeparam>
+        /// <param name="vane">The vane itself</param>
+        /// <param name="body">The body to deliver</param>
+        public static Task ExecuteAsync<T>(this Vane<T> vane, Payload<T> payload)
+        {
+            var builder = new TaskBuilder<T>();
+
+            vane.Build(builder, payload);
+
+            return builder.Build();
         }
 
 <# for(int i=1; i<=16; i++){
@@ -61,13 +93,31 @@ namespace FeatherVane
             var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
-            var planner = new AgendaPlanner<T>();
+            var builder = new TaskBuilder<T>();
 
-            vane.Plan(planner, payload);
+            vane.Build(builder, payload);
 
-            planner.Build().Wait();
+            builder.Build().Wait();
         }
 
+        /// <summary>
+        /// Handles a payload body with a vane, supplying additional context
+        /// </summary>
+        /// <typeparam name="T">The context type of the Vane</typeparam>
+        /// <param name="vane">The vane itself</param>
+        /// <param name="body">The body to deliver</param>
+        public static Task ExecuteAsync<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>, bool runSynchronously = true) 
+            <#=tWheres#>
+        {
+            var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
+            payload.GetOrAdd(() => ctx<#=j#>);<# } #>
+
+            var builder = new TaskBuilder<T>(runSynchronously);
+
+            vane.Build(builder, payload);
+
+            return builder.Build();
+        }
 <# 
 }
 #>

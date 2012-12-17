@@ -29,9 +29,11 @@ namespace FeatherVane
         CancellationToken _cancellationToken;
         Task _task;
 
-        public TaskBuilder(CancellationToken cancellationToken = default(CancellationToken))
+        public TaskBuilder(bool runSynchronously = true, CancellationToken cancellationToken = default(CancellationToken))
         {
-            _task = TaskUtil.Completed();
+            _task = runSynchronously
+                        ? TaskUtil.Completed()
+                        : Task.Factory.StartNew(() => { });
             _cancellationToken = cancellationToken;
         }
 

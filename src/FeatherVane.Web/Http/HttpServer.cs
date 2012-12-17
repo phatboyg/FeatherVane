@@ -18,6 +18,7 @@ namespace FeatherVane.Web.Http
     using System.Threading.Tasks;
     using Contexts;
 
+
     public class HttpServer :
         ServerContext
     {
@@ -26,12 +27,20 @@ namespace FeatherVane.Web.Http
         bool _closing;
         int _concurrentConnectionLimit = 100000;
         int _connectionCount;
+        int _maxConnections;
         HttpListener _httpListener;
+
+        public int MaxConnections
+        {
+            get { return _maxConnections; }
+        }
 
         public HttpServer(Uri uri, Vane<ConnectionContext> vane)
         {
             _uri = uri;
-            _vane = vane;
+
+            var connectionComplete = new ConnectionComplete(HandleConnectionComplete);
+            _vane = connectionComplete.Append(vane);
         }
 
         public int ConnectionCount
@@ -82,11 +91,15 @@ namespace FeatherVane.Web.Http
 
                 DateTime acceptedAt = DateTime.UtcNow;
 
-                Interlocked.Increment(ref _connectionCount);
+                var connections = Interlocked.Increment(ref _connectionCount);
+                
+                var maxConnections = _maxConnections;
+                if (connections > _maxConnections)
+                {
+                    Interlocked.CompareExchange(ref _maxConnections, connections, maxConnections);
+                }
 
-                var connectionTask = new Task<ConnectionContext>(() => HandleConnection(acceptedAt, context));
-                connectionTask.ContinueWith(task => ConnectionComplete(task.Result));
-                connectionTask.Start();
+                HandleConnection(acceptedAt, context);
             }
             catch (InvalidOperationException)
             {
@@ -100,14 +113,11 @@ namespace FeatherVane.Web.Http
             }
         }
 
-        ConnectionContext HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
+        Task HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
         {
-            var connectionContext = new HttpListenerConnectionContext(this, httpContext, acceptedAt);
+            var context = new HttpListenerConnectionContext(this, httpContext, acceptedAt);
 
-            _vane.Execute(connectionContext, connectionContext.Request, connectionContext.Response,
-                connectionContext.Server);
-
-            return connectionContext;
+            return _vane.ExecuteAsync(context, context.Request, context.Response, context.Server, false);
         }
 
         void ShutdownListener()
@@ -153,26 +163,50 @@ namespace FeatherVane.Web.Http
 
             for (int i = 0; i < 30; i++)
             {
-                if(!_httpListener.IsListening)
+                if (!_httpListener.IsListening)
                     break;
 
                 Thread.Sleep(1000);
             }
 
-            if(_httpListener.IsListening)
+            if (_httpListener.IsListening)
                 _httpListener.Abort();
         }
 
-        void ConnectionComplete(ConnectionContext connectionContext)
-        {
-            connectionContext.End();
 
+        void HandleConnectionComplete(ConnectionContext connectionContext)
+        {
             int count = Interlocked.Decrement(ref _connectionCount);
 
             if (_closing)
             {
                 if (count == 0)
                     ShutdownListener();
+            }
+        }
+
+
+        class ConnectionComplete :
+            FeatherVane<ConnectionContext>
+        {
+            readonly Action<ConnectionContext> _onConnectionComplete;
+
+            public ConnectionComplete(Action<ConnectionContext> onConnectionComplete)
+            {
+                _onConnectionComplete = onConnectionComplete;
+            }
+
+            public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
+                Vane<ConnectionContext> next)
+            {
+                next.Build(builder, payload);
+
+                builder.Finally(() =>
+                    {
+                        payload.Data.End();
+
+                        _onConnectionComplete(payload.Data);
+                    });
             }
         }
     }

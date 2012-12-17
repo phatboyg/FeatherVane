@@ -56,7 +56,7 @@ namespace FeatherVane.Tests.HttpTests
             Stopwatch start = Stopwatch.StartNew();
 
             int threads = Environment.ProcessorCount*2;
-            int iterations = 2000;
+            int iterations = 5000;
 
             Task[] tasks = Enumerable.Range(0, threads).Select(x => Task.Factory.StartNew(() =>
                 {
@@ -114,7 +114,7 @@ namespace FeatherVane.Tests.HttpTests
         protected override Vane<ConnectionContext> CreateMainVane()
         {
             return Vane.Connect(new Unhandled<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(2)),
+                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
                 new HelloFeatherVane(),
                 new NotFoundFeatherVane());
         }

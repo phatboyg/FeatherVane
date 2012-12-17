@@ -22,8 +22,7 @@ namespace FeatherVane.Web.Http.Vanes
     public class NotFoundFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        public void Build(Builder<ConnectionContext> builder,
-            Payload<ConnectionContext> payload,
+        public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             builder.Execute(() =>

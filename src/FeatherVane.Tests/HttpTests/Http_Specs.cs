@@ -41,14 +41,15 @@ namespace FeatherVane.Tests.HttpTests
         public void Teardown_http_server()
         {
             _server.Stop();
+            Console.WriteLine("Maximum Concurrent Connections: {0}", _server.MaxConnections);
         }
 
-        protected Uri ServerUri { get; set; }
+        protected Uri ServerUri { get; private set; }
 
         protected virtual Vane<ConnectionContext> CreateMainVane()
         {
             return Vane.Connect(new Unhandled<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(2)),
+                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
                 new Logger<ConnectionContext>(Console.Error, x => x.Get<RequestContext>().Url.ToString()),
                 new NotFoundFeatherVane());
         }
