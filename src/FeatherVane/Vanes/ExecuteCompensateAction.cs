@@ -13,38 +13,31 @@ namespace FeatherVane.Vanes
 {
     using System;
 
+
     public class ExecuteCompensateAction<T> :
-        FeatherVane<T>,
-        AgendaItem<T>
+        FeatherVane<T>
     {
-        readonly Action<Agenda<T>> _compensateAction;
+        readonly Action<Payload<T>> _compensateAction;
         readonly Action<Payload<T>> _executeAction;
 
-        public ExecuteCompensateAction(Action<Payload<T>> executeAction, Action<Agenda<T>> compensateAction)
+        public ExecuteCompensateAction(Action<Payload<T>> executeAction, Action<Payload<T>> compensateAction)
         {
             _executeAction = executeAction;
             _compensateAction = compensateAction;
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            planner.Add(this);
+            builder.Execute(() => _executeAction(payload));
 
-            return next.Plan(planner, payload);
-        }
+            next.Build(builder, payload);
 
-        public bool Execute(Agenda<T> agenda)
-        {
-            _executeAction(agenda.Payload);
+            builder.Compensate(x =>
+                {
+                    _compensateAction(payload);
 
-            return agenda.Execute();
-        }
-
-        public bool Compensate(Agenda<T> agenda)
-        {
-            _compensateAction(agenda);
-
-            return agenda.Compensate();
+                    return x.Throw();
+                });
         }
     }
 }

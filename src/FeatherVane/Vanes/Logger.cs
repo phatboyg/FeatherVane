@@ -14,9 +14,9 @@ namespace FeatherVane.Vanes
     using System;
     using System.IO;
 
+
     public class Logger<T> :
-        FeatherVane<T>,
-        AgendaItem<T>
+        FeatherVane<T>
     {
         readonly Func<Payload<T>, string> _getLogMessage;
         readonly TextWriter _output;
@@ -27,26 +27,16 @@ namespace FeatherVane.Vanes
             _getLogMessage = getLogMessage;
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            planner.Add(this);
+            builder.Execute(() =>
+                {
+                    string message = _getLogMessage(payload);
 
-            return next.Plan(planner, payload);
-        }
+                    _output.WriteLine(message);
+                });
 
-        public bool Execute(Agenda<T> agenda)
-        {
-            Payload<T> payload = agenda.Payload;
-
-            string message = _getLogMessage(payload);
-            _output.WriteLine(message);
-
-            return agenda.Execute();
-        }
-
-        public bool Compensate(Agenda<T> agenda)
-        {
-            return agenda.Compensate();
+            next.Build(builder, payload);
         }
     }
 }

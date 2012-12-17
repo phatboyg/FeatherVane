@@ -14,19 +14,11 @@ namespace FeatherVane.Web.Http.Vanes
     using System;
     using System.IO.Compression;
 
+
     public class CompressionFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        readonly AgendaItem<ConnectionContext> _deflate;
-        readonly AgendaItem<ConnectionContext> _gzip;
-
-        public CompressionFeatherVane()
-        {
-            _gzip = new GZipAgendaItem();
-            _deflate = new DeflateAgendaItem();
-        }
-
-        public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+        public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             var request = payload.Get<RequestContext>();
@@ -34,12 +26,13 @@ namespace FeatherVane.Web.Http.Vanes
 
             response.Headers["Vary"] = "Accept-Encoding";
 
-            ApplyCompressionIfAppropriate(request, planner);
+            ApplyCompressionIfAppropriate(request, builder, payload);
 
-            return next.Plan(planner, payload);
+            next.Build(builder, payload);
         }
 
-        void ApplyCompressionIfAppropriate(RequestContext request, Planner<ConnectionContext> planner)
+        void ApplyCompressionIfAppropriate(RequestContext request, Builder<ConnectionContext> builder,
+            Payload<ConnectionContext> payload)
         {
             if (request.HttpMethod == "HEAD")
                 return;
@@ -51,50 +44,26 @@ namespace FeatherVane.Web.Http.Vanes
             if ((accept.IndexOf("gzip", StringComparison.OrdinalIgnoreCase) != -1)
                 || accept.Trim().Equals("*"))
             {
-                planner.Add(_gzip);
+                builder.Execute(() => GzipResponse(payload));
                 return;
             }
 
             if (accept.IndexOf("deflate", StringComparison.OrdinalIgnoreCase) != -1)
-            {
-                planner.Add(_deflate);
-            }
+                builder.Execute(() => DeflateResponse(payload));
         }
 
-        class DeflateAgendaItem :
-            AgendaItem<ConnectionContext>
+        void DeflateResponse(Payload<ConnectionContext> payload)
         {
-            public bool Execute(Agenda<ConnectionContext> agenda)
-            {
-                var response = agenda.Payload.Get<ResponseContext>();
-                response.Headers["Content-Encoding"] = "deflate";
-                response.AddBodyStreamFilter(x => new DeflateStream(x, CompressionMode.Compress, true));
-
-                return agenda.Execute();
-            }
-
-            public bool Compensate(Agenda<ConnectionContext> agenda)
-            {
-                return agenda.Compensate();
-            }
+            var response = payload.Get<ResponseContext>();
+            response.Headers["Content-Encoding"] = "deflate";
+            response.AddBodyStreamFilter(x => new DeflateStream(x, CompressionMode.Compress, true));
         }
 
-        class GZipAgendaItem :
-            AgendaItem<ConnectionContext>
+        void GzipResponse(Payload<ConnectionContext> payload)
         {
-            public bool Execute(Agenda<ConnectionContext> agenda)
-            {
-                var response = agenda.Payload.Get<ResponseContext>();
-                response.Headers["Content-Encoding"] = "gzip";
-                response.AddBodyStreamFilter(x => new GZipStream(x, CompressionMode.Compress, true));
-
-                return agenda.Execute();
-            }
-
-            public bool Compensate(Agenda<ConnectionContext> agenda)
-            {
-                return agenda.Compensate();
-            }
+            var response = payload.Get<ResponseContext>();
+            response.Headers["Content-Encoding"] = "gzip";
+            response.AddBodyStreamFilter(x => new GZipStream(x, CompressionMode.Compress, true));
         }
     }
 }

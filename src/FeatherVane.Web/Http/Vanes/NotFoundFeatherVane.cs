@@ -13,41 +13,32 @@ namespace FeatherVane.Web.Http.Vanes
 {
     using System;
 
+
     /// <summary>
     /// Handles a connection inside of a channel, allowing handlers to be injected
     /// along the channel network to handle things like authentication and ultimately
     /// routing
     /// </summary>
     public class NotFoundFeatherVane :
-        FeatherVane<ConnectionContext>,
-        AgendaItem<ConnectionContext>
+        FeatherVane<ConnectionContext>
     {
-        public bool Execute(Agenda<ConnectionContext> agenda)
-        {
-            ResponseContext response;
-            if (agenda.Payload.TryGet(out response))
-            {
-                response.StatusCode = 404;
-                response.StatusDescription = "Not Found";
-                response.WriteHtml(
-                    @"<body><h1>Your request was not processed</h1><p>The URI specified was not recognized by any registered handler.</p></body>");
-
-                return true;
-            }
-
-            throw new InvalidOperationException("No response context was available");
-        }
-
-        public bool Compensate(Agenda<ConnectionContext> agenda)
-        {
-            return agenda.Compensate();
-        }
-
-        public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner,
+        public void Build(Builder<ConnectionContext> builder,
             Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
-            throw new NotImplementedException();
+            builder.Execute(() =>
+                {
+                    ResponseContext response;
+                    if (payload.TryGet(out response))
+                    {
+                        response.StatusCode = 404;
+                        response.StatusDescription = "Not Found";
+                        response.WriteHtml(
+                            @"<body><h1>Your request was not processed</h1><p>The URI specified was not recognized by any registered handler.</p></body>");
+                    }
+                    else
+                        throw new InvalidOperationException("No response context was available");
+                });
         }
     }
 }

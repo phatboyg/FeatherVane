@@ -17,15 +17,15 @@ namespace FeatherVane
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static bool Execute<T>(this Vane<T> vane, T body)
+        public static void Execute<T>(this Vane<T> vane, T body)
         {
             var payload = new PayloadImpl<T>(body);
 
             var planner = new AgendaPlanner<T>();
 
-            Agenda<T> agenda = vane.Plan(planner, payload);
+            vane.Plan(planner, payload);
 
-            return agenda.Execute();
+            planner.Build().Wait();
         }
 
         /// <summary>
@@ -34,13 +34,13 @@ namespace FeatherVane
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static bool Execute<T>(this Vane<T> vane, Payload<T> payload)
+        public static void Execute<T>(this Vane<T> vane, Payload<T> payload)
         {
             var planner = new AgendaPlanner<T>();
 
-            Agenda<T> agenda = vane.Plan(planner, payload);
+            vane.Plan(planner, payload);
 
-            return agenda.Execute();
+            planner.Build().Wait();
         }
 
 <# for(int i=1; i<=16; i++){
@@ -55,7 +55,7 @@ namespace FeatherVane
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
         /// <param name="body">The body to deliver</param>
-        public static bool Execute<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
+        public static void Execute<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
             <#=tWheres#>
         {
             var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
@@ -63,9 +63,9 @@ namespace FeatherVane
 
             var planner = new AgendaPlanner<T>();
 
-            Agenda<T> agenda = vane.Plan(planner, payload);
+            vane.Plan(planner, payload);
 
-            return agenda.Execute();
+            planner.Build().Wait();
         }
 
 <# 

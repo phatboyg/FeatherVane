@@ -27,17 +27,18 @@ namespace FeatherVane.Tests
             var rescue = new Rescue<TestSubject>(success);
             Vane<TestSubject> vane = Vane.Connect(fail, rescue, middle);
 
-            Assert.IsTrue(vane.Execute(_testSubject));
-
-            Assert.IsTrue(fail.AssignCalled);
-            Assert.IsTrue(fail.ExecuteCalled);
-            Assert.IsFalse(fail.CompensateCalled);
+            vane.Execute(_testSubject);
 
             Assert.IsTrue(middle.AssignCalled);
             Assert.IsTrue(middle.ExecuteCalled);
             Assert.IsTrue(middle.CompensateCalled);
 
             Assert.IsTrue(success.AssignCalled);
+
+            Assert.IsTrue(fail.AssignCalled);
+            Assert.IsTrue(fail.ExecuteCalled);
+            Assert.IsTrue(fail.CompensateCalled);
+
         }
 
         TestSubject _testSubject = new TestSubject {Street = "123"};

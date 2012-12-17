@@ -17,6 +17,6 @@ namespace FeatherVane
     /// <typeparam name="T"></typeparam>
     public interface FeatherVane<T>
     {
-        Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next);
+        void Build(Builder<T> builder, Payload<T> payload, Vane<T> next);
     }
 }

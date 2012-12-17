@@ -15,6 +15,7 @@ namespace FeatherVane.Vanes
     using System.Diagnostics;
     using System.IO;
 
+
     public class Profiler<T> :
         FeatherVane<T>
     {
@@ -25,14 +26,51 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            var step = new ProfilerAgendaItem(_settings);
+            ProfilerSettings settings = _settings;
 
-            planner.Add(step);
+            ProfilerInstance instance = null;
+            builder.Execute(() => instance = new ProfilerInstance(settings));
 
-            return next.Plan(planner, payload);
+            next.Build(builder, payload);
+
+            builder.Finally(() =>
+                {
+                    if (instance != null)
+                        instance.Complete();
+                });
         }
+
+
+        class ProfilerInstance
+        {
+            readonly ProfilerSettings _settings;
+            readonly DateTime _startTime;
+            readonly Stopwatch _stopwatch;
+            readonly Guid _timingId;
+
+            public ProfilerInstance(ProfilerSettings settings)
+            {
+                _settings = settings;
+                _timingId = Guid.NewGuid();
+                _startTime = DateTime.UtcNow;
+                _stopwatch = Stopwatch.StartNew();
+            }
+
+            public void Complete()
+            {
+                _stopwatch.Stop();
+
+                if (_stopwatch.Elapsed > _settings.TrivialThreshold)
+                {
+                    _settings.Writer.WriteLine(_timingId.ToString("N") + ": "
+                                               + _startTime.ToString("yyyyMMdd HHmmss.fff") + " "
+                                               + _stopwatch.ElapsedMilliseconds + "ms");
+                }
+            }
+        }
+
 
         class ProfilerSettings
         {
@@ -45,47 +83,6 @@ namespace FeatherVane.Vanes
             public TimeSpan TrivialThreshold { get; private set; }
 
             public TextWriter Writer { get; private set; }
-        }
-
-        class ProfilerAgendaItem :
-            AgendaItem<T>
-        {
-            readonly ProfilerSettings _settings;
-            readonly DateTime _startTime;
-            readonly Stopwatch _stopwatch;
-            readonly Guid _timingId;
-
-            public ProfilerAgendaItem(ProfilerSettings settings)
-            {
-                _settings = settings;
-                _timingId = Guid.NewGuid();
-                _startTime = DateTime.UtcNow;
-                _stopwatch = Stopwatch.StartNew();
-            }
-
-            public bool Execute(Agenda<T> agenda)
-            {
-                try
-                {
-                    return agenda.Execute();
-                }
-                finally
-                {
-                    _stopwatch.Stop();
-
-                    if (_stopwatch.Elapsed > _settings.TrivialThreshold)
-                    {
-                        _settings.Writer.WriteLine(_timingId.ToString("N") + ": "
-                                                   + _startTime.ToString("yyyyMMdd HHmmss.fff") + " "
-                                                   + _stopwatch.ElapsedMilliseconds + "ms");
-                    }
-                }
-            }
-
-            public bool Compensate(Agenda<T> agenda)
-            {
-                return agenda.Compensate();
-            }
         }
     }
 }

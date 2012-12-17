@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -9,31 +9,33 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane
 {
-    using Execution;
+    using System;
+    using System.Runtime.Serialization;
 
-    class ConnectVane<T> :
-        Vane<T>,
-        AcceptVaneVisitor
+
+    [Serializable]
+    public class TaskBuilderException :
+        FeatherVaneException
     {
-        readonly Vane<T> _next;
-        readonly FeatherVane<T> _vane;
-
-        public ConnectVane(FeatherVane<T> vane, Vane<T> next)
+        public TaskBuilderException()
         {
-            _vane = vane;
-            _next = next;
         }
 
-        public bool Accept(VaneVisitor visitor)
+        public TaskBuilderException(string message)
+            : base(message)
         {
-            return visitor.Visit(_vane, x => visitor.Visit(_next));
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
+        public TaskBuilderException(string message, Exception innerException)
+            : base(message, innerException)
         {
-            return _vane.Plan(planner, payload, _next);
+        }
+
+        protected TaskBuilderException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

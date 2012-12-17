@@ -11,34 +11,29 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+    using System;
+
+
     class TestFail :
-        Vane<TestSubject>,
-        AgendaItem<TestSubject>
+        Vane<TestSubject>
     {
         public bool AssignCalled { get; set; }
         public bool ExecuteCalled { get; set; }
         public bool CompensateCalled { get; set; }
 
-        public bool Execute(Agenda<TestSubject> agenda)
+        public void Build(Builder<TestSubject> builder, Payload<TestSubject> payload)
         {
-            ExecuteCalled = true;
-            return false;
-        }
-
-        public bool Compensate(Agenda<TestSubject> agenda)
-        {
-            CompensateCalled = true;
-
-            return agenda.Compensate();
-        }
-
-        public Agenda<TestSubject> Plan(Planner<TestSubject> planner, Payload<TestSubject> payload)
-        {
-            planner.Add(this);
-
             AssignCalled = true;
 
-            return planner.CreateAgenda(payload);
+            builder.Execute(() => ExecuteCalled = true);
+
+            builder.Failed(new InvalidOperationException("Test Fail Exception"));
+
+            builder.Compensate(x =>
+                {
+                    CompensateCalled = true;
+                    return x.Throw();
+                });
         }
     }
 }

@@ -122,39 +122,23 @@ namespace FeatherVane.Tests.HttpTests
         class HelloFeatherVane :
             FeatherVane<ConnectionContext>
         {
-            public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner,
+            public void Build(Builder<ConnectionContext> builder,
                 Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
             {
                 if (payload.Get<RequestContext>().Url.ToString().EndsWith("hello"))
                 {
-                    planner.Add(new HelloAgendaItem());
-                    return planner.CreateAgenda(payload);
-                }
-
-                return next.Plan(planner, payload);
-            }
-
-            class HelloAgendaItem :
-                AgendaItem<ConnectionContext>
-            {
-                public bool Execute(Agenda<ConnectionContext> agenda)
-                {
+                    builder.Execute(() =>
+                        {
                     ResponseContext response;
-                    if (agenda.Payload.TryGet(out response))
-                    {
-                        response.StatusCode = 200;
-                        response.Write("Hello!");
-
-                        return agenda.Execute();
-                    }
-
-                    throw new InvalidOperationException("Response context not available");
+                            if (payload.TryGet(out response))
+                            {
+                                response.StatusCode = 200;
+                                response.Write("Hello!");
+                            }
+                        });
                 }
 
-                public bool Compensate(Agenda<ConnectionContext> agenda)
-                {
-                    return agenda.Compensate();
-                }
+                next.Build(builder, payload);
             }
         }
     }

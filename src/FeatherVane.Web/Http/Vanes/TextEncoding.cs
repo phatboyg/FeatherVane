@@ -14,9 +14,9 @@ namespace FeatherVane.Web.Http.Vanes
     using System.Text;
     using System.Text.RegularExpressions;
 
+
     public class TextEncoding :
-        FeatherVane<ConnectionContext>,
-        AgendaItem<ConnectionContext>
+        FeatherVane<ConnectionContext>
     {
         TextEncodingSettings _settings;
 
@@ -30,7 +30,7 @@ namespace FeatherVane.Web.Http.Vanes
         }
 
 
-        public Agenda<ConnectionContext> Plan(Planner<ConnectionContext> planner, Payload<ConnectionContext> payload,
+        public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             RequestContext request;
@@ -43,18 +43,7 @@ namespace FeatherVane.Web.Http.Vanes
             // context.Request.ContentEncoding = encoding;
 
             // probably need to decorate the forms/body with a decoder to convert to the proper encoding
-            return next.Plan(planner, payload);
-        }
-
-        public bool Execute(Agenda<ConnectionContext> agenda)
-        {
-            // we don't do anything yet
-            return agenda.Execute();
-        }
-
-        public bool Compensate(Agenda<ConnectionContext> agenda)
-        {
-            return agenda.Compensate();
+            next.Build(builder, payload);
         }
 
         Encoding GetEncoding(RequestContext context)
@@ -69,6 +58,7 @@ namespace FeatherVane.Web.Http.Vanes
 
             return Encoding.GetEncoding(match.Groups[1].Value);
         }
+
 
         class TextEncodingSettings
         {

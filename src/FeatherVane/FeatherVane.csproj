@@ -36,23 +36,25 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptVaneVisitor.cs" />
+    <Compile Include="Compensation.cs" />
+    <Compile Include="CompensationResult.cs" />
     <Compile Include="Exceptions\ContextFactoryException.cs" />
     <Compile Include="Exceptions\ContextNotFoundException.cs" />
     <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
-    <Compile Include="Execution\AcceptVaneVisitor.cs" />
-    <Compile Include="Execution\AgendaImpl.cs" />
-    <Compile Include="Execution\AgendaPlanner.cs" />
-    <Compile Include="Execution\VaneVisitor.cs" />
+    <Compile Include="Exceptions\TaskBuilderException.cs" />
+    <Compile Include="CompensationImpl.cs" />
     <Compile Include="Payloads\DelegatingPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
     <Compile Include="ContextFactory.cs" />
-    <Compile Include="Agenda.cs" />
     <Compile Include="Payloads\PayloadImpl.cs" />
-    <Compile Include="Planner.cs" />
-    <Compile Include="AgendaItem.cs" />
+    <Compile Include="Builder.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="TaskBuilder.cs" />
+    <Compile Include="TaskUtil.cs" />
     <Compile Include="VaneExecuteExtensions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -61,7 +63,9 @@
     <Compile Include="Payloads\PayloadContextCache.cs" />
     <Compile Include="Payload.cs" />
     <Compile Include="PayloadExtensions.cs" />
-    <Compile Include="Vanes\ConnectVane.cs" />
+    <Compile Include="Vanes\AsyncLogger.cs" />
+    <Compile Include="Vanes\NextVane.cs" />
+    <Compile Include="VaneVisitor.cs" />
     <Compile Include="Visualization\StringVaneVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,7 +74,6 @@
     </Compile>
     <Compile Include="Vane.cs" />
     <Compile Include="FeatherVane.cs" />
-    <Compile Include="VaneExtensions.cs" />
     <Compile Include="Vanes\ExecuteCompensateAction.cs" />
     <Compile Include="Vanes\ExecuteAction.cs" />
     <Compile Include="Vanes\Rescue.cs" />

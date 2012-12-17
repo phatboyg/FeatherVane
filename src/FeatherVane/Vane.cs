@@ -13,10 +13,12 @@ namespace FeatherVane
 {
     using Vanes;
 
+
     public interface Vane<T>
     {
-        Agenda<T> Plan(Planner<T> planner, Payload<T> payload);
+        void Build(Builder<T> builder, Payload<T> payload);
     }
+
 
     public static class Vane
     {
@@ -31,16 +33,19 @@ namespace FeatherVane
         {
             Vane<T> next = last;
             for (int i = vanes.Length - 1; i >= 0; i--)
-            {
                 next = vanes[i].Append(next);
-            }
 
             return next;
         }
 
-        public static Vane<T> Connect<T>(FeatherVane<T> vane, Vane<T> next)
+        public static Vane<T> Append<T>(this FeatherVane<T> head, Vane<T> next)
         {
-            return new ConnectVane<T>(vane, next);
+            return new NextVane<T>(head, next);
+        }
+
+        public static Vane<T> Push<T>(this Vane<T> existing, FeatherVane<T> front)
+        {
+            return new NextVane<T>(front, existing);
         }
     }
 }

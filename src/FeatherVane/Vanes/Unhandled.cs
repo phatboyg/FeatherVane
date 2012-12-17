@@ -12,24 +12,11 @@
 namespace FeatherVane.Vanes
 {
     public class Unhandled<T> :
-        Vane<T>,
-        AgendaItem<T>
+        Vane<T>
     {
-        public bool Execute(Agenda<T> agenda)
+        public void Build(Builder<T> builder, Payload<T> payload)
         {
-            throw UnhandledException.New(agenda.Payload);
-        }
-
-        public bool Compensate(Agenda<T> agenda)
-        {
-            return agenda.Compensate();
-        }
-
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
-        {
-            planner.Add(this);
-
-            return planner.CreateAgenda(payload);
+            builder.Failed(UnhandledException.New(payload));
         }
     }
 }

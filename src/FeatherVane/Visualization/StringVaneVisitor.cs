@@ -14,7 +14,6 @@ namespace FeatherVane.Visualization
     using System;
     using System.Collections.Generic;
     using System.Text;
-    using Execution;
     using Internals.Extensions;
     using Vanes;
 
@@ -64,7 +63,7 @@ namespace FeatherVane.Visualization
             if (_seen.Contains(vane))
                 return;
 
-            if (!(vane is ConnectVane<T>))
+            if (!(vane is NextVane<T>))
                 Append(vane.GetType().GetTypeName());
 
             _seen.Add(vane);
@@ -91,7 +90,7 @@ namespace FeatherVane.Visualization
 
         void VisitAcceptor<T>(object vane)
         {
-            if (!(vane is ConnectVane<T>))
+            if (!(vane is NextVane<T>))
                 _depth++;
 
             var acceptVaneVisitor = vane as AcceptVaneVisitor;
@@ -100,7 +99,7 @@ namespace FeatherVane.Visualization
                 (acceptVaneVisitor).Accept(this);
             }
 
-            if (!(vane is ConnectVane<T>))
+            if (!(vane is NextVane<T>))
                 _depth--;
         }
 

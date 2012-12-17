@@ -13,8 +13,8 @@ namespace FeatherVane.Vanes
 {
     using System;
     using System.Linq;
-    using Execution;
     using Internals.Caching;
+
 
     /// <summary>
     /// The TypeRouter allows vanes to be registered for types that can be converted from the input
@@ -43,13 +43,13 @@ namespace FeatherVane.Vanes
             return visitor.Visit(this, x => _typeVanes.All(visitor.Visit));
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
             Type contextType = _typeSelector(payload);
 
             Vane<T> typeVane = _typeVanes.Get(contextType, x => next);
 
-            return typeVane.Plan(planner, payload);
+            typeVane.Build(builder, payload);
         }
 
         public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter)
@@ -57,6 +57,7 @@ namespace FeatherVane.Vanes
         {
             _typeVanes.Add(typeof(TOutput), new TypeConverter<TOutput>(nextVane, converter));
         }
+
 
         class TypeConverter<TOutput> :
             Vane<T>
@@ -71,38 +72,18 @@ namespace FeatherVane.Vanes
                 _converter = converter;
             }
 
-            public Agenda<T> Plan(Planner<T> planner, Payload<T> payload)
+            public void Build(Builder<T> builder, Payload<T> payload)
             {
-                Payload<TOutput> output = _converter(payload);
+                builder.Execute(() =>
+                    {
+                        Payload<TOutput> output = _converter(payload);
 
-                var outputPlanner = new AgendaPlanner<TOutput>();
+                        var outputPlanner = new TaskBuilder<TOutput>();
 
-                Agenda<TOutput> outputAgenda = _vane.Plan(outputPlanner, output);
+                        _vane.Build(outputPlanner, output);
 
-                planner.Add(new TypeConverterAgendaItem(outputAgenda));
-
-                return planner.CreateAgenda(payload);
-            }
-
-            class TypeConverterAgendaItem :
-                AgendaItem<T>
-            {
-                readonly Agenda<TOutput> _agenda;
-
-                public TypeConverterAgendaItem(Agenda<TOutput> agenda)
-                {
-                    _agenda = agenda;
-                }
-
-                public bool Execute(Agenda<T> agenda)
-                {
-                    return _agenda.Execute();
-                }
-
-                public bool Compensate(Agenda<T> agenda)
-                {
-                    return _agenda.Compensate();
-                }
+                        return outputPlanner.Build();
+                    });
             }
         }
     }

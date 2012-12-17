@@ -14,8 +14,7 @@ namespace FeatherVane.Vanes
     using System;
 
     public class ExecuteAction<T> :
-        FeatherVane<T>,
-        AgendaItem<T>
+        FeatherVane<T>
     {
         readonly Action<Payload<T>> _handler;
 
@@ -24,23 +23,11 @@ namespace FeatherVane.Vanes
             _handler = handler;
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            planner.Add(this);
+            builder.Execute(() => _handler(payload));
 
-            return next.Plan(planner, payload);
-        }
-
-        public bool Execute(Agenda<T> agenda)
-        {
-            _handler(agenda.Payload);
-
-            return agenda.Execute();
-        }
-
-        public bool Compensate(Agenda<T> agenda)
-        {
-            return agenda.Compensate();
+            next.Build(builder, payload);
         }
     }
 }

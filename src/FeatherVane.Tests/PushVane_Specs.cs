@@ -34,22 +34,22 @@ namespace FeatherVane.Tests
         class Original :
             FeatherVane<string>
         {
-            public Agenda<string> Plan(Planner<string> planner, Payload<string> payload, Vane<string> next)
+            public void Build(Builder<string> builder, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Original: {0}", payload.Data);
 
-                return next.Plan(planner, payload);
+                next.Build(builder, payload);
             }
         }
 
         class Decorator :
             FeatherVane<string>
         {
-            public Agenda<string> Plan(Planner<string> planner, Payload<string> payload, Vane<string> next)
+            public void Build(Builder<string> builder, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Decorator: {0}", payload.Data);
 
-                return next.Plan(planner, payload);
+                next.Build(builder, payload);
             }
         }
     }

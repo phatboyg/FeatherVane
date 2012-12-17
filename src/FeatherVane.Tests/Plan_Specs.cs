@@ -11,6 +11,7 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+    using System;
     using NUnit.Framework;
 
     [TestFixture]
@@ -22,9 +23,9 @@ namespace FeatherVane.Tests
             var fail = new TestFail();
             Vane<TestSubject> vane = Vane.Connect(fail);
 
-            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
+            var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
 
-            Assert.AreEqual(0, exception.InnerExceptionCount);
+            Assert.AreEqual(1, exception.InnerExceptions.Count);
         }
 
         [Test]
@@ -45,13 +46,13 @@ namespace FeatherVane.Tests
             var log = new TestVane();
             Vane<TestSubject> vane = Vane.Connect(fail, log);
 
-            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
+            var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
 
-            Assert.AreEqual(0, exception.InnerExceptionCount);
+            Assert.AreEqual(1, exception.InnerExceptions.Count);
 
             Assert.IsTrue(fail.AssignCalled);
             Assert.IsTrue(fail.ExecuteCalled);
-            Assert.IsFalse(fail.CompensateCalled);
+            Assert.IsTrue(fail.CompensateCalled);
 
             Assert.IsTrue(log.AssignCalled);
             Assert.IsTrue(log.ExecuteCalled);
@@ -66,13 +67,13 @@ namespace FeatherVane.Tests
             var log2 = new TestVane();
             Vane<TestSubject> vane = Vane.Connect(fail, log, log2);
 
-            var exception = Assert.Throws<AgendaExecutionException>(() => vane.Execute(_testSubject));
+            var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
 
-            Assert.AreEqual(0, exception.InnerExceptionCount);
+            Assert.AreEqual(1, exception.InnerExceptions.Count);
 
             Assert.IsTrue(fail.AssignCalled);
             Assert.IsTrue(fail.ExecuteCalled);
-            Assert.IsFalse(fail.CompensateCalled);
+            Assert.IsTrue(fail.CompensateCalled);
 
             Assert.IsTrue(log.AssignCalled);
             Assert.IsTrue(log.ExecuteCalled);

@@ -13,9 +13,9 @@ namespace FeatherVane.Vanes
 {
     using System.Transactions;
 
+
     public class Transaction<T> :
-        FeatherVane<T>,
-        AgendaItem<T>
+        FeatherVane<T>
     {
         readonly TransactionScopeOption _scopeOptions;
 
@@ -24,34 +24,33 @@ namespace FeatherVane.Vanes
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        public bool Execute(Agenda<T> agenda)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            TransactionScope scope = agenda.Payload.GetOrAdd(() => new TransactionScope(_scopeOptions));
+            TransactionScopeOption options = _scopeOptions;
 
-            if (agenda.Execute())
-            {
-                scope.Complete();
-                scope.Dispose();
+            TransactionScope scope = null;
+            builder.Execute(() =>
+                {
+                    payload.GetOrAdd(() =>
+                        {
+                            scope = new TransactionScope(options);
+                            return scope;
+                        });
+                });
 
-                return true;
-            }
+            next.Build(builder, payload);
 
-            return false;
-        }
+            builder.Execute(() =>
+                {
+                    if (scope != null)
+                        scope.Complete();
+                });
 
-        public bool Compensate(Agenda<T> agenda)
-        {
-            var transactionScope = agenda.Payload.Get<TransactionScope>();
-            transactionScope.Dispose();
-
-            return agenda.Compensate();
-        }
-
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
-        {
-            planner.Add(this);
-
-            return next.Plan(planner, payload);
+            builder.Finally(() =>
+                {
+                    if (scope != null)
+                        scope.Dispose();
+                });
         }
     }
 }

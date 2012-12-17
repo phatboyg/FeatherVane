@@ -11,10 +11,10 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
-    using Execution;
     using FeatherVane.Actors;
     using NUnit.Framework;
     using Vanes;
+
 
     [TestFixture]
     public class When_sending_a_message
@@ -27,39 +27,25 @@ namespace FeatherVane.Tests
 
             var payload = new MessagePayload<Alpha>(new Alpha());
 
-            var planner = new AgendaPlanner<Message>();
+            var planner = new TaskBuilder<Message>();
 
-            Agenda<Message> agenda = vane.Plan(planner, payload);
+            vane.Build(planner, payload);
         }
+
 
         class MessageVane :
             FeatherVane<Message>
         {
-            public Agenda<Message> Plan(Planner<Message> planner, Payload<Message> payload, Vane<Message> next)
+            public void Build(Builder<Message> builder, Payload<Message> payload, Vane<Message> next)
             {
                 Message<Alpha> alphaMessage;
                 if (payload.Data.TryGet(out alphaMessage))
-                {
-                    planner.Add(new AlphaAgendaItem());
-                }
+                    builder.Execute(() => { });
 
-                return next.Plan(planner, payload);
-            }
-
-            class AlphaAgendaItem :
-                AgendaItem<Message>
-            {
-                public bool Execute(Agenda<Message> agenda)
-                {
-                    return agenda.Execute();
-                }
-
-                public bool Compensate(Agenda<Message> agenda)
-                {
-                    return agenda.Compensate();
-                }
+                next.Build(builder, payload);
             }
         }
+
 
         class Alpha
         {

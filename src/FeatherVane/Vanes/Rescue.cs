@@ -12,8 +12,7 @@
 namespace FeatherVane.Vanes
 {
     public class Rescue<T> :
-        FeatherVane<T>,
-        AgendaItem<T>
+        FeatherVane<T>
     {
         readonly Vane<T> _rescueVane;
 
@@ -22,21 +21,18 @@ namespace FeatherVane.Vanes
             _rescueVane = rescueVane;
         }
 
-        public Agenda<T> Plan(Planner<T> planner, Payload<T> payload, Vane<T> next)
+        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            planner.Add(this);
+            next.Build(builder, payload);
 
-            return next.Plan(planner, payload);
-        }
+            builder.Compensate(compensation =>
+                {
+                    var rescueBuilder = new TaskBuilder<T>();
 
-        public bool Execute(Agenda<T> agenda)
-        {
-            return agenda.Execute();
-        }
+                    _rescueVane.Build(rescueBuilder, payload);
 
-        public bool Compensate(Agenda<T> agenda)
-        {
-            return _rescueVane.Execute(agenda.Payload);
+                    return compensation.Task(rescueBuilder.Build());
+                });
         }
     }
 }

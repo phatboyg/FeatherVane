@@ -9,16 +9,29 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Execution
+namespace FeatherVane.Vanes
 {
-    using System;
-
-    public interface VaneVisitor
+    class NextVane<T> :
+        Vane<T>,
+        AcceptVaneVisitor
     {
-        bool Visit<T>(Vane<T> vane);
-        bool Visit<T>(Vane<T> vane, Func<Vane<T>, bool> next);
+        readonly Vane<T> _next;
+        readonly FeatherVane<T> _vane;
 
-        bool Visit<T>(FeatherVane<T> vane);
-        bool Visit<T>(FeatherVane<T> vane, Func<FeatherVane<T>, bool> next);
+        public NextVane(FeatherVane<T> vane, Vane<T> next)
+        {
+            _vane = vane;
+            _next = next;
+        }
+
+        public bool Accept(VaneVisitor visitor)
+        {
+            return visitor.Visit(_vane, x => visitor.Visit(_next));
+        }
+
+        public void Build(Builder<T> builder, Payload<T> payload)
+        {
+            _vane.Build(builder, payload, _next);
+        }
     }
 }

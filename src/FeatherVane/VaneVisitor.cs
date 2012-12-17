@@ -9,24 +9,17 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Execution
+namespace FeatherVane
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using System;
 
-    public class AgendaPlanner<T> :
-        Planner<T>
+
+    public interface VaneVisitor
     {
-        readonly IList<AgendaItem<T>> _items = new List<AgendaItem<T>>();
+        bool Visit<T>(Vane<T> vane);
+        bool Visit<T>(Vane<T> vane, Func<Vane<T>, bool> next);
 
-        public void Add(AgendaItem<T> agendaItem)
-        {
-            _items.Add(agendaItem);
-        }
-
-        public Agenda<T> CreateAgenda(Payload<T> payload)
-        {
-            return new AgendaImpl<T>(_items.ToArray(), payload);
-        }
+        bool Visit<T>(FeatherVane<T> vane);
+        bool Visit<T>(FeatherVane<T> vane, Func<FeatherVane<T>, bool> next);
     }
 }

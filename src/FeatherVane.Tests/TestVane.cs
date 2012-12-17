@@ -13,37 +13,26 @@ namespace FeatherVane.Tests
 {
     using System.Diagnostics;
 
+
     [DebuggerNonUserCode]
     public class TestVane :
-        FeatherVane<TestSubject>,
-        AgendaItem<TestSubject>
+        FeatherVane<TestSubject>
     {
         public bool AssignCalled { get; set; }
         public bool ExecuteCalled { get; set; }
         public bool CompensateCalled { get; set; }
 
-        public bool Execute(Agenda<TestSubject> agenda)
-        {
-            ExecuteCalled = true;
-
-            return agenda.Execute();
-        }
-
-        public bool Compensate(Agenda<TestSubject> agenda)
-        {
-            CompensateCalled = true;
-
-            return agenda.Compensate();
-        }
-
-        public Agenda<TestSubject> Plan(Planner<TestSubject> planner, Payload<TestSubject> payload,
-            Vane<TestSubject> next)
+        public void Build(Builder<TestSubject> builder, Payload<TestSubject> payload, Vane<TestSubject> next)
         {
             AssignCalled = true;
 
-            planner.Add(this);
-
-            return next.Plan(planner, payload);
+            builder.Execute(() => ExecuteCalled = true);
+            next.Build(builder, payload);
+            builder.Compensate(x =>
+                {
+                    CompensateCalled = true;
+                    return x.Throw();
+                });
         }
     }
 }

@@ -11,23 +11,11 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    /// <summary>
-    /// Planners are passed to vanes, which can choose to add steps to the plan for execution
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface Planner<T>
-    {
-        /// <summary>
-        /// Add an item to the agenda
-        /// </summary>
-        /// <param name="agendaItem"></param>
-        void Add(AgendaItem<T> agendaItem);
+    using System.Threading.Tasks;
 
-        /// <summary>
-        /// Creates the agenda using the items added and the payload
-        /// </summary>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        Agenda<T> CreateAgenda(Payload<T> payload);
+
+    public interface CompensationResult
+    {
+        Task Task { get; }
     }
 }

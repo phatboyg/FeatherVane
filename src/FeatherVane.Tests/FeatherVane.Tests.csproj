@@ -45,6 +45,7 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actors\Actor_Specs.cs" />
+    <Compile Include="ActorThoughts_Specs.cs" />
     <Compile Include="Benchmarks\EmptyThroughput.cs" />
     <Compile Include="Benchmarks\LoggerThroughput.cs" />
     <Compile Include="Benchmarks\ProfilerLoggerThroughput.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="TestVane.cs" />
     <Compile Include="Trace_Specs.cs" />
     <Compile Include="TypeRouter_Specs.cs" />
-    <Compile Include="VaneCommand.cs" />
     <Compile Include="Visitor_Specs.cs" />
   </ItemGroup>
   <ItemGroup>

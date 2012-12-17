@@ -11,35 +11,34 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
-    /// <summary>
-    /// A WireTap passes the context to another Vane so that it can be observed
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class WireTap<T> :
-        FeatherVane<T>,
-        AcceptVaneVisitor
+    using System;
+    using System.IO;
+    using System.Text;
+
+
+    public class AsyncLogger<T> :
+        FeatherVane<T>
     {
-        readonly Vane<T> _tap;
+        readonly Func<Payload<T>, string> _getLogMessage;
+        readonly Stream _output;
+        readonly Encoding _outputEncoding;
 
-        public WireTap(Vane<T> tap)
+        public AsyncLogger(Stream output, Func<Payload<T>, string> getLogMessage, Encoding outputEncoding = null)
         {
-            _tap = tap;
-        }
-
-        public bool Accept(VaneVisitor visitor)
-        {
-            return visitor.Visit(this, x => visitor.Visit(_tap));
+            _output = output;
+            _getLogMessage = getLogMessage;
+            _outputEncoding = outputEncoding ?? Encoding.UTF8;
         }
 
         public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
             builder.Execute(() =>
                 {
-                    var planB = new TaskBuilder<T>();
+                    string message = _getLogMessage(payload);
 
-                    _tap.Build(planB, payload);
+                    byte[] data = _outputEncoding.GetBytes(message);
 
-                    return planB.Build();
+                    return _output.WriteAsync(data, 0, data.Length, builder.CancellationToken);
                 });
 
             next.Build(builder, payload);

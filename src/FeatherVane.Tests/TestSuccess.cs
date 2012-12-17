@@ -16,11 +16,9 @@ namespace FeatherVane.Tests
     {
         public bool AssignCalled { get; set; }
 
-        public Agenda<TestSubject> Plan(Planner<TestSubject> planner, Payload<TestSubject> payload)
+        public void Build(Builder<TestSubject> builder, Payload<TestSubject> payload)
         {
             AssignCalled = true;
-
-            return planner.CreateAgenda(payload);
         }
     }
 }
