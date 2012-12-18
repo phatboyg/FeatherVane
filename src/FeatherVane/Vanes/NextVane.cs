@@ -39,9 +39,9 @@ namespace FeatherVane.Vanes
             return visitor.Visit(_featherVane, x => visitor.Visit(_nextVane));
         }
 
-        void Vane<T>.Build(Builder<T> builder, Payload<T> payload)
+        void Vane<T>.Compose(Composer<T> composer, Payload<T> payload)
         {
-            _featherVane.Build(builder, payload, _nextVane);
+            _featherVane.Compose(composer, payload, _nextVane);
         }
     }
 }

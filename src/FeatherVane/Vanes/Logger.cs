@@ -36,16 +36,16 @@ namespace FeatherVane.Vanes
             _getLogMessage = getLogMessage;
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
-            builder.Execute(() =>
+            composer.Execute(() =>
                 {
                     string message = _getLogMessage(payload);
 
                     _output.WriteLine(message);
                 });
 
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
         }
     }
 }

@@ -20,9 +20,9 @@ namespace FeatherVane
         /// <summary>
         /// Builds a Task chain by enumerating the Vanes in the network
         /// </summary>
-        /// <param name="builder">The Task builder</param>
+        /// <param name="composer">The Task builder</param>
         /// <param name="payload">The payload for this execution</param>
         /// <param name="next">The next Vane in the chain</param>
-        void Build(Builder<T> builder, Payload<T> payload, Vane<T> next);
+        void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next);
     }
 }

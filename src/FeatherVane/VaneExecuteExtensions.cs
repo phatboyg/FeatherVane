@@ -21,7 +21,7 @@
         {
             var payload = new PayloadImpl<T>(data);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
         {
            var payload = new PayloadImpl<T>(data);
 
-           return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+           return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
         public static void Execute<T>(this Vane<T> vane, Payload<T> payload, 
             CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }  
         
         /// <summary>
@@ -65,7 +65,7 @@
         public static Task ExecuteAsync<T>(this Vane<T> vane, Payload<T> payload, 
             CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@
             var payload = new PayloadImpl<T>(data); 
             payload.GetOrAdd(() => ctx1);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@
             var payload = new PayloadImpl<T>(data); 
             payload.GetOrAdd(() => ctx1);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -120,7 +120,7 @@
             payload.GetOrAdd(() => ctx1); 
             payload.GetOrAdd(() => ctx2);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -140,7 +140,7 @@
             payload.GetOrAdd(() => ctx1); 
             payload.GetOrAdd(() => ctx2);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -161,7 +161,7 @@
             payload.GetOrAdd(() => ctx2); 
             payload.GetOrAdd(() => ctx3);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -183,7 +183,7 @@
             payload.GetOrAdd(() => ctx2); 
             payload.GetOrAdd(() => ctx3);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -206,7 +206,7 @@
             payload.GetOrAdd(() => ctx3); 
             payload.GetOrAdd(() => ctx4);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -230,7 +230,7 @@
             payload.GetOrAdd(() => ctx3); 
             payload.GetOrAdd(() => ctx4);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -255,7 +255,7 @@
             payload.GetOrAdd(() => ctx4); 
             payload.GetOrAdd(() => ctx5);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -281,7 +281,7 @@
             payload.GetOrAdd(() => ctx4); 
             payload.GetOrAdd(() => ctx5);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -308,7 +308,7 @@
             payload.GetOrAdd(() => ctx5); 
             payload.GetOrAdd(() => ctx6);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -336,7 +336,7 @@
             payload.GetOrAdd(() => ctx5); 
             payload.GetOrAdd(() => ctx6);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -365,7 +365,7 @@
             payload.GetOrAdd(() => ctx6); 
             payload.GetOrAdd(() => ctx7);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -395,7 +395,7 @@
             payload.GetOrAdd(() => ctx6); 
             payload.GetOrAdd(() => ctx7);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -426,7 +426,7 @@
             payload.GetOrAdd(() => ctx7); 
             payload.GetOrAdd(() => ctx8);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -458,7 +458,7 @@
             payload.GetOrAdd(() => ctx7); 
             payload.GetOrAdd(() => ctx8);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -491,7 +491,7 @@
             payload.GetOrAdd(() => ctx8); 
             payload.GetOrAdd(() => ctx9);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -525,7 +525,7 @@
             payload.GetOrAdd(() => ctx8); 
             payload.GetOrAdd(() => ctx9);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -560,7 +560,7 @@
             payload.GetOrAdd(() => ctx9); 
             payload.GetOrAdd(() => ctx10);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -596,7 +596,7 @@
             payload.GetOrAdd(() => ctx9); 
             payload.GetOrAdd(() => ctx10);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -633,7 +633,7 @@
             payload.GetOrAdd(() => ctx10); 
             payload.GetOrAdd(() => ctx11);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -671,7 +671,7 @@
             payload.GetOrAdd(() => ctx10); 
             payload.GetOrAdd(() => ctx11);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -710,7 +710,7 @@
             payload.GetOrAdd(() => ctx11); 
             payload.GetOrAdd(() => ctx12);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -750,7 +750,7 @@
             payload.GetOrAdd(() => ctx11); 
             payload.GetOrAdd(() => ctx12);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -791,7 +791,7 @@
             payload.GetOrAdd(() => ctx12); 
             payload.GetOrAdd(() => ctx13);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -833,7 +833,7 @@
             payload.GetOrAdd(() => ctx12); 
             payload.GetOrAdd(() => ctx13);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -876,7 +876,7 @@
             payload.GetOrAdd(() => ctx13); 
             payload.GetOrAdd(() => ctx14);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -920,7 +920,7 @@
             payload.GetOrAdd(() => ctx13); 
             payload.GetOrAdd(() => ctx14);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -965,7 +965,7 @@
             payload.GetOrAdd(() => ctx14); 
             payload.GetOrAdd(() => ctx15);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -1011,7 +1011,7 @@
             payload.GetOrAdd(() => ctx14); 
             payload.GetOrAdd(() => ctx15);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
         /// <summary>
         /// Handles a payload body with a vane, supplying additional context
@@ -1058,7 +1058,7 @@
             payload.GetOrAdd(() => ctx15); 
             payload.GetOrAdd(() => ctx16);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -1106,7 +1106,7 @@
             payload.GetOrAdd(() => ctx15); 
             payload.GetOrAdd(() => ctx16);
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace FeatherVane.Web.Http.Vanes
     public class CompressionFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
+        public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             var request = payload.Get<RequestContext>();
@@ -26,12 +26,12 @@ namespace FeatherVane.Web.Http.Vanes
 
             response.Headers["Vary"] = "Accept-Encoding";
 
-            ApplyCompressionIfAppropriate(request, builder, payload);
+            ApplyCompressionIfAppropriate(request, composer, payload);
 
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
         }
 
-        void ApplyCompressionIfAppropriate(RequestContext request, Builder<ConnectionContext> builder,
+        void ApplyCompressionIfAppropriate(RequestContext request, Composer<ConnectionContext> composer,
             Payload<ConnectionContext> payload)
         {
             if (request.HttpMethod == "HEAD")
@@ -44,12 +44,12 @@ namespace FeatherVane.Web.Http.Vanes
             if ((accept.IndexOf("gzip", StringComparison.OrdinalIgnoreCase) != -1)
                 || accept.Trim().Equals("*"))
             {
-                builder.Execute(() => GzipResponse(payload));
+                composer.Execute(() => GzipResponse(payload));
                 return;
             }
 
             if (accept.IndexOf("deflate", StringComparison.OrdinalIgnoreCase) != -1)
-                builder.Execute(() => DeflateResponse(payload));
+                composer.Execute(() => DeflateResponse(payload));
         }
 
         void DeflateResponse(Payload<ConnectionContext> payload)

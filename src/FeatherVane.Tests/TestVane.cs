@@ -22,13 +22,13 @@ namespace FeatherVane.Tests
         public bool ExecuteCalled { get; set; }
         public bool CompensateCalled { get; set; }
 
-        public void Build(Builder<TestSubject> builder, Payload<TestSubject> payload, Vane<TestSubject> next)
+        public void Compose(Composer<TestSubject> composer, Payload<TestSubject> payload, Vane<TestSubject> next)
         {
             AssignCalled = true;
 
-            builder.Execute(() => ExecuteCalled = true);
-            next.Build(builder, payload);
-            builder.Compensate(x =>
+            composer.Execute(() => ExecuteCalled = true);
+            next.Compose(composer, payload);
+            composer.Compensate(x =>
                 {
                     CompensateCalled = true;
                     return x.Throw();

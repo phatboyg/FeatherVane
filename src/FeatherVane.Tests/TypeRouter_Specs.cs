@@ -12,7 +12,7 @@
         {
             var lambda = new Execute<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
 
-            Vane<ConsumeContext<A>> messageAVane = VaneBuilder.Connect(new Success<ConsumeContext<A>>(), lambda);
+            Vane<ConsumeContext<A>> messageAVane = VaneFactory.Connect(new Success<ConsumeContext<A>>(), lambda);
 
             var typeRouter = new TypeRouter<ConsumeContext>(context => context.Data.ContextType);
             typeRouter.Add(messageAVane, x =>
@@ -23,7 +23,7 @@
                     return x.CreateDelegatingPayload(context);
                 });
 
-            var messageVane = VaneBuilder.Connect(new Unhandled<ConsumeContext>(), typeRouter);
+            var messageVane = VaneFactory.Connect(new Unhandled<ConsumeContext>(), typeRouter);
 
             var message = new MessageConsumeContext<A>(new A {Value = "Hello!"});
 

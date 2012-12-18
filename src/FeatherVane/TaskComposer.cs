@@ -16,16 +16,16 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
-    public static class TaskBuilder
+    public static class TaskComposer
     {
-        public static Task Build<T>(Vane<T> vane, Payload<T> payload, CancellationToken cancellationToken,
+        public static Task Compose<T>(Vane<T> vane, Payload<T> payload, CancellationToken cancellationToken,
             bool runSynchronously = true)
         {
-            var taskBuilder = new TaskBuilder<T>(cancellationToken, runSynchronously);
+            var composer = new TaskComposer<T>(cancellationToken, runSynchronously);
 
-            vane.Build(taskBuilder, payload);
+            vane.Compose(composer, payload);
 
-            return taskBuilder.Build();
+            return composer.Complete();
         }
     }
 
@@ -36,14 +36,17 @@ namespace FeatherVane
     /// asynchronous.
     /// </summary>
     /// <typeparam name="T">The payload type of the task chain</typeparam>
-    public class TaskBuilder<T> :
-        Builder<T>
+    public class TaskComposer<T> :
+        Composer<T>
     {
-        bool _built;
-        CancellationToken _cancellationToken;
+        readonly CancellationToken _cancellationToken;
+        readonly Lazy<Exception> _completeException =
+            new Lazy<Exception>(() => new TaskComposerException("The composition is already complete."));
+
+        bool _complete;
         Task _task;
 
-        public TaskBuilder(CancellationToken cancellationToken, bool runSynchronously = true)
+        public TaskComposer(CancellationToken cancellationToken, bool runSynchronously = true)
         {
             _cancellationToken = cancellationToken;
             _task = runSynchronously
@@ -53,59 +56,63 @@ namespace FeatherVane
                         : Task.Factory.StartNew(() => { }, cancellationToken);
         }
 
-        CancellationToken Builder<T>.CancellationToken
+        CancellationToken Composer<T>.CancellationToken
         {
             get { return _cancellationToken; }
         }
 
-        Builder<T> Builder<T>.Execute(Action continuation, bool runSynchronously)
+        Composer<T> Composer<T>.Execute(Action continuation, bool runSynchronously)
         {
-            if (_built)
-                throw new TaskBuilderException("The plan has already been built.");
+            if (_complete)
+                throw _completeException.Value;
 
-            Then(() => TaskUtil.RunSynchronously(continuation, _cancellationToken), runSynchronously);
+            _task = Execute(_task, () => TaskUtil.RunSynchronously(continuation, _cancellationToken), _cancellationToken,
+                runSynchronously);
             return this;
         }
 
-        Builder<T> Builder<T>.Execute(Func<Task> continuationTask, bool runSynchronously)
+        Composer<T> Composer<T>.Execute(Func<Task> continuationTask, bool runSynchronously)
         {
-            if (_built)
-                throw new TaskBuilderException("The plan has already been built.");
+            if (_complete)
+                throw _completeException.Value;
 
-            Then(continuationTask, runSynchronously);
+            _task = Execute(_task, continuationTask, _cancellationToken, runSynchronously);
             return this;
         }
 
-        Builder<T> Builder<T>.Compensate(Func<Compensation, CompensationResult> compensation)
+        Composer<T> Composer<T>.Compensate(Func<Compensation, CompensationResult> compensation)
         {
-            if (_built)
-                throw new TaskBuilderException("The plan has already been built.");
+            if (_complete)
+                throw _completeException.Value;
 
             if (_task.Status == TaskStatus.RanToCompletion)
                 return this;
 
-            _task = Compensate(_task, () => compensation(new TaskCompensation(_task)).Task);
+            _task = Compensate(_task, () => compensation(new TaskCompensation<T>(_task)).Task);
             return this;
         }
 
-        void Builder<T>.Completed()
+        void Composer<T>.Completed()
         {
-            if (_built)
-                throw new TaskBuilderException("The plan has already been built.");
+            if (_complete)
+                throw _completeException.Value;
 
-            Then(TaskUtil.Completed);
+            _task = Execute(_task, TaskUtil.Completed, _cancellationToken);
         }
 
-        void Builder<T>.Failed(Exception exception)
+        void Composer<T>.Failed(Exception exception)
         {
-            if (_built)
-                throw new TaskBuilderException("The plan has already been built.");
+            if (_complete)
+                throw _completeException.Value;
 
-            Then(() => TaskUtil.CompletedError(exception));
+            _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
         }
 
-        Builder<T> Builder<T>.Finally(Action continuation, bool runSynchronously)
+        Composer<T> Composer<T>.Finally(Action continuation, bool runSynchronously)
         {
+            if (_complete)
+                throw _completeException.Value;
+
             if (_task.IsCompleted)
             {
                 try
@@ -121,60 +128,55 @@ namespace FeatherVane
                 }
             }
 
-            FinallyAsync(continuation, runSynchronously);
+            _task = FinallyAsync(_task, continuation, runSynchronously);
             return this;
         }
 
-        public Task Build()
+        public Task Complete()
         {
-            _built = true;
+            _complete = true;
 
             return _task;
         }
 
-        void Then(Func<Task> newTask, bool runSynchronously = true)
+        static Task Execute(Task task, Func<Task> continuationTask, CancellationToken cancellationToken,
+            bool runSynchronously = true)
         {
-            if (_task.IsCompleted)
+            if (task.IsCompleted)
             {
-                if (_task.IsFaulted)
-                {
-                    _task = TaskUtil.CompletedErrors(_task.Exception.InnerExceptions);
-                    return;
-                }
-                if (_task.IsCanceled || _cancellationToken.IsCancellationRequested)
-                {
-                    _task = TaskUtil.Cancelled();
-                    return;
-                }
-                if (_task.Status == TaskStatus.RanToCompletion)
+                if (task.IsFaulted)
+                    return TaskUtil.CompletedErrors(task.Exception.InnerExceptions);
+
+                if (task.IsCanceled || cancellationToken.IsCancellationRequested)
+                    return TaskUtil.Cancelled();
+
+                if (task.Status == TaskStatus.RanToCompletion)
                 {
                     try
                     {
-                        _task = newTask();
-                        return;
+                        return continuationTask();
                     }
                     catch (Exception ex)
                     {
-                        _task = TaskUtil.CompletedError(ex);
-                        return;
+                        return TaskUtil.CompletedError(ex);
                     }
                 }
             }
 
-            _task = ThenAsync(newTask, runSynchronously);
+            return ExecuteAsync(task, continuationTask, cancellationToken, runSynchronously);
         }
 
-
-        Task ThenAsync(Func<Task> newTask, bool runSynchronously)
+        static Task ExecuteAsync(Task task, Func<Task> continuationTask, CancellationToken cancellationToken,
+            bool runSynchronously)
         {
             SynchronizationContext context = SynchronizationContext.Current;
 
             var source = new TaskCompletionSource<Task>();
-            _task.ContinueWith(task =>
+            task.ContinueWith(innerTask =>
                 {
-                    if (task.IsFaulted)
-                        source.TrySetException(task.Exception.InnerExceptions);
-                    else if (task.IsCanceled || _cancellationToken.IsCancellationRequested)
+                    if (innerTask.IsFaulted)
+                        source.TrySetException(innerTask.Exception.InnerExceptions);
+                    else if (innerTask.IsCanceled || cancellationToken.IsCancellationRequested)
                         source.TrySetCanceled();
                     else
                     {
@@ -184,7 +186,7 @@ namespace FeatherVane
                                 {
                                     try
                                     {
-                                        source.TrySetResult(newTask());
+                                        source.TrySetResult(continuationTask());
                                     }
                                     catch (Exception ex)
                                     {
@@ -193,7 +195,7 @@ namespace FeatherVane
                                 }, state: null);
                         }
                         else
-                            source.TrySetResult(newTask());
+                            source.TrySetResult(continuationTask());
                     }
                 }, runSynchronously
                        ? TaskContinuationOptions.ExecuteSynchronously
@@ -202,7 +204,7 @@ namespace FeatherVane
             return source.Task.FastUnwrap();
         }
 
-        Task Compensate(Task task, Func<Task> continuation)
+        static Task Compensate(Task task, Func<Task> compensationTask)
         {
             if (task.IsCompleted)
             {
@@ -210,7 +212,7 @@ namespace FeatherVane
                 {
                     try
                     {
-                        Task resultTask = continuation();
+                        Task resultTask = compensationTask();
                         if (resultTask == null)
                             throw new InvalidOperationException("Sure could use a Task here buddy");
 
@@ -222,7 +224,7 @@ namespace FeatherVane
                     }
                 }
 
-                if (task.IsCanceled || _cancellationToken.IsCancellationRequested)
+                if (task.IsCanceled)
                     return TaskUtil.Cancelled();
 
                 if (task.Status == TaskStatus.RanToCompletion)
@@ -233,10 +235,10 @@ namespace FeatherVane
                 }
             }
 
-            return CompensateAsync(task, continuation);
+            return CompensateAsync(task, compensationTask);
         }
 
-        static Task CompensateAsync(Task task, Func<Task> continuation)
+        static Task CompensateAsync(Task task, Func<Task> compensationTask)
         {
             var source = new TaskCompletionSource<Task>();
 
@@ -253,7 +255,7 @@ namespace FeatherVane
                             {
                                 try
                                 {
-                                    Task resultTask = continuation();
+                                    Task resultTask = compensationTask();
                                     if (resultTask == null)
                                         throw new InvalidOperationException("Sure could use a Task here buddy");
 
@@ -269,7 +271,7 @@ namespace FeatherVane
                     {
                         try
                         {
-                            Task resultTask = continuation();
+                            Task resultTask = compensationTask();
                             if (resultTask == null)
                                 throw new InvalidOperationException("Sure could use a Task here buddy");
 
@@ -286,12 +288,12 @@ namespace FeatherVane
         }
 
 
-        void FinallyAsync(Action continuation, bool runSynchronously = true)
+        static Task FinallyAsync(Task task, Action continuation, bool runSynchronously = true)
         {
             SynchronizationContext syncContext = SynchronizationContext.Current;
 
             var source = new TaskCompletionSource<object>();
-            _task.ContinueWith(innerTask =>
+            task.ContinueWith(innerTask =>
                 {
                     try
                     {
@@ -326,7 +328,7 @@ namespace FeatherVane
                        ? TaskContinuationOptions.ExecuteSynchronously
                        : TaskContinuationOptions.None);
 
-            _task = source.Task;
+            return source.Task;
         }
     }
 }

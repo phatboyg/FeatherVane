@@ -13,6 +13,6 @@ namespace FeatherVane
 {
     public interface Vane<T>
     {
-        void Build(Builder<T> builder, Payload<T> payload);
+        void Compose(Composer<T> composer, Payload<T> payload);
     }
 }

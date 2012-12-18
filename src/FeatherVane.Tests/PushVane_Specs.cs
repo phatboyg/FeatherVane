@@ -21,7 +21,7 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_be_able_to_push_in_front()
         {
-            Vane<string> original = VaneBuilder.Connect(new Success<string>(),
+            Vane<string> original = VaneFactory.Connect(new Success<string>(),
                 new Original());
 
             original.Execute("First");
@@ -34,22 +34,22 @@ namespace FeatherVane.Tests
         class Original :
             FeatherVane<string>
         {
-            public void Build(Builder<string> builder, Payload<string> payload, Vane<string> next)
+            public void Compose(Composer<string> composer, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Original: {0}", payload.Data);
 
-                next.Build(builder, payload);
+                next.Compose(composer, payload);
             }
         }
 
         class Decorator :
             FeatherVane<string>
         {
-            public void Build(Builder<string> builder, Payload<string> payload, Vane<string> next)
+            public void Compose(Composer<string> composer, Payload<string> payload, Vane<string> next)
             {
                 Console.WriteLine("Decorator: {0}", payload.Data);
 
-                next.Build(builder, payload);
+                next.Compose(composer, payload);
             }
         }
     }

@@ -32,7 +32,7 @@ namespace FeatherVane.Tests
 
             FeatherVane<string> profiler = new Profiler<string>(Console.Error, TimeSpan.FromMilliseconds(2));
 
-            Vane<string> vane = VaneBuilder.Success(profiler, logger);
+            Vane<string> vane = VaneFactory.Success(profiler, logger);
 
             vane.Execute(expected);
 

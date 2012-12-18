@@ -21,15 +21,15 @@ namespace FeatherVane.Tests
         public bool ExecuteCalled { get; set; }
         public bool CompensateCalled { get; set; }
 
-        public void Build(Builder<TestSubject> builder, Payload<TestSubject> payload)
+        public void Compose(Composer<TestSubject> composer, Payload<TestSubject> payload)
         {
             AssignCalled = true;
 
-            builder.Execute(() => ExecuteCalled = true);
+            composer.Execute(() => ExecuteCalled = true);
 
-            builder.Failed(new InvalidOperationException("Test Fail Exception"));
+            composer.Failed(new InvalidOperationException("Test Fail Exception"));
 
-            builder.Compensate(x =>
+            composer.Compensate(x =>
                 {
                     CompensateCalled = true;
                     return x.Throw();

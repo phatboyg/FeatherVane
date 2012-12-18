@@ -43,7 +43,7 @@
     <Compile Include="Exceptions\ContextNotFoundException.cs" />
     <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
-    <Compile Include="Exceptions\TaskBuilderException.cs" />
+    <Compile Include="Exceptions\TaskComposerException.cs" />
     <Compile Include="TaskCompensation.cs" />
     <Compile Include="Payloads\DelegatingPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
@@ -51,9 +51,9 @@
     <Compile Include="Internals\**\*.cs" />
     <Compile Include="ContextFactory.cs" />
     <Compile Include="Payloads\PayloadImpl.cs" />
-    <Compile Include="Builder.cs" />
+    <Compile Include="Composer.cs" />
     <Compile Include="StreamExtensions.cs" />
-    <Compile Include="TaskBuilder.cs" />
+    <Compile Include="TaskComposer.cs" />
     <Compile Include="TaskUtil.cs" />
     <Compile Include="Vane.cs" />
     <Compile Include="VaneExecuteExtensions.cs">
@@ -74,7 +74,7 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="VaneBuilder.cs" />
+    <Compile Include="VaneFactory.cs" />
     <Compile Include="FeatherVane.cs" />
     <Compile Include="Vanes\ExecuteCompensate.cs" />
     <Compile Include="Vanes\Execute.cs" />

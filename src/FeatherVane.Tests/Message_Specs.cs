@@ -23,12 +23,12 @@ namespace FeatherVane.Tests
         public void Should_be_able_to_get_the_message_type()
         {
             var messageVane = new MessageVane();
-            Vane<Message> vane = VaneBuilder.Success(messageVane);
+            Vane<Message> vane = VaneFactory.Success(messageVane);
 
             var alpha = new Alpha();
             var payload = new MessagePayload<Alpha>(alpha);
 
-            TaskBuilder.Build(vane, payload, CancellationToken.None).Wait();
+            TaskComposer.Compose(vane, payload, CancellationToken.None).Wait();
 
             Assert.IsTrue(ReferenceEquals(alpha, messageVane.Message));
         }
@@ -44,13 +44,13 @@ namespace FeatherVane.Tests
                 get { return _message; }
             }
 
-            public void Build(Builder<Message> builder, Payload<Message> payload, Vane<Message> next)
+            public void Compose(Composer<Message> composer, Payload<Message> payload, Vane<Message> next)
             {
                 Message<Alpha> alphaMessage;
                 if (payload.Data.TryGetAs(out alphaMessage))
-                    builder.Execute(() => { _message = alphaMessage.Body; });
+                    composer.Execute(() => { _message = alphaMessage.Body; });
 
-                next.Build(builder, payload);
+                next.Compose(composer, payload);
             }
         }
 

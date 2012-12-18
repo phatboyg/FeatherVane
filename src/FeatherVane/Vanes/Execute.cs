@@ -33,11 +33,11 @@ namespace FeatherVane.Vanes
             _continuation = payload => continuation(payload.Data);
         }
 
-        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
-            builder.Execute(() => _continuation(payload));
+            composer.Execute(() => _continuation(payload));
 
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
         }
     }
 }

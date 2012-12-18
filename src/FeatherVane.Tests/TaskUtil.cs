@@ -17,13 +17,18 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
-    static class TaskUtil
+    public static class TaskUtil
     {
         static readonly Task _defaultCompleted = CompletedResult(default(Unit));
 
         internal static Task Cancelled()
         {
             return CancelCache<Unit>.CancelledTask;
+        }
+
+        internal static Task<T> Cancelled<T>()
+        {
+            return CancelCache<T>.CancelledTask;
         }
 
         internal static Task FastUnwrap(this Task<Task> task)
@@ -40,7 +45,7 @@ namespace FeatherVane
             return _defaultCompleted;
         }
 
-        internal static Task CompletedError(Exception exception)
+        public static Task CompletedError(Exception exception)
         {
             return CompletedError<Unit>(exception);
         }

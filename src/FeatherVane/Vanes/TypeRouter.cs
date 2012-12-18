@@ -43,13 +43,13 @@ namespace FeatherVane.Vanes
             return visitor.Visit(this, x => _typeVanes.All(visitor.Visit));
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
             Type contextType = _typeSelector(payload);
 
             Vane<T> typeVane = _typeVanes.Get(contextType, x => next);
 
-            typeVane.Build(builder, payload);
+            typeVane.Compose(composer, payload);
         }
 
         public void Add<TOutput>(Vane<TOutput> nextVane, Func<Payload<T>, Payload<TOutput>> converter)
@@ -72,13 +72,13 @@ namespace FeatherVane.Vanes
                 _converter = converter;
             }
 
-            public void Build(Builder<T> builder, Payload<T> payload)
+            public void Compose(Composer<T> composer, Payload<T> payload)
             {
-                builder.Execute(() =>
+                composer.Execute(() =>
                     {
                         Payload<TOutput> output = _converter(payload);
 
-                        return TaskBuilder.Build(_vane, output, builder.CancellationToken);
+                        return TaskComposer.Compose(_vane, output, composer.CancellationToken);
                     });
             }
         }

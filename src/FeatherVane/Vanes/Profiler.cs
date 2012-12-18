@@ -26,16 +26,16 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
             ProfilerSettings settings = _settings;
 
             ProfilerInstance instance = null;
-            builder.Execute(() => instance = new ProfilerInstance(settings));
+            composer.Execute(() => instance = new ProfilerInstance(settings));
 
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
 
-            builder.Finally(() =>
+            composer.Finally(() =>
                 {
                     if (instance != null)
                         instance.Complete();

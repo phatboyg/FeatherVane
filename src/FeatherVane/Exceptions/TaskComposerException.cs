@@ -16,24 +16,24 @@ namespace FeatherVane
 
 
     [Serializable]
-    public class TaskBuilderException :
+    public class TaskComposerException :
         FeatherVaneException
     {
-        public TaskBuilderException()
+        public TaskComposerException()
         {
         }
 
-        public TaskBuilderException(string message)
+        public TaskComposerException(string message)
             : base(message)
         {
         }
 
-        public TaskBuilderException(string message, Exception innerException)
+        public TaskComposerException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected TaskBuilderException(SerializationInfo info, StreamingContext context)
+        protected TaskComposerException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

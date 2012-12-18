@@ -60,6 +60,8 @@
     <Compile Include="PushVane_Specs.cs" />
     <Compile Include="Rescue_Specs.cs" />
     <Compile Include="StreamDecorator_Specs.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="TaskUtil.cs" />
     <Compile Include="TestFail.cs" />
     <Compile Include="TestSubject.cs" />
     <Compile Include="TestSuccess.cs" />

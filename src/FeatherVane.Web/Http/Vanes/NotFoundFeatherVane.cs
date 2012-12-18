@@ -22,10 +22,10 @@ namespace FeatherVane.Web.Http.Vanes
     public class NotFoundFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
+        public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
-            builder.Execute(() =>
+            composer.Execute(() =>
                 {
                     ResponseContext response;
                     if (payload.TryGet(out response))

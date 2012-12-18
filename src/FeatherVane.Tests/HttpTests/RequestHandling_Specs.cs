@@ -122,7 +122,7 @@ namespace FeatherVane.Tests.HttpTests
 
         protected override Vane<ConnectionContext> CreateMainVane()
         {
-            return VaneBuilder.Connect(new Unhandled<ConnectionContext>(),
+            return VaneFactory.Connect(new Unhandled<ConnectionContext>(),
                 new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(10)),
                 new HelloFeatherVane(),
                 new NotFoundFeatherVane());
@@ -131,12 +131,12 @@ namespace FeatherVane.Tests.HttpTests
         class HelloFeatherVane :
             FeatherVane<ConnectionContext>
         {
-            public void Build(Builder<ConnectionContext> builder,
+            public void Compose(Composer<ConnectionContext> composer,
                 Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
             {
                 if (payload.Get<RequestContext>().Url.ToString().EndsWith("hello"))
                 {
-                    builder.Execute(() =>
+                    composer.Execute(() =>
                         {
                             ResponseContext response;
                             if (payload.TryGet(out response))
@@ -150,7 +150,7 @@ namespace FeatherVane.Tests.HttpTests
                         });
                 }
 
-                next.Build(builder, payload);
+                next.Compose(composer, payload);
             }
         }
     }

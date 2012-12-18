@@ -24,7 +24,7 @@ namespace FeatherVane.Tests.Benchmarks
         {
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
-            _vane = VaneBuilder.Success(new Logger<Subject>(sw, x => ""),
+            _vane = VaneFactory.Success(new Logger<Subject>(sw, x => ""),
                 new Profiler<Subject>(sw, TimeSpan.FromMilliseconds(2)));
         }
 

@@ -34,18 +34,18 @@ namespace FeatherVane.Vanes
             _outputEncoding = outputEncoding ?? Encoding.UTF8;
         }
 
-        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
-            builder.Execute(() =>
+            composer.Execute(() =>
                 {
                     string message = _getLogMessage(payload);
 
                     byte[] data = _outputEncoding.GetBytes(message);
 
-                    return _output.WriteAsync(data, 0, data.Length, builder.CancellationToken);
+                    return _output.WriteAsync(data, 0, data.Length, composer.CancellationToken);
                 });
 
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
         }
     }
 }

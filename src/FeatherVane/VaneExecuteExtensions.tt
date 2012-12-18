@@ -25,7 +25,7 @@ namespace FeatherVane
         {
             var payload = new PayloadImpl<T>(data);
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace FeatherVane
         {
            var payload = new PayloadImpl<T>(data);
 
-           return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+           return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace FeatherVane
         public static void Execute<T>(this Vane<T> vane, Payload<T> payload, 
             CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }  
         
         /// <summary>
@@ -69,7 +69,7 @@ namespace FeatherVane
         public static Task ExecuteAsync<T>(this Vane<T> vane, Payload<T> payload, 
             CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
 
 <# for(int i=1; i<=16; i++){
@@ -94,7 +94,7 @@ namespace FeatherVane
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
 
-            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
+            TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace FeatherVane
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
 
-            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
+            return TaskComposer.Compose(vane, payload, cancellationToken, runSynchronously);
         }
 <# 
 }

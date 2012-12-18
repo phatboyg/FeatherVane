@@ -33,26 +33,26 @@ namespace FeatherVane.Vanes
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
             TransactionScopeOption options = _scopeOptions;
 
             TransactionScope createdScope = null;
-            builder.Execute(() => payload.GetOrAdd(() =>
+            composer.Execute(() => payload.GetOrAdd(() =>
                 {
                     createdScope = new TransactionScope(options);
                     return createdScope;
                 }));
 
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
 
-            builder.Execute(() =>
+            composer.Execute(() =>
                 {
                     if (createdScope != null)
                         createdScope.Complete();
                 });
 
-            builder.Finally(() =>
+            composer.Finally(() =>
                 {
                     if (createdScope != null)
                         createdScope.Dispose();

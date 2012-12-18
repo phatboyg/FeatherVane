@@ -15,13 +15,13 @@
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
 
-            Vane<TestSubject> wired = VaneBuilder.Success<TestSubject>();
+            Vane<TestSubject> wired = VaneFactory.Success<TestSubject>();
 
             var typeRouter = new TypeRouter<TestSubject>(x => typeof(ISubjectA));
-            typeRouter.Add(VaneBuilder.Success<ISubjectA>(), x => x);
-            typeRouter.Add(VaneBuilder.Success<ISubjectB>(), x => x);
+            typeRouter.Add(VaneFactory.Success<ISubjectA>(), x => x);
+            typeRouter.Add(VaneFactory.Success<ISubjectB>(), x => x);
 
-            Vane<TestSubject> vane = VaneBuilder.Success(new Logger<TestSubject>(sw, x => ""),
+            Vane<TestSubject> vane = VaneFactory.Success(new Logger<TestSubject>(sw, x => ""),
                 new WireTap<TestSubject>(wired),
                 new Profiler<TestSubject>(sw, TimeSpan.FromMilliseconds(2)),
                 new Transaction<TestSubject>(),

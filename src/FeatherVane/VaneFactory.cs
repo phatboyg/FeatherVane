@@ -14,7 +14,7 @@ namespace FeatherVane
     using Vanes;
 
 
-    public static class VaneBuilder
+    public static class VaneFactory
     {
         /// <summary>
         /// Connects a sequence of FeatherVanes into a Vane that can be executed, with the default

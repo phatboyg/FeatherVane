@@ -198,12 +198,12 @@ namespace FeatherVane.Web.Http
                 _onConnectionComplete = onConnectionComplete;
             }
 
-            public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
+            public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
                 Vane<ConnectionContext> next)
             {
-                next.Build(builder, payload);
+                next.Compose(composer, payload);
 
-                builder.Finally(() =>
+                composer.Finally(() =>
                     {
                         payload.Data.End();
 

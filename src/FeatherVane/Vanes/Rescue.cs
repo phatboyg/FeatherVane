@@ -35,11 +35,11 @@ namespace FeatherVane.Vanes
             return visitor.Visit(this, x => visitor.Visit(_vane));
         }
 
-        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
 
-            builder.Compensate(x => x.Task(TaskBuilder.Build(_vane, payload, builder.CancellationToken)));
+            composer.Compensate(x => x.Task(TaskComposer.Compose(_vane, payload, composer.CancellationToken)));
         }
     }
 }

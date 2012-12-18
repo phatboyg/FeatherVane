@@ -15,17 +15,17 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
-    public class TaskCompensation :
+    public class TaskCompensation<T> :
         Compensation
     {
         static readonly Result _completed = new Result {Task = TaskUtil.Completed()};
         readonly Exception _exception;
-        readonly Task _task;
+        readonly Task _faultedTask;
 
-        public TaskCompensation(Task task)
+        public TaskCompensation(Task faultedTask)
         {
-            _task = task;
-            _exception = _task.Exception.GetBaseException();
+            _faultedTask = faultedTask;
+            _exception = _faultedTask.Exception.GetBaseException();
         }
 
         public Exception Exception
@@ -45,12 +45,12 @@ namespace FeatherVane
 
         public CompensationResult Throw(Exception ex)
         {
-            return new Result {Task = TaskUtil.CompletedError<object>(ex)};
+            return new Result {Task = TaskUtil.CompletedError<T>(ex)};
         }
 
         public CompensationResult Throw()
         {
-            return new Result {Task = _task};
+            return new Result {Task = _faultedTask};
         }
 
 

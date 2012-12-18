@@ -14,9 +14,9 @@ namespace FeatherVane.Vanes
     public class Unhandled<T> :
         Vane<T>
     {
-        void Vane<T>.Build(Builder<T> builder, Payload<T> payload)
+        void Vane<T>.Compose(Composer<T> composer, Payload<T> payload)
         {
-            builder.Failed(UnhandledException.New(payload));
+            composer.Failed(UnhandledException.New(payload));
         }
     }
 }

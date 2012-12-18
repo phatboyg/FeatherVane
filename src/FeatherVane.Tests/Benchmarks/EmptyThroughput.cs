@@ -18,7 +18,7 @@ namespace FeatherVane.Tests.Benchmarks
 
         public EmptyThroughput()
         {
-            _vane = VaneBuilder.Success<Subject>();
+            _vane = VaneFactory.Success<Subject>();
         }
 
         public void Execute(Subject subject)

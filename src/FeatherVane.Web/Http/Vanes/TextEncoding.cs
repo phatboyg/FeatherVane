@@ -30,7 +30,7 @@ namespace FeatherVane.Web.Http.Vanes
         }
 
 
-        public void Build(Builder<ConnectionContext> builder, Payload<ConnectionContext> payload,
+        public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             RequestContext request;
@@ -43,7 +43,7 @@ namespace FeatherVane.Web.Http.Vanes
             // context.Request.ContentEncoding = encoding;
 
             // probably need to decorate the forms/body with a decoder to convert to the proper encoding
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
         }
 
         Encoding GetEncoding(RequestContext context)

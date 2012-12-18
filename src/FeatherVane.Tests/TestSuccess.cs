@@ -16,7 +16,7 @@ namespace FeatherVane.Tests
     {
         public bool AssignCalled { get; set; }
 
-        public void Build(Builder<TestSubject> builder, Payload<TestSubject> payload)
+        public void Compose(Composer<TestSubject> composer, Payload<TestSubject> payload)
         {
             AssignCalled = true;
         }

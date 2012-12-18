@@ -32,11 +32,11 @@ namespace FeatherVane.Vanes
             _compensate = compensate;
         }
 
-        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
         {
-            next.Build(builder, payload);
+            next.Compose(composer, payload);
 
-            builder.Compensate(compensation => _compensate(payload)
+            composer.Compensate(compensation => _compensate(payload)
                                                    ? compensation.Handled()
                                                    : compensation.Throw());
         }
