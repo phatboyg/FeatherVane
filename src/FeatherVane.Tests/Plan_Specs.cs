@@ -21,7 +21,7 @@ namespace FeatherVane.Tests
         public void Should_create_the_plan_for_fail()
         {
             var fail = new TestFail();
-            Vane<TestSubject> vane = Vane.Connect(fail);
+            Vane<TestSubject> vane = VaneBuilder.Connect(fail);
 
             var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
 
@@ -33,7 +33,7 @@ namespace FeatherVane.Tests
         {
             var success = new TestSuccess();
 
-            Vane<TestSubject> vane = Vane.Connect(success);
+            Vane<TestSubject> vane = VaneBuilder.Connect(success);
             vane.Execute(_testSubject);
 
             Assert.IsTrue(success.AssignCalled);
@@ -44,7 +44,7 @@ namespace FeatherVane.Tests
         {
             var fail = new TestFail();
             var log = new TestVane();
-            Vane<TestSubject> vane = Vane.Connect(fail, log);
+            Vane<TestSubject> vane = VaneBuilder.Connect(fail, log);
 
             var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
 
@@ -65,7 +65,7 @@ namespace FeatherVane.Tests
             var fail = new TestFail();
             var log = new TestVane();
             var log2 = new TestVane();
-            Vane<TestSubject> vane = Vane.Connect(fail, log, log2);
+            Vane<TestSubject> vane = VaneBuilder.Connect(fail, log, log2);
 
             var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
 
@@ -89,7 +89,7 @@ namespace FeatherVane.Tests
         {
             var success = new TestSuccess();
             var log = new TestVane();
-            Vane<TestSubject> vane = Vane.Connect(success, log);
+            Vane<TestSubject> vane = VaneBuilder.Connect(success, log);
 
             vane.Execute(_testSubject);
 
@@ -106,7 +106,7 @@ namespace FeatherVane.Tests
             var success = new TestSuccess();
             var log = new TestVane();
             var log2 = new TestVane();
-            Vane<TestSubject> vane = Vane.Connect(success, log, log2);
+            Vane<TestSubject> vane = VaneBuilder.Connect(success, log, log2);
 
             vane.Execute(_testSubject);
 

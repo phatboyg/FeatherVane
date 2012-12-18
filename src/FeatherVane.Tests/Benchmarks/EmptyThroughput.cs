@@ -11,8 +11,6 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests.Benchmarks
 {
-    using System.Text;
-
     public class EmptyThroughput :
         Throughput
     {
@@ -20,7 +18,7 @@ namespace FeatherVane.Tests.Benchmarks
 
         public EmptyThroughput()
         {
-            _vane = Vane.Success<Subject>();
+            _vane = VaneBuilder.Success<Subject>();
         }
 
         public void Execute(Subject subject)

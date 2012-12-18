@@ -15,14 +15,14 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
-    public class CompensationImpl :
+    public class TaskCompensation :
         Compensation
     {
         static readonly Result _completed = new Result {Task = TaskUtil.Completed()};
         readonly Exception _exception;
         readonly Task _task;
 
-        public CompensationImpl(Task task)
+        public TaskCompensation(Task task)
         {
             _task = task;
             _exception = _task.Exception.GetBaseException();

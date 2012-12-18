@@ -15,7 +15,6 @@ namespace FeatherVane.Web.Http
     using System.Linq;
     using System.Net;
     using System.Threading;
-    using System.Threading.Tasks;
     using Contexts;
 
 
@@ -67,7 +66,10 @@ namespace FeatherVane.Web.Http
 
                 _httpListener.Start();
 
-                QueueAccept();
+                for (int cpu = 0; cpu < Environment.ProcessorCount * 2; cpu++)
+                {
+                    QueueAccept();
+                }
             }
             catch (HttpListenerException ex)
             {
@@ -113,11 +115,11 @@ namespace FeatherVane.Web.Http
             }
         }
 
-        Task HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
+        void HandleConnection(DateTime acceptedAt, HttpListenerContext httpContext)
         {
             var context = new HttpListenerConnectionContext(this, httpContext, acceptedAt);
 
-            return _vane.ExecuteAsync(context, context.Request, context.Response, context.Server, false);
+            _vane.ExecuteAsync(context, context.Request, context.Response, context.Server, CancellationToken.None, false);
         }
 
         void ShutdownListener()

@@ -11,9 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+    using System.Threading;
     using FeatherVane.Actors;
     using NUnit.Framework;
-    using Vanes;
 
 
     [TestFixture]
@@ -22,25 +22,33 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_be_able_to_get_the_message_type()
         {
-            Vane<Message> vane = Vane.Connect(new Success<Message>(),
-                new MessageVane());
+            var messageVane = new MessageVane();
+            Vane<Message> vane = VaneBuilder.Success(messageVane);
 
-            var payload = new MessagePayload<Alpha>(new Alpha());
+            var alpha = new Alpha();
+            var payload = new MessagePayload<Alpha>(alpha);
 
-            var planner = new TaskBuilder<Message>();
+            TaskBuilder.Build(vane, payload, CancellationToken.None).Wait();
 
-            vane.Build(planner, payload);
+            Assert.IsTrue(ReferenceEquals(alpha, messageVane.Message));
         }
 
 
         class MessageVane :
             FeatherVane<Message>
         {
+            Alpha _message;
+
+            public Alpha Message
+            {
+                get { return _message; }
+            }
+
             public void Build(Builder<Message> builder, Payload<Message> payload, Vane<Message> next)
             {
                 Message<Alpha> alphaMessage;
-                if (payload.Data.TryGet(out alphaMessage))
-                    builder.Execute(() => { });
+                if (payload.Data.TryGetAs(out alphaMessage))
+                    builder.Execute(() => { _message = alphaMessage.Body; });
 
                 next.Build(builder, payload);
             }

@@ -25,15 +25,15 @@ namespace FeatherVane.Actors
         /// </summary>
         /// <param name="messageType">The message type</param>
         /// <returns>True if the message can be cast to the specified type, otherwise false</returns>
-        bool Has(Type messageType);
+        bool Is(Type messageType);
 
         /// <summary>
         /// Retrieve the message as the specified type
         /// </summary>
         /// <typeparam name="TContext">The type of message to retrieve</typeparam>
-        /// <param name="context">The resulting context if found</param>
+        /// <param name="message">The resulting context if found</param>
         /// <returns>True if the context was found, otherwise false</returns>
-        bool TryGet<T>(out Message<T> context)
+        bool TryGetAs<T>(out Message<T> message)
             where T : class;
     }
 

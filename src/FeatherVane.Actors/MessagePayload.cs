@@ -39,20 +39,21 @@ namespace FeatherVane.Actors
             _body = body;
         }
 
-        bool Message.Has(Type messageType)
+        bool Message.Is(Type messageType)
         {
             return messageType.IsInstanceOfType(_body);
         }
 
-        bool Message.TryGet<T>(out Message<T> context)
+        bool Message.TryGetAs<T>(out Message<T> message)
         {
-            if (_body is T)
+            var body = _body as T;
+            if (body != null)
             {
-                context = new MessagePayload<T>(_payload, _body as T);
+                message = new MessagePayload<T>(_payload, body);
                 return true;
             }
 
-            context = default(Message<T>);
+            message = default(Message<T>);
             return false;
         }
 

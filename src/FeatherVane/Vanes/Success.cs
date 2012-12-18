@@ -14,7 +14,7 @@ namespace FeatherVane.Vanes
     public class Success<T> :
         Vane<T>
     {
-        public void Build(Builder<T> builder, Payload<T> payload)
+        void Vane<T>.Build(Builder<T> builder, Payload<T> payload)
         {
             builder.Completed();
         }

@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -11,35 +11,34 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
+    using System;
+
+
     /// <summary>
-    /// If the next Vane faults, a Rescue reroutes the Build to an alternate Vane.
+    /// A Vane with an Execute and Compensate method
     /// </summary>
-    /// <typeparam name="T">The Vane type</typeparam>
-    public class Rescue<T> :
-        FeatherVane<T>,
-        AcceptVaneVisitor
+    /// <typeparam name="T"></typeparam>
+    public class Compensate<T> :
+        FeatherVane<T>
     {
-        readonly Vane<T> _vane;
+        readonly Func<Payload<T>, bool> _compensate;
 
         /// <summary>
-        /// Constructs a Rescue Vane
+        /// Constructs a Execute and Compensate Vane
         /// </summary>
-        /// <param name="vane">The rescue vane</param>
-        public Rescue(Vane<T> vane)
+        /// <param name="compensate">A compensation, returns true if handled</param>
+        public Compensate(Func<Payload<T>, bool> compensate)
         {
-            _vane = vane;
-        }
-
-        bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
-        {
-            return visitor.Visit(this, x => visitor.Visit(_vane));
+            _compensate = compensate;
         }
 
         void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
             next.Build(builder, payload);
 
-            builder.Compensate(x => x.Task(TaskBuilder.Build(_vane, payload, builder.CancellationToken)));
+            builder.Compensate(compensation => _compensate(payload)
+                                                   ? compensation.Handled()
+                                                   : compensation.Throw());
         }
     }
 }

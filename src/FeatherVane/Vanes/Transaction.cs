@@ -14,42 +14,48 @@ namespace FeatherVane.Vanes
     using System.Transactions;
 
 
+    /// <summary>
+    /// Adds a TransactionScope to the Vane, allowing transactional operations
+    /// </summary>
+    /// <typeparam name="T">The Vane type</typeparam>
     public class Transaction<T> :
         FeatherVane<T>
     {
         readonly TransactionScopeOption _scopeOptions;
+
+        public Transaction(TransactionScopeOption scopeOptions)
+        {
+            _scopeOptions = scopeOptions;
+        }
 
         public Transaction()
         {
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
             TransactionScopeOption options = _scopeOptions;
 
-            TransactionScope scope = null;
-            builder.Execute(() =>
+            TransactionScope createdScope = null;
+            builder.Execute(() => payload.GetOrAdd(() =>
                 {
-                    payload.GetOrAdd(() =>
-                        {
-                            scope = new TransactionScope(options);
-                            return scope;
-                        });
-                });
+                    createdScope = new TransactionScope(options);
+                    return createdScope;
+                }));
 
             next.Build(builder, payload);
 
             builder.Execute(() =>
                 {
-                    if (scope != null)
-                        scope.Complete();
+                    if (createdScope != null)
+                        createdScope.Complete();
                 });
 
             builder.Finally(() =>
                 {
-                    if (scope != null)
-                        scope.Dispose();
+                    if (createdScope != null)
+                        createdScope.Dispose();
                 });
         }
     }

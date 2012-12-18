@@ -16,6 +16,10 @@ namespace FeatherVane.Vanes
     using System.Text;
 
 
+    /// <summary>
+    /// An async logger writes to the Stream asynchronously to force a non-synchronous Task
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class AsyncLogger<T> :
         FeatherVane<T>
     {
@@ -30,7 +34,7 @@ namespace FeatherVane.Vanes
             _outputEncoding = outputEncoding ?? Encoding.UTF8;
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
             builder.Execute(() =>
                 {

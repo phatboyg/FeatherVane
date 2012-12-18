@@ -26,21 +26,14 @@ namespace FeatherVane.Vanes
             _tap = tap;
         }
 
-        public bool Accept(VaneVisitor visitor)
+        bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
             return visitor.Visit(this, x => visitor.Visit(_tap));
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
         {
-            builder.Execute(() =>
-                {
-                    var planB = new TaskBuilder<T>();
-
-                    _tap.Build(planB, payload);
-
-                    return planB.Build();
-                });
+            builder.Execute(() => TaskBuilder.Build(_tap, payload, builder.CancellationToken));
 
             next.Build(builder, payload);
         }

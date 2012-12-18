@@ -23,7 +23,7 @@ namespace FeatherVane.Tests.Benchmarks
         {
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
-            _vane = Vane.Success(new Logger<Subject>(sw, x => ""));
+            _vane = VaneBuilder.Success(new Logger<Subject>(sw, x => ""));
         }
 
         public void Execute(Subject subject)

@@ -17,7 +17,7 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
-    static class StreamExtensions
+    public static class StreamExtensions
     {
         /// <summary>
         /// Write the buffer to the stream asynchronously, returning a Task to use for completion
@@ -27,7 +27,7 @@ namespace FeatherVane
         /// <param name="offset">The offset into the buffer</param>
         /// <param name="count">The count of bytes to write</param>
         /// <param name="cancellationToken">The cancellation token</param>
-        internal static Task WriteAsync(this Stream stream, byte[] buffer, int offset, int count,
+        public static Task WriteAsync(this Stream stream, byte[] buffer, int offset, int count,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (cancellationToken.IsCancellationRequested)

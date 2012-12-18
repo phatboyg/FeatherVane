@@ -20,8 +20,8 @@ namespace FeatherVane.Visualization
     public class StringVaneVisitor :
         VaneVisitor
     {
-        StringBuilder _sb;
-        HashSet<object> _seen;
+        readonly StringBuilder _sb;
+        readonly HashSet<object> _seen;
         int _depth;
 
         public StringVaneVisitor()

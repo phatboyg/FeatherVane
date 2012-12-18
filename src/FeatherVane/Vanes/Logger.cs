@@ -14,13 +14,22 @@ namespace FeatherVane.Vanes
     using System;
     using System.IO;
 
-
+    /// <summary>
+    /// Logs to a TextWriter before the passing control to the next vane. The payload is 
+    /// used to get the output text via the provider function.
+    /// </summary>
+    /// <typeparam name="T">The Vane type</typeparam>
     public class Logger<T> :
         FeatherVane<T>
     {
         readonly Func<Payload<T>, string> _getLogMessage;
         readonly TextWriter _output;
 
+        /// <summary>
+        /// Constructs a Logger
+        /// </summary>
+        /// <param name="output">The output writer for log messages</param>
+        /// <param name="getLogMessage">The log message factory method</param>
         public Logger(TextWriter output, Func<Payload<T>, string> getLogMessage)
         {
             _output = output;

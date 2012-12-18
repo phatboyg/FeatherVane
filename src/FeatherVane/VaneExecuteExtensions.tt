@@ -5,6 +5,7 @@
 namespace FeatherVane
 {
     using System.Diagnostics;
+    using System.Threading;
     using System.Threading.Tasks;
     using Payloads;
 
@@ -16,16 +17,15 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
-        /// <param name="body">The body to deliver</param>
-        public static void Execute<T>(this Vane<T> vane, T body)
+        /// <param name="data">The body to deliver</param>
+        /// <param name="cancellationToken">The cancellation token to cancel</param>
+        /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
+        public static void Execute<T>(this Vane<T> vane, T data, 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            var payload = new PayloadImpl<T>(body);
+            var payload = new PayloadImpl<T>(data);
 
-            var builder = new TaskBuilder<T>();
-
-            vane.Build(builder, payload);
-
-            builder.Build().Wait();
+            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -33,16 +33,15 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
-        /// <param name="body">The body to deliver</param>
-        public static Task ExecuteAsync<T>(this Vane<T> vane, T body)
+        /// <param name="data">The body to deliver</param>
+        /// <param name="cancellationToken">The cancellation token to cancel</param>
+        /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
+        public static Task ExecuteAsync<T>(this Vane<T> vane, T data, 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            var payload = new PayloadImpl<T>(body);
+           var payload = new PayloadImpl<T>(data);
 
-            var builder = new TaskBuilder<T>();
-
-            vane.Build(builder, payload);
-
-            return builder.Build();
+           return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
         }
 
         /// <summary>
@@ -50,14 +49,13 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
-        /// <param name="body">The body to deliver</param>
-        public static void Execute<T>(this Vane<T> vane, Payload<T> payload)
+        /// <param name="payload">The payload to deliver</param>
+        /// <param name="cancellationToken">The cancellation token to cancel</param>
+        /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
+        public static void Execute<T>(this Vane<T> vane, Payload<T> payload, 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            var builder = new TaskBuilder<T>();
-
-            vane.Build(builder, payload);
-
-            builder.Build().Wait();
+            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
         }  
         
         /// <summary>
@@ -65,14 +63,13 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
-        /// <param name="body">The body to deliver</param>
-        public static Task ExecuteAsync<T>(this Vane<T> vane, Payload<T> payload)
+        /// <param name="payload">The payload to deliver</param>
+        /// <param name="cancellationToken">The cancellation token to cancel</param>
+        /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
+        public static Task ExecuteAsync<T>(this Vane<T> vane, Payload<T> payload, 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true)
         {
-            var builder = new TaskBuilder<T>();
-
-            vane.Build(builder, payload);
-
-            return builder.Build();
+            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
         }
 
 <# for(int i=1; i<=16; i++){
@@ -86,18 +83,18 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
-        /// <param name="body">The body to deliver</param>
-        public static void Execute<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>) 
+        /// <param name="data">The data to deliver</param>
+        /// <param name="cancellationToken">The cancellation token to cancel</param>
+        /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
+        public static void Execute<T<#=tInputArgs#>>(this Vane<T> vane, T data, <#=tParms#>, 
+            CancellationToken cancellationToken, bool runSynchronously = true) 
             <#=tWheres#>
         {
-            var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
+            var payload = new PayloadImpl<T>(data);<# for(int j = 1; j <= i; j++){ #> 
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
-            var builder = new TaskBuilder<T>();
 
-            vane.Build(builder, payload);
-
-            builder.Build().Wait();
+            TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously).Wait();
         }
 
         /// <summary>
@@ -105,18 +102,18 @@ namespace FeatherVane
         /// </summary>
         /// <typeparam name="T">The context type of the Vane</typeparam>
         /// <param name="vane">The vane itself</param>
-        /// <param name="body">The body to deliver</param>
-        public static Task ExecuteAsync<T<#=tInputArgs#>>(this Vane<T> vane, T body, <#=tParms#>, bool runSynchronously = true) 
+        /// <param name="data">The data to deliver</param>
+        /// <param name="cancellationToken">The cancellation token to cancel</param>
+        /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
+        public static Task ExecuteAsync<T<#=tInputArgs#>>(this Vane<T> vane, T data, <#=tParms#>,
+            CancellationToken cancellationToken, bool runSynchronously = true) 
             <#=tWheres#>
         {
-            var payload = new PayloadImpl<T>(body);<# for(int j = 1; j <= i; j++){ #> 
+            var payload = new PayloadImpl<T>(data);<# for(int j = 1; j <= i; j++){ #> 
             payload.GetOrAdd(() => ctx<#=j#>);<# } #>
 
-            var builder = new TaskBuilder<T>(runSynchronously);
 
-            vane.Build(builder, payload);
-
-            return builder.Build();
+            return TaskBuilder.Build(vane, payload, cancellationToken, runSynchronously);
         }
 <# 
 }

@@ -44,7 +44,7 @@
     <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
     <Compile Include="Exceptions\TaskBuilderException.cs" />
-    <Compile Include="CompensationImpl.cs" />
+    <Compile Include="TaskCompensation.cs" />
     <Compile Include="Payloads\DelegatingPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
@@ -55,6 +55,7 @@
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="TaskBuilder.cs" />
     <Compile Include="TaskUtil.cs" />
+    <Compile Include="Vane.cs" />
     <Compile Include="VaneExecuteExtensions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -64,6 +65,7 @@
     <Compile Include="Payload.cs" />
     <Compile Include="PayloadExtensions.cs" />
     <Compile Include="Vanes\AsyncLogger.cs" />
+    <Compile Include="Vanes\Compensate.cs" />
     <Compile Include="Vanes\NextVane.cs" />
     <Compile Include="VaneVisitor.cs" />
     <Compile Include="Visualization\StringVaneVisitor.cs" />
@@ -72,10 +74,10 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Vane.cs" />
+    <Compile Include="VaneBuilder.cs" />
     <Compile Include="FeatherVane.cs" />
-    <Compile Include="Vanes\ExecuteCompensateAction.cs" />
-    <Compile Include="Vanes\ExecuteAction.cs" />
+    <Compile Include="Vanes\ExecuteCompensate.cs" />
+    <Compile Include="Vanes\Execute.cs" />
     <Compile Include="Vanes\Rescue.cs" />
     <Compile Include="Vanes\Success.cs" />
     <Compile Include="Vanes\Profiler.cs" />

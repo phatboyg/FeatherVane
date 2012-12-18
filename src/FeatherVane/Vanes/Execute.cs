@@ -13,19 +13,29 @@ namespace FeatherVane.Vanes
 {
     using System;
 
-    public class ExecuteAction<T> :
+
+    /// <summary>
+    /// Executes a continuation as part of the Vane
+    /// </summary>
+    /// <typeparam name="T">The Vane type</typeparam>
+    public class Execute<T> :
         FeatherVane<T>
     {
-        readonly Action<Payload<T>> _handler;
+        readonly Action<Payload<T>> _continuation;
 
-        public ExecuteAction(Action<Payload<T>> handler)
+        public Execute(Action<Payload<T>> continuation)
         {
-            _handler = handler;
+            _continuation = continuation;
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        public Execute(Action<T> continuation)
         {
-            builder.Execute(() => _handler(payload));
+            _continuation = payload => continuation(payload.Data);
+        }
+
+        void FeatherVane<T>.Build(Builder<T> builder, Payload<T> payload, Vane<T> next)
+        {
+            builder.Execute(() => _continuation(payload));
 
             next.Build(builder, payload);
         }

@@ -11,41 +11,8 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    using Vanes;
-
-
     public interface Vane<T>
     {
         void Build(Builder<T> builder, Payload<T> payload);
-    }
-
-
-    public static class Vane
-    {
-        public static Vane<T> Success<T>(params FeatherVane<T>[] vanes)
-        {
-            var success = new Success<T>();
-
-            return Connect(success, vanes);
-        }
-
-        public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes)
-        {
-            Vane<T> next = last;
-            for (int i = vanes.Length - 1; i >= 0; i--)
-                next = vanes[i].Append(next);
-
-            return next;
-        }
-
-        public static Vane<T> Append<T>(this FeatherVane<T> head, Vane<T> next)
-        {
-            return new NextVane<T>(head, next);
-        }
-
-        public static Vane<T> Push<T>(this Vane<T> existing, FeatherVane<T> front)
-        {
-            return new NextVane<T>(front, existing);
-        }
     }
 }

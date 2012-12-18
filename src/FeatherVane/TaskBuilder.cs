@@ -16,6 +16,20 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
+    public static class TaskBuilder
+    {
+        public static Task Build<T>(Vane<T> vane, Payload<T> payload, CancellationToken cancellationToken,
+            bool runSynchronously = true)
+        {
+            var taskBuilder = new TaskBuilder<T>(cancellationToken, runSynchronously);
+
+            vane.Build(taskBuilder, payload);
+
+            return taskBuilder.Build();
+        }
+    }
+
+
     /// <summary>
     /// Builds a chain of tasks that should run synchronously on the building thread until
     /// an asynchronous operation is requested, in which case it switches the chain to 
@@ -29,12 +43,14 @@ namespace FeatherVane
         CancellationToken _cancellationToken;
         Task _task;
 
-        public TaskBuilder(bool runSynchronously = true, CancellationToken cancellationToken = default(CancellationToken))
+        public TaskBuilder(CancellationToken cancellationToken, bool runSynchronously = true)
         {
-            _task = runSynchronously
-                        ? TaskUtil.Completed()
-                        : Task.Factory.StartNew(() => { });
             _cancellationToken = cancellationToken;
+            _task = runSynchronously
+                        ? cancellationToken.IsCancellationRequested
+                              ? TaskUtil.Cancelled()
+                              : TaskUtil.Completed()
+                        : Task.Factory.StartNew(() => { }, cancellationToken);
         }
 
         CancellationToken Builder<T>.CancellationToken
@@ -68,7 +84,7 @@ namespace FeatherVane
             if (_task.Status == TaskStatus.RanToCompletion)
                 return this;
 
-            _task = Compensate(_task, () => compensation(new CompensationImpl(_task)).Task);
+            _task = Compensate(_task, () => compensation(new TaskCompensation(_task)).Task);
             return this;
         }
 
@@ -88,7 +104,7 @@ namespace FeatherVane
             Then(() => TaskUtil.CompletedError(exception));
         }
 
-        Builder<T> Builder<T>.Finally(Action continuation, bool runSynchronously = true)
+        Builder<T> Builder<T>.Finally(Action continuation, bool runSynchronously)
         {
             if (_task.IsCompleted)
             {

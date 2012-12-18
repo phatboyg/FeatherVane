@@ -15,7 +15,8 @@ namespace FeatherVane.Tests.HttpTests
     using System.Diagnostics;
     using System.Linq;
     using System.Net;
-    using System.Threading.Tasks;
+    using System.Text;
+    using System.Threading;
     using NUnit.Framework;
     using Vanes;
     using Web.Http;
@@ -48,17 +49,17 @@ namespace FeatherVane.Tests.HttpTests
             }
         }
 
-        [Test]
+        [Test, Explicit]
         public void Should_get_a_whole_lot_of_200s()
         {
             var requestUri = new Uri(ServerUri + "/hello");
 
             Stopwatch start = Stopwatch.StartNew();
 
-            int threads = Environment.ProcessorCount*2;
+            int threadCount = Environment.ProcessorCount*2;
             int iterations = 5000;
 
-            Task[] tasks = Enumerable.Range(0, threads).Select(x => Task.Factory.StartNew(() =>
+            Thread[] threads = Enumerable.Range(0, threadCount).Select(x => new Thread(() =>
                 {
                     for (int i = 0; i < iterations; i++)
                     {
@@ -79,15 +80,23 @@ namespace FeatherVane.Tests.HttpTests
                             _webResponse.Close();
                         }
                     }
-                }, TaskCreationOptions.LongRunning)).ToArray();
+                })).ToArray();
 
-            Task.WaitAll(tasks);
+            foreach (var thread in threads)
+            {
+                thread.Start();
+            }
+
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
 
             start.Stop();
 
             Console.WriteLine("Elapsed Time: {0}ms", start.ElapsedMilliseconds);
             Console.WriteLine("Requests/second: {0}", (Stopwatch.Frequency/((decimal)start.ElapsedTicks/
-                                                                            (threads*iterations))).ToString("F0"));
+                                                                            (threadCount * iterations))).ToString("F0"));
         }
 
         [Test, Explicit]
@@ -113,8 +122,8 @@ namespace FeatherVane.Tests.HttpTests
 
         protected override Vane<ConnectionContext> CreateMainVane()
         {
-            return Vane.Connect(new Unhandled<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
+            return VaneBuilder.Connect(new Unhandled<ConnectionContext>(),
+                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(10)),
                 new HelloFeatherVane(),
                 new NotFoundFeatherVane());
         }
@@ -129,12 +138,15 @@ namespace FeatherVane.Tests.HttpTests
                 {
                     builder.Execute(() =>
                         {
-                    ResponseContext response;
+                            ResponseContext response;
                             if (payload.TryGet(out response))
                             {
                                 response.StatusCode = 200;
-                                response.Write("Hello!");
+                                var data = Encoding.UTF8.GetBytes("Hello!");
+                                return response.BodyStream.WriteAsync(data, 0, data.Length);
                             }
+
+                            return TaskUtil.CompletedError(new UnhandledException());
                         });
                 }
 

@@ -17,7 +17,7 @@ namespace FeatherVane
     using System.Threading.Tasks;
 
 
-    static class TaskUtil
+    public static class TaskUtil
     {
         static readonly Task _defaultCompleted = CompletedResult(default(Unit));
 
@@ -45,7 +45,7 @@ namespace FeatherVane
             return _defaultCompleted;
         }
 
-        internal static Task CompletedError(Exception exception)
+        public static Task CompletedError(Exception exception)
         {
             return CompletedError<Unit>(exception);
         }

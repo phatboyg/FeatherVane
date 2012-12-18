@@ -11,27 +11,37 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
-    class NextVane<T> :
+    /// <summary>
+    /// Curries a FeatherVane into a Vane, using the next Vane supplied during
+    /// Build operations.
+    /// </summary>
+    /// <typeparam name="T">The Vane type</typeparam>
+    public class NextVane<T> :
         Vane<T>,
         AcceptVaneVisitor
     {
-        readonly Vane<T> _next;
-        readonly FeatherVane<T> _vane;
+        readonly FeatherVane<T> _featherVane;
+        readonly Vane<T> _nextVane;
 
-        public NextVane(FeatherVane<T> vane, Vane<T> next)
+        /// <summary>
+        /// Constructs a NextVane
+        /// </summary>
+        /// <param name="featherVane">The FeatherVane to combine with the next Vane</param>
+        /// <param name="nextVane">The next Vane</param>
+        public NextVane(FeatherVane<T> featherVane, Vane<T> nextVane)
         {
-            _vane = vane;
-            _next = next;
+            _featherVane = featherVane;
+            _nextVane = nextVane;
         }
 
-        public bool Accept(VaneVisitor visitor)
+        bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(_vane, x => visitor.Visit(_next));
+            return visitor.Visit(_featherVane, x => visitor.Visit(_nextVane));
         }
 
-        public void Build(Builder<T> builder, Payload<T> payload)
+        void Vane<T>.Build(Builder<T> builder, Payload<T> payload)
         {
-            _vane.Build(builder, payload, _next);
+            _featherVane.Build(builder, payload, _nextVane);
         }
     }
 }

@@ -78,11 +78,7 @@ namespace FeatherVane.Vanes
                     {
                         Payload<TOutput> output = _converter(payload);
 
-                        var outputPlanner = new TaskBuilder<TOutput>();
-
-                        _vane.Build(outputPlanner, output);
-
-                        return outputPlanner.Build();
+                        return TaskBuilder.Build(_vane, output, builder.CancellationToken);
                     });
             }
         }
