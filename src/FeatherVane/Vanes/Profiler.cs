@@ -26,7 +26,7 @@ namespace FeatherVane.Vanes
             _settings = new ProfilerSettings(writer, trivialThreshold);
         }
 
-        public void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             ProfilerSettings settings = _settings;
 

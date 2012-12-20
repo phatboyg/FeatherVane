@@ -37,7 +37,7 @@ namespace FeatherVane
     /// </summary>
     /// <typeparam name="T">The payload type of the task chain</typeparam>
     public class TaskComposer<T> :
-        Composer<T>
+        Composer
     {
         readonly CancellationToken _cancellationToken;
         readonly Lazy<Exception> _completeException =
@@ -56,12 +56,12 @@ namespace FeatherVane
                         : Task.Factory.StartNew(() => { }, cancellationToken);
         }
 
-        CancellationToken Composer<T>.CancellationToken
+        CancellationToken Composer.CancellationToken
         {
             get { return _cancellationToken; }
         }
 
-        Composer<T> Composer<T>.Execute(Action continuation, bool runSynchronously)
+        Composer Composer.Execute(Action continuation, bool runSynchronously)
         {
             if (_complete)
                 throw _completeException.Value;
@@ -71,7 +71,7 @@ namespace FeatherVane
             return this;
         }
 
-        Composer<T> Composer<T>.Execute(Func<Task> continuationTask, bool runSynchronously)
+        Composer Composer.Execute(Func<Task> continuationTask, bool runSynchronously)
         {
             if (_complete)
                 throw _completeException.Value;
@@ -80,7 +80,7 @@ namespace FeatherVane
             return this;
         }
 
-        Composer<T> Composer<T>.Compensate(Func<Compensation, CompensationResult> compensation)
+        Composer Composer.Compensate(Func<Compensation, CompensationResult> compensation)
         {
             if (_complete)
                 throw _completeException.Value;
@@ -92,7 +92,7 @@ namespace FeatherVane
             return this;
         }
 
-        void Composer<T>.Completed()
+        void Composer.Completed()
         {
             if (_complete)
                 throw _completeException.Value;
@@ -100,7 +100,7 @@ namespace FeatherVane
             _task = Execute(_task, TaskUtil.Completed, _cancellationToken);
         }
 
-        void Composer<T>.Failed(Exception exception)
+        void Composer.Failed(Exception exception)
         {
             if (_complete)
                 throw _completeException.Value;
@@ -108,7 +108,7 @@ namespace FeatherVane
             _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
         }
 
-        Composer<T> Composer<T>.Finally(Action continuation, bool runSynchronously)
+        Composer Composer.Finally(Action continuation, bool runSynchronously)
         {
             if (_complete)
                 throw _completeException.Value;

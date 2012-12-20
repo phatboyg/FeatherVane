@@ -36,7 +36,7 @@ namespace FeatherVane.Vanes
             _getLogMessage = getLogMessage;
         }
 
-        public void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             composer.Execute(() =>
                 {

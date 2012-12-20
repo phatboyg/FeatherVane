@@ -11,33 +11,35 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
-    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
 
     /// <summary>
-    /// Executes a continuation as part of the Vane
+    /// A fan-out Vane composes over a list of subsequent vanes for every execution
     /// </summary>
-    /// <typeparam name="T">The Vane type</typeparam>
-    public class Execute<T> :
-        FeatherVane<T>
+    /// <typeparam name="T"></typeparam>
+    public class FanOutVane<T> :
+        FeatherVane<T>,
+        AcceptVaneVisitor
+
     {
-        readonly Action<Payload<T>> _continuation;
+        readonly IList<FeatherVane<T>> _vanes;
 
-        public Execute(Action<Payload<T>> continuation)
+        public FanOutVane(IEnumerable<FeatherVane<T>> vanes)
         {
-            _continuation = continuation;
+            _vanes = vanes.ToList();
         }
 
-        public Execute(Action<T> continuation)
+        public bool Accept(VaneVisitor visitor)
         {
-            _continuation = payload => continuation(payload.Data);
+            return visitor.Visit(this, x => _vanes.All(visitor.Visit));
         }
 
-        void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
-            composer.Execute(() => _continuation(payload));
-
-            next.Compose(composer, payload);
+            for (int i = 0; i < _vanes.Count; i++)
+                _vanes[i].Compose(composer, payload, next);
         }
     }
 }

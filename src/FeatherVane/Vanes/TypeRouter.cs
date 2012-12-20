@@ -43,7 +43,7 @@ namespace FeatherVane.Vanes
             return visitor.Visit(this, x => _typeVanes.All(visitor.Visit));
         }
 
-        public void Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
+        public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             Type contextType = _typeSelector(payload);
 
@@ -72,7 +72,7 @@ namespace FeatherVane.Vanes
                 _converter = converter;
             }
 
-            public void Compose(Composer<T> composer, Payload<T> payload)
+            public void Compose(Composer composer, Payload<T> payload)
             {
                 composer.Execute(() =>
                     {

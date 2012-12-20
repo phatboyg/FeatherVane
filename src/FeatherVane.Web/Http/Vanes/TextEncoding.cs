@@ -30,7 +30,7 @@ namespace FeatherVane.Web.Http.Vanes
         }
 
 
-        public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
+        public void Compose(Composer composer, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             RequestContext request;

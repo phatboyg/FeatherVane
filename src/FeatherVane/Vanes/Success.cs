@@ -14,7 +14,7 @@ namespace FeatherVane.Vanes
     public class Success<T> :
         Vane<T>
     {
-        void Vane<T>.Compose(Composer<T> composer, Payload<T> payload)
+        void Vane<T>.Compose(Composer composer, Payload<T> payload)
         {
             composer.Completed();
         }

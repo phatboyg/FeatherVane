@@ -66,6 +66,7 @@
     <Compile Include="PayloadExtensions.cs" />
     <Compile Include="Vanes\AsyncLogger.cs" />
     <Compile Include="Vanes\Compensate.cs" />
+    <Compile Include="Vanes\FanOutVane.cs" />
     <Compile Include="Vanes\NextVane.cs" />
     <Compile Include="VaneVisitor.cs" />
     <Compile Include="Visualization\StringVaneVisitor.cs" />

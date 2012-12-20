@@ -12,7 +12,8 @@
 namespace FeatherVane.Tests
 {
     using System.Threading;
-    using FeatherVane.Actors;
+    using FeatherVane.Messaging;
+    using FeatherVane.Messaging.Payloads;
     using NUnit.Framework;
 
 
@@ -44,7 +45,7 @@ namespace FeatherVane.Tests
                 get { return _message; }
             }
 
-            public void Compose(Composer<Message> composer, Payload<Message> payload, Vane<Message> next)
+            public void Compose(Composer composer, Payload<Message> payload, Vane<Message> next)
             {
                 Message<Alpha> alphaMessage;
                 if (payload.Data.TryGetAs(out alphaMessage))

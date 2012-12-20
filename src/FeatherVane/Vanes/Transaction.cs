@@ -33,7 +33,7 @@ namespace FeatherVane.Vanes
             _scopeOptions = TransactionScopeOption.Required;
         }
 
-        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             TransactionScopeOption options = _scopeOptions;
 

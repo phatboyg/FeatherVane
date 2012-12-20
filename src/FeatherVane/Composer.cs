@@ -19,8 +19,7 @@ namespace FeatherVane
     /// <summary>
     /// Composers are passed to vanes, which use them to add continuations and/or compensations
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface Composer<T>
+    public interface Composer
     {
         /// <summary>
         /// The CancellationToken for this execution
@@ -33,7 +32,7 @@ namespace FeatherVane
         /// <param name="continuation"></param>
         /// <param name="runSynchronously"></param>
         /// <returns></returns>
-        Composer<T> Execute(Action continuation, bool runSynchronously = true);
+        Composer Execute(Action continuation, bool runSynchronously = true);
 
         /// <summary>
         /// Adds a task continuation to the plan. If the Task is not truly asynchronous, it can be
@@ -42,14 +41,14 @@ namespace FeatherVane
         /// <param name="continuationTask"></param>
         /// <param name="runSynchronously"></param>
         /// <returns></returns>
-        Composer<T> Execute(Func<Task> continuationTask, bool runSynchronously = true);
+        Composer Execute(Func<Task> continuationTask, bool runSynchronously = true);
 
         /// <summary>
         /// Adds a compensating task to the plan, which will be invoked if an exception occurs
         /// </summary>
         /// <param name="compensation"></param>
         /// <returns></returns>
-        Composer<T> Compensate(Func<Compensation, CompensationResult> compensation);
+        Composer Compensate(Func<Compensation, CompensationResult> compensation);
 
         /// <summary>
         /// Adds a continuation that is always run, regardless of a successful or exceptional condition
@@ -57,7 +56,7 @@ namespace FeatherVane
         /// <param name="continuation"></param>
         /// <param name="runSynchronously"></param>
         /// <returns></returns>
-        Composer<T> Finally(Action continuation, bool runSynchronously = true); 
+        Composer Finally(Action continuation, bool runSynchronously = true); 
 
         /// <summary>
         /// Adds a successful completion of the execution to the plan

@@ -26,7 +26,7 @@ namespace FeatherVane.Tests.Actors
         class ExitHandler :
             FeatherVane<Exit>
         {
-            public void Compose(Composer<Exit> composer, Payload<Exit> payload, Vane<Exit> next)
+            public void Compose(Composer composer, Payload<Exit> payload, Vane<Exit> next)
             {
                 throw new NotImplementedException();
             }

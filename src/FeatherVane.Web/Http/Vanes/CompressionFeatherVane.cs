@@ -18,7 +18,7 @@ namespace FeatherVane.Web.Http.Vanes
     public class CompressionFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
+        public void Compose(Composer composer, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             var request = payload.Get<RequestContext>();
@@ -31,7 +31,7 @@ namespace FeatherVane.Web.Http.Vanes
             next.Compose(composer, payload);
         }
 
-        void ApplyCompressionIfAppropriate(RequestContext request, Composer<ConnectionContext> composer,
+        void ApplyCompressionIfAppropriate(RequestContext request, Composer composer,
             Payload<ConnectionContext> payload)
         {
             if (request.HttpMethod == "HEAD")

@@ -22,7 +22,7 @@ namespace FeatherVane.Web.Http.Vanes
     public class NotFoundFeatherVane :
         FeatherVane<ConnectionContext>
     {
-        public void Compose(Composer<ConnectionContext> composer, Payload<ConnectionContext> payload,
+        public void Compose(Composer composer, Payload<ConnectionContext> payload,
             Vane<ConnectionContext> next)
         {
             composer.Execute(() =>

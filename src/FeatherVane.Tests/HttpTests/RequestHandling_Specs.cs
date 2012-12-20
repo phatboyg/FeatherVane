@@ -131,7 +131,7 @@ namespace FeatherVane.Tests.HttpTests
         class HelloFeatherVane :
             FeatherVane<ConnectionContext>
         {
-            public void Compose(Composer<ConnectionContext> composer,
+            public void Compose(Composer composer,
                 Payload<ConnectionContext> payload, Vane<ConnectionContext> next)
             {
                 if (payload.Get<RequestContext>().Url.ToString().EndsWith("hello"))

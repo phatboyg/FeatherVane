@@ -31,7 +31,7 @@ namespace FeatherVane.Vanes
             return visitor.Visit(this, x => visitor.Visit(_tap));
         }
 
-        void FeatherVane<T>.Compose(Composer<T> composer, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             composer.Execute(() => TaskComposer.Compose(_tap, payload, composer.CancellationToken));
 

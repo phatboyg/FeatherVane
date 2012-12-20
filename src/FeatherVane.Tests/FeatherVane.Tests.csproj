@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="Actors\Actor_Specs.cs" />
     <Compile Include="ActorThoughts_Specs.cs" />
+    <Compile Include="Benchmarks\ConsumerThroughput.cs" />
     <Compile Include="Benchmarks\EmptyThroughput.cs" />
     <Compile Include="Benchmarks\LoggerThroughput.cs" />
     <Compile Include="Benchmarks\ProfilerLoggerThroughput.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="HttpTests\Http_Specs.cs" />
     <Compile Include="HttpTests\RequestHandling_Specs.cs" />
     <Compile Include="Message_Specs.cs" />
+    <Compile Include="Messaging\Consumer_Specs.cs" />
     <Compile Include="Plan_Specs.cs" />
     <Compile Include="PushVane_Specs.cs" />
     <Compile Include="Rescue_Specs.cs" />
@@ -77,6 +79,10 @@
     <ProjectReference Include="..\FeatherVane.Actors\FeatherVane.Actors.csproj">
       <Project>{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}</Project>
       <Name>FeatherVane.Actors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FeatherVane.Messaging\FeatherVane.Messaging.csproj">
+      <Project>{FDC93173-1C85-43B0-9A7D-F3B22962924C}</Project>
+      <Name>FeatherVane.Messaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatherVane.Web\FeatherVane.Web.csproj">
       <Project>{F1851622-9293-4FB3-A6B8-CB7F81B06096}</Project>
