@@ -11,21 +11,28 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests.Benchmarks
 {
+    using System;
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
     using FeatherVane.Messaging.Vanes;
     using Vanes;
 
 
-    public class ConsumerThroughput :
+    public class TupleConsumerThroughput :
         Throughput
     {
         readonly Vane<Message> _vane;
 
-        public ConsumerThroughput()
+        public TupleConsumerThroughput()
         {
-            Vane<Message<Subject>> vane = ConsumerVaneFactory.New<TestConsumer, Subject>(() => new TestConsumer(),
-                x => x.Consume);
+            var messageConsumerVane = new MessageConsumerVane<Subject, TestConsumer>(x => x.Consume);
+            Vane<Tuple<Message<Subject>, TestConsumer>> consumerVane = VaneFactory.Success(messageConsumerVane);
+
+            var factoryVane = new FactoryVane<TestConsumer>(() => new TestConsumer());
+            var joinVane = new JoinVane<Message<Subject>, TestConsumer>(consumerVane, factoryVane);
+
+            Vane<Message<Subject>> vane = VaneFactory.Success(joinVane);
+
 
             var messageVane = new MessageVane<Subject>(vane);
 

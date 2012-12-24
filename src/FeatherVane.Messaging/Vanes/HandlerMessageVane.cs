@@ -15,27 +15,24 @@ namespace FeatherVane.Messaging.Vanes
 
 
     /// <summary>
-    /// Creates a consumer for the message and adds it to the execution
+    /// Invokes a handler for a message
     /// </summary>
-    /// <typeparam name="TMessage">The message type for the consumer</typeparam>
-    public class ConsumerMessageVane<TMessage> :
+    /// <typeparam name="TMessage">The message type</typeparam>
+    public class HandlerMessageVane<TMessage> :
         FeatherVane<Message<TMessage>>
         where TMessage : class
     {
-        readonly ConsumerFactory _consumerFactory;
+        readonly Action<Payload<Message<TMessage>>> _handler;
 
-        public ConsumerMessageVane(ConsumerFactory consumerFactory)
+        public HandlerMessageVane(Action<Payload<Message<TMessage>>> handler)
         {
-            _consumerFactory = consumerFactory;
+            _handler = handler;
         }
 
-        public void Compose(Composer composer, Payload<Message<TMessage>> payload, Vane<Message<TMessage>> next)
+        void FeatherVane<Message<TMessage>>.Compose(Composer composer, Payload<Message<TMessage>> payload,
+            Vane<Message<TMessage>> next)
         {
-            foreach (Action action in _consumerFactory.GetConsumers(payload))
-            {
-                Action consumerAction = action;
-                composer.Execute(consumerAction);
-            }
+            composer.Execute(() => _handler(payload));
 
             next.Compose(composer, payload);
         }

@@ -13,6 +13,7 @@ namespace FeatherVane.Messaging.Vanes
 {
     using Payloads;
 
+
     /// <summary>
     /// If a message can be converted to the message type of the vane, it will be
     /// executed by the fork in the vane before continuing
@@ -35,14 +36,20 @@ namespace FeatherVane.Messaging.Vanes
             return visitor.Visit(this, x => visitor.Visit(_vane));
         }
 
-        public void Compose(Composer composer, Payload<Message> payload, Vane<Message> next)
+        void FeatherVane<Message>.Compose(Composer composer, Payload<Message> payload, Vane<Message> next)
         {
-            Message<TMessage> message;
-            if (payload.Data.TryGetAs(out message))
-            {
-                var messagePayload = new MessagePayload<TMessage>(payload, message);
-                _vane.Compose(composer, messagePayload);
-            }
+            composer.Execute(() =>
+                {
+                    Message<TMessage> message;
+                    if (payload.Data.TryGetAs(out message))
+                    {
+                        var messagePayload = new MessagePayload<TMessage>(payload, message);
+
+                        return TaskComposer.Compose(_vane, messagePayload, composer.CancellationToken);
+                    }
+
+                    return TaskComposer.Completed<Message>(composer.CancellationToken);
+                });
 
             next.Compose(composer, payload);
         }

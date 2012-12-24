@@ -9,10 +9,31 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Actors.Payloads
+namespace FeatherVane.Messaging
 {
-    public interface ExitPayload :
-        Payload<Exit>
+    using System;
+
+
+    public class ConsumerImpl<TConsumer> :
+        Consumer<TConsumer>
     {
+        TConsumer _consumer;
+
+        public ConsumerImpl(TConsumer consumer)
+        {
+            _consumer = consumer;
+        }
+
+        public void Dispose()
+        {
+            var disposable = _consumer as IDisposable;
+            if (disposable != null)
+                disposable.Dispose();
+        }
+
+        public TConsumer Consumer
+        {
+            get { return _consumer; }
+        }
     }
 }

@@ -27,6 +27,13 @@ namespace FeatherVane
 
             return composer.Complete();
         }
+
+        public static Task Completed<T>(CancellationToken cancellationToken)
+        {
+            var composer = new TaskComposer<T>(cancellationToken);
+
+            return composer.Complete();
+        }
     }
 
 
@@ -40,6 +47,7 @@ namespace FeatherVane
         Composer
     {
         readonly CancellationToken _cancellationToken;
+
         readonly Lazy<Exception> _completeException =
             new Lazy<Exception>(() => new TaskComposerException("The composition is already complete."));
 

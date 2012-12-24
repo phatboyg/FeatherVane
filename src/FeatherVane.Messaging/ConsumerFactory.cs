@@ -11,12 +11,8 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Messaging
 {
-    using System;
-    using System.Collections.Generic;
-
-
-    public interface ConsumerFactory
+    public interface ConsumerFactory<out TConsumer>
     {
-        IEnumerable<Action> GetConsumers(Payload<Message> payload);
+        Consumer<TConsumer> GetConsumer<T>(Payload<T> payload);
     }
 }

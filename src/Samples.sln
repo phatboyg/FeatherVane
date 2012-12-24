@@ -7,7 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Tests", "Feathe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Web", "FeatherVane.Web\FeatherVane.Web.csproj", "{F1851622-9293-4FB3-A6B8-CB7F81B06096}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Actors", "FeatherVane.Actors\FeatherVane.Actors.csproj", "{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Messaging", "FeatherVane.Messaging\FeatherVane.Messaging.csproj", "{FDC93173-1C85-43B0-9A7D-F3B22962924C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A53AA501-AA60-472B-A7E2-72B261A16A1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,10 @@ Global
 		{F1851622-9293-4FB3-A6B8-CB7F81B06096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1851622-9293-4FB3-A6B8-CB7F81B06096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1851622-9293-4FB3-A6B8-CB7F81B06096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD405DE-C1B1-4C1E-ABA7-27BB3BE9B346}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Release|Any CPU.ActiveCfg = Release|Any CPU

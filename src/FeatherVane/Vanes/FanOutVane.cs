@@ -13,22 +13,26 @@ namespace FeatherVane.Vanes
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Internals.Caching;
 
 
     /// <summary>
     /// A fan-out Vane composes over a list of subsequent vanes for every execution
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FanOutVane<T> :
+    public class FanoutVane<T> :
         FeatherVane<T>,
         AcceptVaneVisitor
-
     {
-        readonly IList<FeatherVane<T>> _vanes;
+        readonly Cache<FeatherVane<T>, FeatherVane<T>> _vanes;
 
-        public FanOutVane(IEnumerable<FeatherVane<T>> vanes)
+        public FanoutVane(IEnumerable<FeatherVane<T>> vanes)
         {
-            _vanes = vanes.ToList();
+            _vanes = new ConcurrentCache<FeatherVane<T>, FeatherVane<T>>
+                {
+                    KeySelector = x => x
+                };
+            _vanes.Fill(vanes);
         }
 
         public bool Accept(VaneVisitor visitor)
@@ -38,8 +42,18 @@ namespace FeatherVane.Vanes
 
         public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
-            for (int i = 0; i < _vanes.Count; i++)
-                _vanes[i].Compose(composer, payload, next);
+            foreach (var vane in _vanes)
+                vane.Compose(composer, payload, next);
+        }
+
+        public void Add(FeatherVane<T> vane)
+        {
+            _vanes.AddValue(vane);
+        }
+
+        public void Remove(FeatherVane<T> vane)
+        {
+            _vanes.RemoveValue(vane);
         }
     }
 }

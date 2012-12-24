@@ -38,7 +38,7 @@ namespace FeatherVane.Tests.Benchmarks
 
         public IEnumerable<int> Iterations
         {
-            get { return new[] {10000, 50000}; }
+            get { return new[] {1000, 100000}; }
         }
     }
 }

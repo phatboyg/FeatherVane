@@ -27,20 +27,22 @@ namespace FeatherVane.Tests.Messaging
         [Test]
         public void Should_support_delivery()
         {
-            ConsumerFactory factory = new SingleMethodConsumerFactory<TestConsumer, A>(() => new TestConsumer(),
-                (c, p, m) => () => c.Consume(p, m));
-
-
-            var consumerMessageVane = new ConsumerMessageVane<A>(factory);
-            Vane<Message<A>> messageAVane = VaneFactory.Success(consumerMessageVane);
-
+            var messageAVane = ConsumerVaneFactory.New<TestConsumer, A>(() => new TestConsumer(), x => x.Consume);
             var messageVane = new MessageVane<A>(messageAVane);
+           
+            var messageBVane = ConsumerVaneFactory.New<TestConsumer, B>(() => new TestConsumer(), x => x.Consume);
+            var messageVaneB = new MessageVane<B>(messageBVane);
 
-            var fanOutVane = new FanOutVane<Message>(new[] {messageVane});
+            var fanOutVane = new FanoutVane<Message>(new FeatherVane<Message>[] {messageVane, messageVaneB});
             Vane<Message> vane = VaneFactory.Success(fanOutVane);
 
             var a = new A {Value = "Hello"};
             Payload<Message> payload = new MessagePayload<A>(a);
+
+            vane.Execute(payload, CancellationToken.None);
+
+            var b = new B {Value = "World"};
+            payload = new MessagePayload<B>(b);
 
             vane.Execute(payload, CancellationToken.None);
 
@@ -52,10 +54,68 @@ namespace FeatherVane.Tests.Messaging
 
         class TestConsumer
         {
-            public void Consume(Payload<Message> payload, Message<A> message)
+            public void Consume(Payload payload, Message<A> message)
             {
-                Console.WriteLine("Value: {0}", message.Body.Value);
+                Console.WriteLine("A Value: {0}", message.Body.Value);
+            }
 
+            public void Consume(Payload payload, Message<B> message)
+            {
+                Console.WriteLine("B Value: {0}", message.Body.Value);
+            }
+        }
+
+
+        class A
+        {
+            public string Value { get; set; }
+        }
+
+        class B
+        {
+            public string Value { get; set; }
+        }
+    }
+
+    [TestFixture]
+    public class A_failing_consumer
+    {
+        [Test]
+        public void Should_be_disposed()
+        {
+            var vane = ConsumerVaneFactory.New<FailingConsumer,A>(() => new FailingConsumer(), x => x.Consume);
+
+            var a = new A {Value = "Hello"};
+            Payload<Message<A>> payload = new MessagePayload<A>(a);
+
+            Assert.Throws<AggregateException>(() => vane.Execute(payload));
+            Assert.IsTrue(FailingConsumer.Disposed, "Was not disposed");
+        }
+
+
+        class FailingConsumer :
+            IDisposable
+        {
+            static bool _disposed;
+
+            public static bool Disposed
+            {
+                get { return _disposed; }
+            }
+
+            public FailingConsumer()
+            {
+                _disposed = false;
+            }
+
+            public void Consume(Payload payload, Message<A> message)
+            {
+                throw new InvalidOperationException("This is an expected boom");
+            }
+
+            public void Dispose()
+            {
+                _disposed = true;
             }
         }
 
