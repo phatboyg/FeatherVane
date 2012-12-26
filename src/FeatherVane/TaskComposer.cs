@@ -28,6 +28,26 @@ namespace FeatherVane
             return composer.Complete();
         }
 
+        /// <summary>
+        /// Compose a source vane into a Task for execution
+        /// </summary>
+        /// <typeparam name="T">The source vane type</typeparam>
+        /// <param name="vane">The source vane</param>
+        /// <param name="payload">The payload for the source</param>
+        /// <param name="next">The vane after the source</param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="runSynchronously"></param>
+        /// <returns></returns>
+        public static Task Compose<T, TPayload>(SourceVane<T> vane, Payload<TPayload> payload, Vane<T> next,
+            CancellationToken cancellationToken, bool runSynchronously = true)
+        {
+            var composer = new TaskComposer<T>(cancellationToken, runSynchronously);
+
+            vane.Compose(composer, payload, next);
+
+            return composer.Complete();
+        }
+
         public static Task Completed<T>(CancellationToken cancellationToken)
         {
             var composer = new TaskComposer<T>(cancellationToken);

@@ -12,13 +12,13 @@
 namespace FeatherVane.Vanes
 {
     using System;
-    using Payloads;
+
 
     /// <summary>
     /// Wraps a factory method into a SourceVane, allowing objects to be created within the
     /// scope of an execution with full lifecycle management.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The vane type</typeparam>
     public class FactoryVane<T> :
         SourceVane<T>
     {
@@ -35,9 +35,9 @@ namespace FeatherVane.Vanes
             composer.Execute(() =>
                 {
                     data = _factory();
-                    var factoryPayload = new DelegatingPayload<T>(payload, data);
+                    Payload<T> nextPayload = payload.CreateProxy(data);
 
-                    return TaskComposer.Compose(next, factoryPayload, composer.CancellationToken);
+                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
                 });
 
             composer.Finally(() =>

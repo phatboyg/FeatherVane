@@ -20,11 +20,11 @@ namespace FeatherVane.Messaging.Payloads
     /// </summary>
     /// <typeparam name="TBody">The message body type</typeparam>
     public class MessagePayload<TBody> :
-        DelegatingPayload<Message<TBody>>
+        ProxyPayload<Message<TBody>>
         where TBody : class
     {
         public MessagePayload(TBody body)
-            : this(new TypeMessage<TBody>(body))
+            : this(new ObjectMessage<TBody>(body))
         {
         }
 

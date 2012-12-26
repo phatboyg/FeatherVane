@@ -12,23 +12,17 @@
 namespace FeatherVane.Messaging
 {
     using System;
-    using FeatherVane.Vanes;
-    using Vanes;
+    using Configuration;
 
 
     public static class ConsumerVaneFactory
     {
-        public static Vane<Message<TMessage>> New<TConsumer, TMessage>(Func<TConsumer> factoryMethod,
-            Func<TConsumer, Action<Payload, Message<TMessage>>> methodSelector)
-            where TMessage : class
+        public static TResult New<T, TResult>(this SourceVane<T> source,
+            Func<SourceVaneFactory<T>, TResult> factorySelector)
         {
-            var messageConsumerVane = new MessageConsumerVane<TMessage, TConsumer>(methodSelector);
-            var messageVane = VaneFactory.Success(messageConsumerVane);
+            var factory = new SourceVaneFactoryImpl<T>(source);
 
-            var consumerFactory = new FactoryVane<TConsumer>(factoryMethod);
-            var consumerVane = new JoinVane<Message<TMessage>, TConsumer>(messageVane, consumerFactory);
-
-            return VaneFactory.Success(consumerVane);
+            return factorySelector(factory);
         }
     }
 }

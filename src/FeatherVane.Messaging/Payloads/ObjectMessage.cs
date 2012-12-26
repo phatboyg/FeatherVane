@@ -13,14 +13,18 @@ namespace FeatherVane.Messaging.Payloads
 {
     using System;
 
-
-    public class TypeMessage<TBody> :
+    /// <summary>
+    /// An object-based message, where the message is an instance of an object and
+    /// any related message types are handled by reflection.
+    /// </summary>
+    /// <typeparam name="TBody">The type of the message</typeparam>
+    public class ObjectMessage<TBody> :
         Message<TBody>
         where TBody : class
     {
         readonly TBody _body;
 
-        public TypeMessage(TBody body)
+        public ObjectMessage(TBody body)
         {
             _body = body;
         }
@@ -35,7 +39,7 @@ namespace FeatherVane.Messaging.Payloads
             var body = _body as T;
             if (body != null)
             {
-                message = new TypeMessage<T>(body);
+                message = new ObjectMessage<T>(body);
                 return true;
             }
 

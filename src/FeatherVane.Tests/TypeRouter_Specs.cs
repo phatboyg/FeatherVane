@@ -20,7 +20,7 @@
                     ConsumeContext<A> context;
                     x.Data.TryGetContext(out context);
 
-                    return x.CreateDelegatingPayload(context);
+                    return x.CreateProxy(context);
                 });
 
             var messageVane = VaneFactory.Connect(new Unhandled<ConsumeContext>(), typeRouter);

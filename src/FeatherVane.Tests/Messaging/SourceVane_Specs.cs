@@ -18,7 +18,7 @@
             Vane<Tuple<Message<A>, WorkingConsumer>> consumerVane = VaneFactory.Success(messageConsumerVane);
            
             var factoryVane = new FactoryVane<WorkingConsumer>(() => new WorkingConsumer());
-            var joinVane = new JoinVane<Message<A>, WorkingConsumer>(consumerVane, factoryVane);
+            var joinVane = new SpliceVane<Message<A>, WorkingConsumer>(consumerVane, factoryVane);
 
 
             var vane = VaneFactory.Success(joinVane);

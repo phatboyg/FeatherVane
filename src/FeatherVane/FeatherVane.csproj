@@ -44,8 +44,10 @@
     <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
     <Compile Include="Exceptions\TaskComposerException.cs" />
+    <Compile Include="SourceVane.cs" />
+    <Compile Include="SourceVaneFactory.cs" />
     <Compile Include="TaskCompensation.cs" />
-    <Compile Include="Payloads\DelegatingPayload.cs" />
+    <Compile Include="Payloads\ProxyPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
     <Compile Include="Exceptions\UnhandledException.cs" />
     <Compile Include="Internals\**\*.cs" />
@@ -68,9 +70,8 @@
     <Compile Include="Vanes\Compensate.cs" />
     <Compile Include="Vanes\FactoryVane.cs" />
     <Compile Include="Vanes\FanoutVane.cs" />
-    <Compile Include="Vanes\JoinVane.cs" />
+    <Compile Include="Vanes\SpliceVane.cs" />
     <Compile Include="Vanes\NextVane.cs" />
-    <Compile Include="Vanes\SourceVane.cs" />
     <Compile Include="VaneVisitor.cs" />
     <Compile Include="Visualization\StringVaneVisitor.cs" />
   </ItemGroup>

@@ -35,16 +35,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Consumer.cs" />
-    <Compile Include="ConsumerFactory.cs" />
-    <Compile Include="ConsumerImpl.cs" />
+    <Compile Include="Configuration\SourceVaneFactoryImpl.cs" />
     <Compile Include="ConsumerVaneFactory.cs" />
-    <Compile Include="Exceptions\ConsumerFactoryException.cs" />
-    <Compile Include="Payloads\TypeMessage.cs" />
-    <Compile Include="SingleMethodConsumerFactory.cs" />
+    <Compile Include="Payloads\ObjectMessage.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Payloads\MessagePayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceVaneFactory.cs" />
     <Compile Include="Vanes\ConsumerMessageVane.cs" />
     <Compile Include="Vanes\HandlerMessageVane.cs" />
     <Compile Include="Vanes\MessageVane.cs" />
@@ -54,6 +51,9 @@
       <Project>{0851B204-7FD1-4EEC-BCB4-B4B78DB2D1A5}</Project>
       <Name>FeatherVane</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

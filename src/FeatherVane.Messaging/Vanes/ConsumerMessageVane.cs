@@ -18,8 +18,8 @@ namespace FeatherVane.Messaging.Vanes
     /// Wraps a consumer factory and adds the consumer instance to the payload
     /// so that it can be invoked
     /// </summary>
+    /// <typeparam name="TMessage">The message type</typeparam>
     /// <typeparam name="TConsumer">The consumer type</typeparam>
-    /// <typeparam name="T">The vane type</typeparam>
     public class MessageConsumerVane<TMessage, TConsumer> :
         FeatherVane<Tuple<Message<TMessage>, TConsumer>>
         where TMessage : class

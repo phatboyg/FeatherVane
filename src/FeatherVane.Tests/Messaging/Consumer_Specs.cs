@@ -27,10 +27,12 @@ namespace FeatherVane.Tests.Messaging
         [Test]
         public void Should_support_delivery()
         {
-            var messageAVane = ConsumerVaneFactory.New<TestConsumer, A>(() => new TestConsumer(), x => x.Consume);
+            SourceVane<TestConsumer> factoryVane = SourceVaneFactory.New(() => new TestConsumer());
+
+            Vane<Message<A>> messageAVane = factoryVane.New(x => x.Consumer<A>(v => v.Consume));
             var messageVane = new MessageVane<A>(messageAVane);
-           
-            var messageBVane = ConsumerVaneFactory.New<TestConsumer, B>(() => new TestConsumer(), x => x.Consume);
+
+            Vane<Message<B>> messageBVane = factoryVane.New(x => x.Consumer<B>(v => v.Consume));
             var messageVaneB = new MessageVane<B>(messageBVane);
 
             var fanOutVane = new FanoutVane<Message>(new FeatherVane<Message>[] {messageVane, messageVaneB});
@@ -71,11 +73,13 @@ namespace FeatherVane.Tests.Messaging
             public string Value { get; set; }
         }
 
+
         class B
         {
             public string Value { get; set; }
         }
     }
+
 
     [TestFixture]
     public class A_failing_consumer
@@ -83,7 +87,10 @@ namespace FeatherVane.Tests.Messaging
         [Test]
         public void Should_be_disposed()
         {
-            var vane = ConsumerVaneFactory.New<FailingConsumer,A>(() => new FailingConsumer(), x => x.Consume);
+            Vane<Message<A>> vane = SourceVaneFactory
+                .New(() => new FailingConsumer())
+                .New(x => x.Consumer<A>(v => v.Consume));
+
 
             var a = new A {Value = "Hello"};
             Payload<Message<A>> payload = new MessagePayload<A>(a);
@@ -98,24 +105,24 @@ namespace FeatherVane.Tests.Messaging
         {
             static bool _disposed;
 
-            public static bool Disposed
-            {
-                get { return _disposed; }
-            }
-
             public FailingConsumer()
             {
                 _disposed = false;
             }
 
-            public void Consume(Payload payload, Message<A> message)
+            public static bool Disposed
             {
-                throw new InvalidOperationException("This is an expected boom");
+                get { return _disposed; }
             }
 
             public void Dispose()
             {
                 _disposed = true;
+            }
+
+            public void Consume(Payload payload, Message<A> message)
+            {
+                throw new InvalidOperationException("This is an expected boom");
             }
         }
 

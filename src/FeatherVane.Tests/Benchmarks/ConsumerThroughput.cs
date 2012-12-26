@@ -24,8 +24,9 @@ namespace FeatherVane.Tests.Benchmarks
 
         public ConsumerThroughput()
         {
-            Vane<Message<Subject>> vane = ConsumerVaneFactory.New<TestConsumer, Subject>(() => new TestConsumer(),
-                x => x.Consume);
+            Vane<Message<Subject>> vane = SourceVaneFactory
+                .New(() => new TestConsumer())
+                .New(x => x.Consumer<Subject>(v => v.Consume));
 
             var messageVane = new MessageVane<Subject>(vane);
 

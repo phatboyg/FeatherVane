@@ -14,18 +14,19 @@ namespace FeatherVane.Payloads
     using System;
     using FeatherVane;
 
+
     /// <summary>
     /// Used as a Payload of a body type different than the original, but still retaining
     /// the original context for all related operations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DelegatingPayload<T> :
+    public class ProxyPayload<T> :
         Payload<T>
     {
         readonly T _data;
         readonly Payload _originalPayload;
 
-        public DelegatingPayload(Payload originalPayload, T data)
+        public ProxyPayload(Payload originalPayload, T data)
         {
             _originalPayload = originalPayload;
             _data = data;

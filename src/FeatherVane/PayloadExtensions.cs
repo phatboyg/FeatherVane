@@ -34,10 +34,9 @@ namespace FeatherVane
             throw new ContextNotFoundException("No context factory provided.");
         }
 
-        public static Payload<T> CreateDelegatingPayload<T>(this Payload context, T body)
-            where T : class
+        public static Payload<T> CreateProxy<T>(this Payload context, T body)
         {
-            return new DelegatingPayload<T>(context, body);
+            return new ProxyPayload<T>(context, body);
         }
     }
 }

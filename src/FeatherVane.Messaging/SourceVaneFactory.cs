@@ -12,30 +12,11 @@
 namespace FeatherVane.Messaging
 {
     using System;
-    using System.Runtime.Serialization;
 
 
-    [Serializable]
-    public class ConsumerFactoryException :
-        FeatherVaneException
+    public interface SourceVaneFactory<out T>
     {
-        public ConsumerFactoryException()
-        {
-        }
-
-        public ConsumerFactoryException(string message)
-            : base(message)
-        {
-        }
-
-        public ConsumerFactoryException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        protected ConsumerFactoryException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+        Vane<Message<TMessage>> Consumer<TMessage>(Func<T, Action<Payload, Message<TMessage>>> methodSelector)
+            where TMessage : class;
     }
 }
