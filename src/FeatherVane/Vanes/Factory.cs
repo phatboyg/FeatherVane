@@ -18,24 +18,25 @@ namespace FeatherVane.Vanes
     /// Wraps a factory method into a SourceVane, allowing objects to be created within the
     /// scope of an execution with full lifecycle management.
     /// </summary>
-    /// <typeparam name="T">The vane type</typeparam>
-    public class FactoryVane<T> :
+    /// <typeparam name="T">The vane type of the main vane</typeparam>
+    /// <typeparam name="T">The source type for the splice</typeparam>
+    public class Factory<T> :
         SourceVane<T>
     {
         readonly Func<T> _factory;
 
-        public FactoryVane(Func<T> factory)
+        public Factory(Func<T> factory)
         {
             _factory = factory;
         }
 
-        void SourceVane<T>.Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<T> next)
+        void SourceVane<T>.Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next)
         {
             T data = default(T);
             composer.Execute(() =>
                 {
                     data = _factory();
-                    Payload<T> nextPayload = payload.CreateProxy(data);
+                    Payload<Tuple<TPayload, T>> nextPayload = payload.CreateProxy(Tuple.Create(payload.Data, data));
 
                     return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
                 });

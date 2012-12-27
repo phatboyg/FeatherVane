@@ -35,7 +35,7 @@ namespace FeatherVane.Tests.Messaging
             Vane<Message<B>> messageBVane = factoryVane.New(x => x.Consumer<B>(v => v.Consume));
             var messageVaneB = new MessageVane<B>(messageBVane);
 
-            var fanOutVane = new FanoutVane<Message>(new FeatherVane<Message>[] {messageVane, messageVaneB});
+            var fanOutVane = new Fanout<Message>(new FeatherVane<Message>[] {messageVane, messageVaneB});
             Vane<Message> vane = VaneFactory.Success(fanOutVane);
 
             var a = new A {Value = "Hello"};

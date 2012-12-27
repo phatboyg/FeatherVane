@@ -30,7 +30,7 @@ namespace FeatherVane.Tests.Benchmarks
 
             var messageVane = new MessageVane<Subject>(vane);
 
-            var fanOutVane = new FanoutVane<Message>(new[] {messageVane});
+            var fanOutVane = new Fanout<Message>(new[] {messageVane});
 
             _vane = VaneFactory.Success(fanOutVane);
         }

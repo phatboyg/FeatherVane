@@ -34,9 +34,19 @@ namespace FeatherVane.Vanes
             _nextVane = nextVane;
         }
 
+        public FeatherVane<T> FeatherVane
+        {
+            get { return _featherVane; }
+        }
+
+        public Vane<T> Next
+        {
+            get { return _nextVane; }
+        }
+
         bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(_featherVane, x => visitor.Visit(_nextVane));
+            return visitor.Visit(_featherVane, x => visitor.Visit(_featherVane) && visitor.Visit(_nextVane));
         }
 
         void Vane<T>.Compose(Composer composer, Payload<T> payload)

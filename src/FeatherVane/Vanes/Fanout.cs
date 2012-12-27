@@ -20,13 +20,13 @@ namespace FeatherVane.Vanes
     /// A fan-out Vane composes over a list of subsequent vanes for every execution
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FanoutVane<T> :
+    public class Fanout<T> :
         FeatherVane<T>,
         AcceptVaneVisitor
     {
         readonly Cache<FeatherVane<T>, FeatherVane<T>> _vanes;
 
-        public FanoutVane(IEnumerable<FeatherVane<T>> vanes)
+        public Fanout(IEnumerable<FeatherVane<T>> vanes)
         {
             _vanes = new ConcurrentCache<FeatherVane<T>, FeatherVane<T>>
                 {

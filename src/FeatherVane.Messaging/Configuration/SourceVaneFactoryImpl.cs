@@ -32,7 +32,7 @@ namespace FeatherVane.Messaging.Configuration
             var messageConsumerVane = new MessageConsumerVane<TMessage, T>(methodSelector);
             Vane<Tuple<Message<TMessage>, T>> messageVane = VaneFactory.Success(messageConsumerVane);
 
-            var consumerVane = new SpliceVane<Message<TMessage>, T>(messageVane, _sourceVane);
+            var consumerVane = new Splice<Message<TMessage>, T>(messageVane, _sourceVane);
 
             return VaneFactory.Success(consumerVane);
         }

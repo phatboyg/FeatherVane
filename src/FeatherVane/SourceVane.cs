@@ -11,8 +11,14 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using System;
+
+    /// <summary>
+    /// A source vane is used to splice another type into a vane
+    /// </summary>
+    /// <typeparam name="T">The source type</typeparam>
     public interface SourceVane<T>
     {
-        void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<T> next);
+        void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next);
     }
 }

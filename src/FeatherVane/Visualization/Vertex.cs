@@ -9,17 +9,26 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Visualization
 {
     using System;
-    using Vanes;
 
-
-    public static class SourceVaneFactory
+#if !NETFX_CORE
+    [Serializable]
+#endif
+    public class Vertex
     {
-        public static SourceVane<T> New<T>(Func<T> factoryMethod)
+        public Vertex(Type type, Type targetType, string title)
         {
-            return new Factory<T>(factoryMethod);
+            VertexType = type;
+            TargetType = targetType;
+            Title = title;
         }
+
+        public string Title { get; private set; }
+
+        public Type VertexType { get; private set; }
+
+        public Type TargetType { get; private set; }
     }
 }

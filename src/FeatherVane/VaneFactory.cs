@@ -44,6 +44,16 @@ namespace FeatherVane
             return Connect(unhandled, vanes);
         }
 
+        public static SourceVane<T> Source<T>(SourceVane<T> source, params FeatherVane<T>[] vanes)
+        {
+            SourceVane<T> current = source;
+            for (int i = 0; i < vanes.Length; i++)
+            {
+                current = new NextSource<T>(current, vanes[i]);
+            }
+            return current;
+        }
+
         public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes)
         {
             Vane<T> next = last;

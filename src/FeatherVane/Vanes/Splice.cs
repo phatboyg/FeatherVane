@@ -15,22 +15,31 @@ namespace FeatherVane.Vanes
 
 
     /// <summary>
-    /// Executes a continuation as part of the Vane
+    /// Splices a vane with a source vane
     /// </summary>
-    /// <typeparam name="T">The Vane type</typeparam>
-    public class Execute<T> :
-        FeatherVane<T>
+    /// <typeparam name="T">The primary vane type</typeparam>
+    /// <typeparam name="TSource">The source vane type</typeparam>
+    public class Splice<T, TSource> :
+        FeatherVane<T>,
+        AcceptVaneVisitor
     {
-        readonly Action<Payload<T>> _continuation;
+        readonly SourceVane<TSource> _sourceVane;
+        readonly Vane<Tuple<T, TSource>> _output;
 
-        public Execute(Action<Payload<T>> continuation)
+        public Splice(Vane<Tuple<T, TSource>> output, SourceVane<TSource> sourceVane)
         {
-            _continuation = continuation;
+            _output = output;
+            _sourceVane = sourceVane;
+        }
+
+        public bool Accept(VaneVisitor visitor)
+        {
+            return visitor.Visit(this, x => visitor.Visit(_sourceVane) && visitor.Visit(_output));
         }
 
         void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
-            composer.Execute(() => _continuation(payload));
+            composer.Execute(() => TaskComposer.Compose(_sourceVane, payload, _output, composer.CancellationToken));
 
             next.Compose(composer, payload);
         }

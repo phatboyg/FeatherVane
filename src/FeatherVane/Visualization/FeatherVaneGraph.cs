@@ -9,17 +9,34 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Visualization
 {
     using System;
-    using Vanes;
+    using System.Collections.Generic;
+    using System.Linq;
 
-
-    public static class SourceVaneFactory
+#if !NETFX_CORE
+    [Serializable]
+#endif
+    public class FeatherVaneGraph
     {
-        public static SourceVane<T> New<T>(Func<T> factoryMethod)
+        readonly Edge[] _edges;
+        readonly Vertex[] _vertices;
+
+        public FeatherVaneGraph(IEnumerable<Vertex> vertices, IEnumerable<Edge> edges)
         {
-            return new Factory<T>(factoryMethod);
+            _vertices = vertices.ToArray();
+            _edges = edges.ToArray();
+        }
+
+        public IEnumerable<Vertex> Vertices
+        {
+            get { return _vertices; }
+        }
+
+        public IEnumerable<Edge> Edges
+        {
+            get { return _edges; }
         }
     }
 }

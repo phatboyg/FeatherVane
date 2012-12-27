@@ -19,6 +19,9 @@ namespace FeatherVane
         bool Visit<T>(Vane<T> vane);
         bool Visit<T>(Vane<T> vane, Func<Vane<T>, bool> next);
 
+        bool Visit<T>(SourceVane<T> vane);
+        bool Visit<T>(SourceVane<T> vane, Func<SourceVane<T>, bool> next);
+
         bool Visit<T>(FeatherVane<T> vane);
         bool Visit<T>(FeatherVane<T> vane, Func<FeatherVane<T>, bool> next);
     }
