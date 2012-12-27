@@ -78,6 +78,14 @@ namespace FeatherVane.Visualizer
 
                 args.Node.Attr.Label = "Unhandled";
             }
+            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Factory<>))
+            {
+                args.Node.Attr.Fontcolor = Microsoft.Glee.Drawing.Color.White;
+                args.Node.Attr.Fillcolor = Microsoft.Glee.Drawing.Color.Navy;
+                args.Node.Attr.Shape = Shape.House;
+                args.Node.Attr.Label = args.Vertex.Title;
+                args.Node.Attr.AddStyle(Style.Bold);
+            }
             else
             {
                 args.Node.Attr.Fontcolor = Microsoft.Glee.Drawing.Color.Black;
@@ -92,6 +100,9 @@ namespace FeatherVane.Visualizer
         {
             e.GEdge.EdgeAttr.FontName = "Tahoma";
             e.GEdge.EdgeAttr.Fontsize = 6;
+
+            if(e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(Factory<>))
+                e.GEdge.EdgeAttr.AddStyle(Style.Dashed);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace FeatherVane.Visualizer
             }
             catch (InvalidCastException)
             {
-                MessageBox.Show("The selected data is not of a type compatible with this visualizer.",
+                MessageBox.Show("The selected data is not of a type compatible with this visualization.",
                     GetType().ToString());
             }
         }

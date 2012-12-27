@@ -47,6 +47,16 @@ namespace FeatherVane.Tests.Messaging
             new FeatherVaneGraphGenerator().SaveGraphToFile(graph, 1920, 1080, "sourceVaneGraph.png");
         }
 
+        [Test, Explicit]
+        public void Should_show()
+        {
+            var graphVisitor = new GraphVaneVisitor();
+            graphVisitor.Visit(_vane);
+
+            FeatherVaneGraph graph = graphVisitor.GetGraphData();
+            VaneDebugVisualizer.TestShowVisualizer(graph);
+        }
+
         Vane<Message> _vane;
 
         [TestFixtureSetUp]
@@ -54,6 +64,9 @@ namespace FeatherVane.Tests.Messaging
         {
             var messageConsumerVane = new MessageConsumerVane<A, WorkingConsumer>(x => x.Consume);
             Vane<Tuple<Message<A>, WorkingConsumer>> consumerVane = VaneFactory.Success(messageConsumerVane);
+
+            var messageConsumerVaneB = new MessageConsumerVane<B, WorkingConsumer>(x => x.Consume);
+            Vane<Tuple<Message<B>, WorkingConsumer>> consumerVaneB = VaneFactory.Success(messageConsumerVaneB);
 
             var factoryVane = new Factory<WorkingConsumer>(() => new WorkingConsumer());
             var loggerVane = new Logger<WorkingConsumer>(Console.Out, x => "Logging");
@@ -64,7 +77,10 @@ namespace FeatherVane.Tests.Messaging
 
             var messageVane = new MessageVane<A>(VaneFactory.Success(spliceVane));
 
-            var fanOutVane = new Fanout<Message>(new FeatherVane<Message>[] { messageVane });
+            var spliceVaneB = new Splice<Message<B>, WorkingConsumer>(consumerVaneB, sourceVane);
+            var messageVaneB = new MessageVane<B>(VaneFactory.Success(spliceVaneB));
+
+            var fanOutVane = new Fanout<Message>(new FeatherVane<Message>[] { messageVane, messageVaneB });
             
             _vane = VaneFactory.Success(fanOutVane);
         }
@@ -90,12 +106,21 @@ namespace FeatherVane.Tests.Messaging
 
                 _called = true;
             }
+
+            public void Consume(Payload payload, Message<B> message)
+            {
+            }
         }
 
 
         class A
         {
             public string Value { get; set; }
+        }
+
+        class B
+        {
+            
         }
     }
 }

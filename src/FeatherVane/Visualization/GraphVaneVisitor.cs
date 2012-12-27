@@ -21,7 +21,7 @@ namespace FeatherVane.Visualization
     public class GraphVaneVisitor :
         VaneVisitor
     {
-        readonly List<Edge> _edges = new List<Edge>();
+        readonly HashSet<Edge> _edges = new HashSet<Edge>();
         readonly HashSet<object> _seen = new HashSet<object>();
         readonly Stack<Vertex> _stack = new Stack<Vertex>();
         readonly Cache<int, Vertex> _vertices = new DictionaryCache<int, Vertex>();
@@ -153,9 +153,6 @@ namespace FeatherVane.Visualization
 
         void VisitSourceVane<T>(SourceVane<T> vane)
         {
-            if (_seen.Contains(vane))
-                return;
-
             _seen.Add(vane);
 
             var nextSourceVane = vane as NextSource<T>;
@@ -168,7 +165,6 @@ namespace FeatherVane.Visualization
             _current = GetVertex(vane);
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
-
 
             Push(() => VisitAcceptor(vane));
         }

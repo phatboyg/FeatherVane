@@ -25,36 +25,36 @@ namespace FeatherVane.Visualizer
             if (target == null)
                 return;
 
-            Type machineType = target.GetType();
-            Type instanceType = GetInstanceType(machineType);
-            if (instanceType == null)
+            Type vaneType = target.GetType();
+            Type genericType = GetGenericType(vaneType);
+            if (genericType == null)
                 return;
 
             object graph = GetType()
-                .GetMethod("CreateStateMachineGraph")
-                .MakeGenericMethod(machineType, instanceType)
+                .GetMethod("CreateGraph")
+                .MakeGenericMethod(genericType)
                 .Invoke(this, new[] {target});
 
             base.GetData(graph, outgoingData);
         }
 
-        Type GetInstanceType(Type machineType)
+        Type GetGenericType(Type vaneType)
         {
-            while (machineType != null && machineType != typeof(object))
+            while (vaneType != null && vaneType != typeof(object))
             {
-                if (machineType.IsGenericType && machineType.GetGenericTypeDefinition() == typeof(Vane<>))
+                if (vaneType.IsGenericType && vaneType.GetGenericTypeDefinition() == typeof(Vane<>))
                 {
-                    Type instanceType = machineType.GetGenericArguments()[0];
-                    return instanceType;
+                    Type genericType = vaneType.GetGenericArguments()[0];
+                    return genericType;
                 }
 
-                machineType = machineType.BaseType;
+                vaneType = vaneType.BaseType;
             }
 
             return null;
         }
 
-        FeatherVaneGraph CreateStateMachineGraph<T>(Vane<T> vane)
+        FeatherVaneGraph CreateGraph<T>(Vane<T> vane)
         {
             var visitor = new GraphVaneVisitor();
             visitor.Visit(vane);
