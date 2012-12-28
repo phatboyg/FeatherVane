@@ -34,14 +34,27 @@
     <Reference Include="Benchmarque">
       <HintPath>..\packages\Benchmarque.0.2.0\lib\net40\Benchmarque.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\lib\vs10\Microsoft.VisualStudio.DebuggerVisualizers.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.2.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.1.0.82.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.1.0.82.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionVersion.cs">
@@ -62,6 +75,10 @@
     <Compile Include="Messaging\Message_Specs.cs" />
     <Compile Include="Messaging\Consumer_Specs.cs" />
     <Compile Include="Messaging\SourceVane_Specs.cs" />
+    <Compile Include="NHibernateIntegration\SimpleDemandObject_Specs.cs" />
+    <Compile Include="NHibernateIntegration\SingleConnectionSessionFactory.cs" />
+    <Compile Include="NHibernateIntegration\SQLiteTestFixture.cs" />
+    <Compile Include="NHibernateIntegration\SqlLiteSessionFactoryProvider.cs" />
     <Compile Include="Plan_Specs.cs" />
     <Compile Include="PushVane_Specs.cs" />
     <Compile Include="Rescue_Specs.cs" />
@@ -85,6 +102,10 @@
       <Project>{FDC93173-1C85-43B0-9A7D-F3B22962924C}</Project>
       <Name>FeatherVane.Messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FeatherVane.NHibernateIntegration\FeatherVane.NHibernateIntegration.csproj">
+      <Project>{39AD5E19-4C1B-4764-A007-25DE3CE9117E}</Project>
+      <Name>FeatherVane.NHibernateIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FeatherVane.Visualizer\FeatherVane.Visualizer.csproj">
       <Project>{F5C8C430-2104-47F1-BF65-44F1F17DD002}</Project>
       <Name>FeatherVane.Visualizer</Name>
@@ -101,6 +122,14 @@
   <ItemGroup>
     <Folder Include="Actors\" />
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

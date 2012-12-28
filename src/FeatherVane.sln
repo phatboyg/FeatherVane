@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Messaging", "Fe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Visualizer", "FeatherVane.Visualizer\FeatherVane.Visualizer.csproj", "{F5C8C430-2104-47F1-BF65-44F1F17DD002}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.NHibernateIntegration", "FeatherVane.NHibernateIntegration\FeatherVane.NHibernateIntegration.csproj", "{39AD5E19-4C1B-4764-A007-25DE3CE9117E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{F5C8C430-2104-47F1-BF65-44F1F17DD002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5C8C430-2104-47F1-BF65-44F1F17DD002}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5C8C430-2104-47F1-BF65-44F1F17DD002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AD5E19-4C1B-4764-A007-25DE3CE9117E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AD5E19-4C1B-4764-A007-25DE3CE9117E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AD5E19-4C1B-4764-A007-25DE3CE9117E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AD5E19-4C1B-4764-A007-25DE3CE9117E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

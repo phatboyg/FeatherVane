@@ -149,7 +149,7 @@ namespace FeatherVane
             _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
         }
 
-        Composer Composer.Finally(Action continuation, bool runSynchronously)
+        Composer Composer.Finally(Action<TaskStatus> continuation, bool runSynchronously)
         {
             if (_complete)
                 throw _completeException.Value;
@@ -158,7 +158,7 @@ namespace FeatherVane
             {
                 try
                 {
-                    continuation();
+                    continuation(_task.Status);
                     return this;
                 }
                 catch (Exception ex)
@@ -329,7 +329,7 @@ namespace FeatherVane
         }
 
 
-        static Task FinallyAsync(Task task, Action continuation, bool runSynchronously = true)
+        static Task FinallyAsync(Task task, Action<TaskStatus> continuation, bool runSynchronously = true)
         {
             SynchronizationContext syncContext = SynchronizationContext.Current;
 
@@ -344,7 +344,7 @@ namespace FeatherVane
                                 {
                                     try
                                     {
-                                        continuation();
+                                        continuation(innerTask.Status);
                                         source.TrySetFromTask(innerTask);
                                     }
                                     catch (Exception ex)
@@ -356,7 +356,7 @@ namespace FeatherVane
                         }
                         else
                         {
-                            continuation();
+                            continuation(innerTask.Status);
                             source.TrySetFromTask(innerTask);
                         }
                     }

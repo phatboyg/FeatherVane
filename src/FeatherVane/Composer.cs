@@ -56,7 +56,7 @@ namespace FeatherVane
         /// <param name="continuation"></param>
         /// <param name="runSynchronously"></param>
         /// <returns></returns>
-        Composer Finally(Action continuation, bool runSynchronously = true); 
+        Composer Finally(Action<TaskStatus> continuation, bool runSynchronously = true); 
 
         /// <summary>
         /// Adds a successful completion of the execution to the plan

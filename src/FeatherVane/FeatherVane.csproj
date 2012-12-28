@@ -39,10 +39,11 @@
     <Compile Include="AcceptVaneVisitor.cs" />
     <Compile Include="Compensation.cs" />
     <Compile Include="CompensationResult.cs" />
+    <Compile Include="ComposerExtensions.cs" />
     <Compile Include="Exceptions\ContextFactoryException.cs" />
     <Compile Include="Exceptions\ContextNotFoundException.cs" />
-    <Compile Include="Exceptions\ExecuteAgendaException.cs" />
     <Compile Include="Exceptions\InternalFeatherVaneException.cs" />
+    <Compile Include="Exceptions\ObjectNotFoundException.cs" />
     <Compile Include="Exceptions\TaskComposerException.cs" />
     <Compile Include="SourceVane.cs" />
     <Compile Include="SourceVaneFactory.cs" />
@@ -70,6 +71,8 @@
     <Compile Include="Vanes\Compensate.cs" />
     <Compile Include="Vanes\Factory.cs" />
     <Compile Include="Vanes\Fanout.cs" />
+    <Compile Include="Vanes\Id.cs" />
+    <Compile Include="Vanes\Missing.cs" />
     <Compile Include="Vanes\NextSource.cs" />
     <Compile Include="Vanes\LeftMerge.cs" />
     <Compile Include="Vanes\Splice.cs" />

@@ -65,7 +65,7 @@ namespace FeatherVane.Vanes
                 if (_stopwatch.Elapsed > _settings.TrivialThreshold)
                 {
                     _settings.Writer.WriteLine(_timingId.ToString("N") + ": "
-                                               + _startTime.ToString("yyyyMMdd HHmmss.fff") + " "
+                                               + _startTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + " "
                                                + _stopwatch.ElapsedMilliseconds + "ms");
                 }
             }
