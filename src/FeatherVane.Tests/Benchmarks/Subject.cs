@@ -13,6 +13,12 @@ namespace FeatherVane.Tests.Benchmarks
 {
     public class Subject
     {
+        public Subject()
+        {
+            Id = 1;
+        }
+
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

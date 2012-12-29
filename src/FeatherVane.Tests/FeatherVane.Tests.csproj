@@ -61,9 +61,11 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="ActorThoughts_Specs.cs" />
+    <Compile Include="Benchmarks\AsyncThroughput.cs" />
     <Compile Include="Benchmarks\ConsumerThroughput.cs" />
     <Compile Include="Benchmarks\EmptyThroughput.cs" />
     <Compile Include="Benchmarks\LoggerThroughput.cs" />
+    <Compile Include="Benchmarks\NHibernateThroughput.cs" />
     <Compile Include="Benchmarks\ProfilerLoggerThroughput.cs" />
     <Compile Include="Benchmarks\Subject.cs" />
     <Compile Include="Benchmarks\Throughput.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Messaging\Message_Specs.cs" />
     <Compile Include="Messaging\Consumer_Specs.cs" />
     <Compile Include="Messaging\SourceVane_Specs.cs" />
+    <Compile Include="NHibernateIntegration\Benchmark_Test.cs" />
     <Compile Include="NHibernateIntegration\SimpleDemandObject_Specs.cs" />
     <Compile Include="NHibernateIntegration\SingleConnectionSessionFactory.cs" />
     <Compile Include="NHibernateIntegration\SQLiteTestFixture.cs" />

@@ -69,6 +69,7 @@
     <Compile Include="PayloadExtensions.cs" />
     <Compile Include="Vanes\AsyncLogger.cs" />
     <Compile Include="Vanes\Compensate.cs" />
+    <Compile Include="Vanes\ExecuteTask.cs" />
     <Compile Include="Vanes\Factory.cs" />
     <Compile Include="Vanes\Fanout.cs" />
     <Compile Include="Vanes\Id.cs" />

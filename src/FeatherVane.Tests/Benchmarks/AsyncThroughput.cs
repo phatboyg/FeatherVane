@@ -11,34 +11,24 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests.Benchmarks
 {
-    using System.Collections.Generic;
-    using Benchmarque;
+    using System.Threading.Tasks;
+    using Vanes;
 
-    public class ThroughputBenchmark :
-        Benchmark<Throughput>
+
+    public class AsyncThroughput :
+        Throughput
     {
-        public void WarmUp(Throughput instance)
+        readonly Vane<Subject> _vane;
+
+        public AsyncThroughput()
         {
-            instance.Execute(new Subject());
+            var executeVane = new ExecuteTask<Subject>(x => Task.Factory.StartNew(() => { }));
+            _vane = VaneFactory.Success(executeVane);
         }
 
-        public void Shutdown(Throughput instance)
+        public void Execute(Subject subject)
         {
-        }
-
-        public void Run(Throughput instance, int iterationCount)
-        {
-            var subject = new Subject();
-
-            for (int i = 0; i < iterationCount; i++)
-            {
-                instance.Execute(subject);
-            }
-        }
-
-        public IEnumerable<int> Iterations
-        {
-            get { return new[] {100, 50000}; }
+            _vane.Execute(subject);
         }
     }
 }
