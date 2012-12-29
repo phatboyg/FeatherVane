@@ -34,7 +34,7 @@ namespace FeatherVane.Vanes
 
         public bool Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(this, x => visitor.Visit(_sourceVane) && visitor.Visit(_output));
+            return visitor.Visit(_sourceVane) && visitor.Visit(_output);
         }
 
         void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)

@@ -34,13 +34,6 @@ namespace FeatherVane.Visualization
             return true;
         }
 
-        public bool Visit<T>(Vane<T> vane, Func<Vane<T>, bool> next)
-        {
-            VisitVane(vane);
-
-            return next(vane);
-        }
-
         public bool Visit<T>(SourceVane<T> vane)
         {
             VisitSourceVane(vane);
@@ -48,25 +41,11 @@ namespace FeatherVane.Visualization
             return true;
         }
 
-        public bool Visit<T>(SourceVane<T> vane, Func<SourceVane<T>, bool> next)
-        {
-            VisitSourceVane(vane);
-
-            return next(vane);
-        }
-
         public bool Visit<T>(FeatherVane<T> vane)
         {
             VisitFeatherVane(vane);
 
             return true;
-        }
-
-        public bool Visit<T>(FeatherVane<T> vane, Func<FeatherVane<T>, bool> next)
-        {
-            VisitFeatherVane(vane);
-
-            return next(vane);
         }
 
         public FeatherVaneGraph GetGraphData()
@@ -196,33 +175,25 @@ namespace FeatherVane.Visualization
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
 
-            Push(() => VisitAcceptor(vane));
         }
 
         void VisitNextVane<T>(NextVane<T> nextVane)
         {
             Visit(nextVane.FeatherVane);
-            Visit(nextVane.Next);
-
-            if (_vertices.Has(nextVane.Next.GetHashCode()))
-            {
-                Vertex fromVertex = GetVertex(nextVane.FeatherVane);
-                var next = nextVane.Next as NextVane<T>;
-                if (next != null)
-                    _edges.Add(new Edge(fromVertex, GetVertex(next.FeatherVane), typeof(T).Name));
-                else
-                    _edges.Add(new Edge(fromVertex, GetVertex(nextVane.Next), typeof(T).Name));                
-            }
+            Push(() => Visit(nextVane.Next));
         }
 
         void VisitNextSourceVane<T>(NextSource<T> nextVane)
         {
             _current = GetVertex(nextVane.Next);
- 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
 
-            Push(() => Visit(nextVane.Source));
+            Push(() =>
+                {
+                    VisitAcceptor(nextVane.Next);
+                    Visit(nextVane.Source);
+                });
         }
 
         void Push(Action callback)
@@ -238,9 +209,7 @@ namespace FeatherVane.Visualization
         {
             var acceptVaneVisitor = vane as AcceptVaneVisitor;
             if (acceptVaneVisitor != null)
-            {
                 acceptVaneVisitor.Accept(this);
-            }
         }
     }
 }

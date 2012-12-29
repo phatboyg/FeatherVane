@@ -22,7 +22,8 @@ namespace FeatherVane.NHibernateIntegration.Vanes
     /// <typeparam name="T">The vane type of the main vane</typeparam>
     /// <typeparam name="TId">The identity type for the entity</typeparam>
     public class Load<T, TId> :
-        SourceVane<T>
+        SourceVane<T>,
+        AcceptVaneVisitor
     {
         readonly SourceVane<TId> _id;
         readonly SourceVane<T> _missing;
@@ -53,14 +54,14 @@ namespace FeatherVane.NHibernateIntegration.Vanes
             readonly Vane<Tuple<TPayload, T>> _next;
             readonly ISessionFactory _sessionFactory;
 
-            public Get(ISessionFactory sessionFactory, SourceVane<T> missing, Vane<Tuple<TPayload, T>> next)
+            internal Get(ISessionFactory sessionFactory, SourceVane<T> missing, Vane<Tuple<TPayload, T>> next)
             {
                 _sessionFactory = sessionFactory;
                 _missing = missing;
                 _next = next;
             }
 
-            public void Compose(Composer composer, Payload<Tuple<TPayload, TId>> payload)
+            void Vane<Tuple<TPayload, TId>>.Compose(Composer composer, Payload<Tuple<TPayload, TId>> payload)
             {
                 ISession session = null;
                 ITransaction transaction = null;
@@ -97,6 +98,12 @@ namespace FeatherVane.NHibernateIntegration.Vanes
                             session.Dispose();
                     });
             }
+        }
+
+
+        public bool Accept(VaneVisitor visitor)
+        {
+            return visitor.Visit(_id) && visitor.Visit(_missing);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace FeatherVane.Vanes
             readonly Stopwatch _stopwatch;
             readonly Guid _timingId;
 
-            public ProfilerInstance(ProfilerSettings settings)
+            internal ProfilerInstance(ProfilerSettings settings)
             {
                 _settings = settings;
                 _timingId = Guid.NewGuid();

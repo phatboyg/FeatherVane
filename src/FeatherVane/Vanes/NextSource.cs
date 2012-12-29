@@ -49,7 +49,7 @@ namespace FeatherVane.Vanes
 
         bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(_sourceVane, x => visitor.Visit(_sourceVane) && visitor.Visit(_nextVane));
+            return visitor.Visit(_sourceVane) && visitor.Visit(_nextVane);
         }
 
         void SourceVane<TSource>.Compose<TPayload>(Composer composer, Payload<TPayload> payload,

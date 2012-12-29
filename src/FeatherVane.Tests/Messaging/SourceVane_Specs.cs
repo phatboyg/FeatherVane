@@ -12,6 +12,7 @@
 namespace FeatherVane.Tests.Messaging
 {
     using System;
+    using System.IO;
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
     using FeatherVane.Messaging.Vanes;
@@ -39,12 +40,7 @@ namespace FeatherVane.Tests.Messaging
         [Test, Explicit]
         public void Should_render_graph_nicely()
         {
-            var graphVisitor = new GraphVaneVisitor();
-            graphVisitor.Visit(_vane);
-
-            FeatherVaneGraph graph = graphVisitor.GetGraphData();
-
-            new FeatherVaneGraphGenerator().SaveGraphToFile(graph, 1920, 1080, "sourceVaneGraph.png");
+            _vane.RenderGraphToFile(new FileInfo("sourceVaneGraph.png"));
         }
 
         [Test, Explicit]

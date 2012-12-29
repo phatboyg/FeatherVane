@@ -12,12 +12,14 @@
 namespace FeatherVane.Tests.NHibernateIntegration
 {
     using System;
+    using System.IO;
     using FeatherVane.NHibernateIntegration.Vanes;
     using NHibernate;
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
     using NUnit.Framework;
     using Vanes;
+    using Visualizer;
 
 
     [TestFixture]
@@ -47,6 +49,8 @@ namespace FeatherVane.Tests.NHibernateIntegration
             var profilerVane = new Profiler<A>(Console.Out, TimeSpan.FromMilliseconds(1));
 
             Vane<A> vane = VaneFactory.Success(profilerVane, fanOutVane);
+
+            vane.RenderGraphToFile(new FileInfo("NHibernateTestGraph.png"));
 
             var a = new A {Id = _id};
             vane.Execute(a);

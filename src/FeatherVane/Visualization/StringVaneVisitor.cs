@@ -11,11 +11,11 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Visualization
 {
-    using System;
     using System.Collections.Generic;
     using System.Text;
     using Internals.Extensions;
     using Vanes;
+
 
     public class StringVaneVisitor :
         VaneVisitor
@@ -37,13 +37,6 @@ namespace FeatherVane.Visualization
             return true;
         }
 
-        public bool Visit<T>(Vane<T> vane, Func<Vane<T>, bool> next)
-        {
-            VisitVane(vane);
-
-            return next(vane);
-        }
-
         public bool Visit<T>(SourceVane<T> vane)
         {
             VisitSourceVane(vane);
@@ -51,25 +44,11 @@ namespace FeatherVane.Visualization
             return true;
         }
 
-        public bool Visit<T>(SourceVane<T> vane, Func<SourceVane<T>, bool> next)
-        {
-            VisitSourceVane(vane);
-
-            return next(vane);
-        }
-
         public bool Visit<T>(FeatherVane<T> vane)
         {
             VisitFeatherVane(vane);
 
             return true;
-        }
-
-        public bool Visit<T>(FeatherVane<T> vane, Func<FeatherVane<T>, bool> next)
-        {
-            VisitFeatherVane(vane);
-
-            return next(vane);
         }
 
         void VisitVane<T>(Vane<T> vane)
@@ -109,7 +88,7 @@ namespace FeatherVane.Visualization
 
         void Append(string text)
         {
-            _sb.Append(' ', _depth*2);
+            _sb.Append(' ', _depth * 2);
             _sb.AppendLine(text);
         }
 
@@ -120,9 +99,7 @@ namespace FeatherVane.Visualization
 
             var acceptVaneVisitor = vane as AcceptVaneVisitor;
             if (acceptVaneVisitor != null)
-            {
                 (acceptVaneVisitor).Accept(this);
-            }
 
             if (!(vane is NextVane<T>))
                 _depth--;

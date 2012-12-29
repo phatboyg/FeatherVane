@@ -40,7 +40,7 @@ namespace FeatherVane.Vanes
 
         public bool Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(this, x => _typeVanes.All(visitor.Visit));
+            return _typeVanes.All(visitor.Visit);
         }
 
         public void Compose(Composer composer, Payload<T> payload, Vane<T> next)

@@ -33,7 +33,7 @@ namespace FeatherVane.Messaging.Vanes
 
         public bool Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(this, x => visitor.Visit(_vane));
+            return visitor.Visit(_vane);
         }
 
         void FeatherVane<Message>.Compose(Composer composer, Payload<Message> payload, Vane<Message> next)
