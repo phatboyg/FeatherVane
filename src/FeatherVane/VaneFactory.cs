@@ -11,11 +11,35 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using System;
+    using Configurators;
+    using VaneConfigurators;
     using Vanes;
 
 
     public static class VaneFactory
     {
+        /// <summary>
+        /// Configures a new vane using a fluent configuration syntax
+        /// </summary>
+        /// <typeparam name="T">The payload type for the vane</typeparam>
+        /// <param name="configureCallback">The configuration callback</param>
+        /// <returns>A newly constructed vane of the specified type</returns>
+        public static Vane<T> New<T>(Action<VaneConfigurator<T>> configureCallback)
+        {
+            if (configureCallback == null)
+                throw new ArgumentNullException("configureCallback");
+
+            var configurator = new SuccessConfigurator<T>();
+
+            configureCallback(configurator);
+
+            configurator.ValidateConfigurator();
+
+            return configurator.CreateVane();
+        }
+
+
         /// <summary>
         /// Connects a sequence of FeatherVanes into a Vane that can be executed, with the default
         /// completion being success.

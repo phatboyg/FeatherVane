@@ -14,6 +14,7 @@ namespace FeatherVane.Vanes
     using System;
     using System.IO;
 
+
     /// <summary>
     /// Logs to a TextWriter before the passing control to the next vane. The payload is 
     /// used to get the output text via the provider function.
@@ -22,27 +23,27 @@ namespace FeatherVane.Vanes
     public class Logger<T> :
         FeatherVane<T>
     {
-        readonly Func<Payload<T>, string> _getLogMessage;
+        readonly Func<Payload<T>, string> _formatter;
         readonly TextWriter _output;
 
         /// <summary>
         /// Constructs a Logger
         /// </summary>
         /// <param name="output">The output writer for log messages</param>
-        /// <param name="getLogMessage">The log message factory method</param>
-        public Logger(TextWriter output, Func<Payload<T>, string> getLogMessage)
+        /// <param name="formatter">The log message factory method</param>
+        public Logger(TextWriter output, Func<Payload<T>, string> formatter)
         {
             _output = output;
-            _getLogMessage = getLogMessage;
+            _formatter = formatter;
         }
 
         public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             composer.Execute(() =>
                 {
-                    string message = _getLogMessage(payload);
-
-                    _output.WriteLine(message);
+                    string message = _formatter(payload);
+                    if (!string.IsNullOrEmpty(message))
+                        _output.WriteLine(message);
                 });
 
             next.Compose(composer, payload);
