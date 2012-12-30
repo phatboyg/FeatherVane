@@ -1,5 +1,4 @@
-COPYRIGHT = "Copyright 2012 Chris Patterson & Dru Sellers, All rights reserved."
-
+COPYRIGHT = "Copyright 2012 Chris Patterson, All rights reserved."
 
 internal_files = Dir[File.join(File.expand_path("src"), 'FeatherVane/Internals/**/*.cs')]
 if(!internal_files.any?)
@@ -64,13 +63,30 @@ task :compile => [:versioning, :global_version, :build] do
 	copyOutputFiles File.join(props[:src], "FeatherVane.Web/bin/Release"), "FeatherVane.Web.{dll,pdb,xml}", File.join(props[:output], 'net-4.0')
 end
 
+desc "Cleans, versions, compiles the application and generates build_output/."
+task :compile_net45fx => [:global_version, :build_net45fx] do
+  copyOutputFiles File.join(props[:src], "FeatherVane/bin/Release"), "FeatherVane.{dll,pdb,xml}", File.join(props[:output], 'win8')
+end
+
 desc "Only compiles the application."
 msbuild :build do |msb|
 	msb.properties :Configuration => "Release",
 		:Platform => 'Any CPU'
 	msb.use :net4
 	msb.targets :Clean, :Build
+  msb.properties[:SignAssembly] = 'true'
+  msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile]
 	msb.solution = 'src/FeatherVane.sln'
+end
+
+desc "Only compiles the application for .NET 4.5 FX CORE."
+msbuild :build_net45fx do |msb|
+  msb.properties :Configuration => "Release",
+    :Platform => 'Any CPU'
+  msb.targets :Clean, :Build
+  msb.properties[:SignAssembly] = 'true'
+  msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile]
+  msb.solution = 'src/FeatherVane-NetCore45.sln'
 end
 
 def copyOutputFiles(fromDir, filePattern, outDir)
@@ -130,7 +146,7 @@ nuspec :_nuspec do |nuspec|
   nuspec.version = NUGET_VERSION
   nuspec.authors = 'Chris Patterson'
   nuspec.description = 'FeatherVane, Lightweight Middleware for .NET Applications. Support for System.Web services, including IIS and HttpListener'
-  nuspec.title = 'FeathVane'
+  nuspec.title = 'FeatherVane.Web'
   nuspec.projectUrl = 'http://github.com/TheOrangeBook/FeatherVane'
   nuspec.language = "en-US"
   nuspec.licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0"
@@ -160,7 +176,7 @@ def get_commit_hash_and_date
 end
 
 def add_files stage, what_dlls, nuspec
-  [['net40', 'net-4.0']].each{|fw|
+  [['net40', 'net-4.0'], ['.NETCore45', 'win8']].each{|fw|
     takeFrom = File.join(stage, fw[1], what_dlls)
     Dir.glob(takeFrom).each do |f|
       nuspec.file(f.gsub("/", "\\"), "lib\\#{fw[0]}")
