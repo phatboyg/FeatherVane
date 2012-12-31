@@ -34,9 +34,7 @@ namespace FeatherVane
 
             configureCallback(configurator);
 
-            configurator.ValidateConfigurator();
-
-            return configurator.CreateVane();
+            return configurator.ValidateAndCreate();
         }
 
 

@@ -12,33 +12,27 @@
 namespace FeatherVane.FeatherVaneConfigurators
 {
     using System;
-    using System.Collections.Generic;
     using Configurators;
-    using FeatherVaneBuilders;
-    using VaneBuilders;
 
 
-    public class ExecuteConfigurator<T> :
-        FeatherVaneConfigurator<T>,
-        VaneBuilderConfigurator<T>
+    public class SpliceSourceConfiguratorImpl<T> :
+        SpliceSourceConfigurator<T>
     {
-        readonly Action<Payload<T>> _continuation;
+        readonly VaneConfigurator<T> _vaneConfigurator;
 
-        public ExecuteConfigurator(Action<Payload<T>> continuation)
+        public SpliceSourceConfiguratorImpl(VaneConfigurator<T> vaneConfigurator)
         {
-            _continuation = continuation;
+            _vaneConfigurator = vaneConfigurator;
         }
 
-        void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
+        void SpliceSourceConfigurator<T>.Source<TSource>(SourceVaneFactory<TSource> sourceVaneFactory,
+            Action<SpliceConfigurator<T, TSource>> configureCallback)
         {
-            var executeBuilder = new ExecuteBuilder<T>(_continuation);
-            builder.Add(executeBuilder);
-        }
+            var spliceConfigurator = new SpliceConfiguratorImpl<T, TSource>(sourceVaneFactory);
 
-        IEnumerable<ValidateResult> Configurator.Validate()
-        {
-            if (_continuation == null)
-                yield return this.Failure("Continuation", "must not be null");
+            configureCallback(spliceConfigurator);
+
+            _vaneConfigurator.Add(spliceConfigurator);
         }
     }
 }

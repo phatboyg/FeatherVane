@@ -22,11 +22,5 @@ namespace FeatherVane.VaneBuilders
         /// </summary>
         /// <param name="featherVaneBuilder"></param>
         void Add(FeatherVaneBuilder<T> featherVaneBuilder);
-
-        /// <summary>
-        /// Builds the Vane
-        /// </summary>
-        /// <returns></returns>
-        Vane<T> Build();
     }
 }

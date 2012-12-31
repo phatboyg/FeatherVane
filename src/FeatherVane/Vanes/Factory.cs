@@ -23,11 +23,11 @@ namespace FeatherVane.Vanes
     public class Factory<T> :
         SourceVane<T>
     {
-        readonly Func<T> _factory;
+        readonly Func<T> _factoryMethod;
 
-        public Factory(Func<T> factory)
+        public Factory(Func<T> factoryMethod)
         {
-            _factory = factory;
+            _factoryMethod = factoryMethod;
         }
 
         void SourceVane<T>.Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next)
@@ -35,7 +35,7 @@ namespace FeatherVane.Vanes
             T data = default(T);
             composer.Execute(() =>
                 {
-                    data = _factory();
+                    data = _factoryMethod();
                     Payload<Tuple<TPayload, T>> nextPayload = payload.CreateProxy(Tuple.Create(payload.Data, data));
 
                     return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);

@@ -13,6 +13,7 @@ namespace FeatherVane
 {
     using System;
     using System.Runtime.Serialization;
+    using Configurators;
 
 
     [Serializable]
@@ -35,6 +36,13 @@ namespace FeatherVane
 
         protected VaneConfigurationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
+        {
+        }
+
+        public VaneConfigurationException(ValidateConfigurationResult result)
+            : base("The vane was not properly configured: "
+                   + Environment.NewLine
+                   + result.Message)
         {
         }
     }

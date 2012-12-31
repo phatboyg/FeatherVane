@@ -9,14 +9,22 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Messaging
+namespace FeatherVane
 {
     using System;
+    using FeatherVaneConfigurators;
 
 
-    public interface SourceVaneFactory<out T>
+    public static class ProfilerConfigurationExtensions
     {
-        Vane<Message<TMessage>> Consumer<TMessage>(Func<T, Action<Payload, Message<TMessage>>> methodSelector)
-            where TMessage : class;
+        public static void Profiler<T>(this VaneConfigurator<T> configurator,
+            Action<ProfilerConfigurator<T>> configureCallback)
+        {
+            var profilerConfigurator = new ProfilerConfiguratorImpl<T>();
+
+            configureCallback(profilerConfigurator);
+
+            configurator.Add(profilerConfigurator);
+        }
     }
 }

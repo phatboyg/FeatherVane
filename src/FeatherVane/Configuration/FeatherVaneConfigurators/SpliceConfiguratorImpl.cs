@@ -13,33 +13,42 @@ namespace FeatherVane.FeatherVaneConfigurators
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Configurators;
     using FeatherVaneBuilders;
     using VaneBuilders;
+    using VaneConfigurators;
 
 
-    public class ExecuteTaskConfigurator<T> :
-        FeatherVaneConfigurator<T>,
+    public class SpliceConfiguratorImpl<T, TSource> :
+        SpliceConfigurator<T, TSource>,
         VaneBuilderConfigurator<T>
     {
-        readonly Func<Payload<T>, Task> _continuation;
+        readonly SourceVaneFactory<TSource> _sourceVaneFactory;
+        readonly VaneConfiguratorImpl<Tuple<T, TSource>> _vaneConfigurator;
 
-        public ExecuteTaskConfigurator(Func<Payload<T>, Task> continuation)
+        public SpliceConfiguratorImpl(SourceVaneFactory<TSource> sourceVaneFactory)
         {
-            _continuation = continuation;
+            _sourceVaneFactory = sourceVaneFactory;
+            _vaneConfigurator = new SuccessConfigurator<Tuple<T, TSource>>();
+        }
+
+        void VaneConfigurator<Tuple<T, TSource>>.Add(VaneBuilderConfigurator<Tuple<T, TSource>> vaneBuilderConfigurator)
+        {
+            _vaneConfigurator.Add(vaneBuilderConfigurator);
         }
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var executeBuilder = new ExecuteTaskBuilder<T>(_continuation);
-            builder.Add(executeBuilder);
+            var spliceBuilder = new SpliceBuilder<T, TSource>(_vaneConfigurator, _sourceVaneFactory);
+
+            builder.Add(spliceBuilder);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            if (_continuation == null)
-                yield return this.Failure("Continuation", "must not be null");
+            Configurator configurator = _vaneConfigurator;
+
+            return configurator.Validate();
         }
     }
 }

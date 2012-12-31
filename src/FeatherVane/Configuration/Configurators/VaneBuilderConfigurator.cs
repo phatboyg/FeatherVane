@@ -17,6 +17,6 @@ namespace FeatherVane.Configurators
     public interface VaneBuilderConfigurator<T> :
         Configurator
     {
-        VaneBuilder<T> Configure(VaneBuilder<T> builder);
+        void Configure(VaneBuilder<T> builder);
     }
 }

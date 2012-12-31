@@ -9,37 +9,35 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.FeatherVaneConfigurators
+namespace FeatherVane.Messaging.FeatherVaneConfigurators
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Configurators;
     using FeatherVaneBuilders;
     using VaneBuilders;
 
 
-    public class ExecuteTaskConfigurator<T> :
-        FeatherVaneConfigurator<T>,
-        VaneBuilderConfigurator<T>
+    public class MessageConsumerConfigurator<TMessage, TConsumer> :
+        VaneBuilderConfigurator<Tuple<Message, TConsumer>>
+        where TMessage : class
     {
-        readonly Func<Payload<T>, Task> _continuation;
+        readonly Func<TConsumer, Action<Payload, Message<TMessage>>> _consumeMethod;
 
-        public ExecuteTaskConfigurator(Func<Payload<T>, Task> continuation)
+        public MessageConsumerConfigurator(Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
         {
-            _continuation = continuation;
+            _consumeMethod = consumeMethod;
         }
 
-        void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
+        public void Configure(VaneBuilder<Tuple<Message, TConsumer>> builder)
         {
-            var executeBuilder = new ExecuteTaskBuilder<T>(_continuation);
-            builder.Add(executeBuilder);
+            builder.Add(new MessageConsumerBuilder<TMessage, TConsumer>(_consumeMethod));
         }
 
-        IEnumerable<ValidateResult> Configurator.Validate()
+        public IEnumerable<ValidateResult> Validate()
         {
-            if (_continuation == null)
-                yield return this.Failure("Continuation", "must not be null");
+            if (_consumeMethod == null)
+                yield return this.Failure("ConsumeMethod", "must not be null");
         }
     }
 }

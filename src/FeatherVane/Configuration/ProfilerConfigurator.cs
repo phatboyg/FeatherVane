@@ -12,19 +12,24 @@
 namespace FeatherVane
 {
     using System;
-    using Configurators;
-    using SourceVaneConfigurators;
+    using System.IO;
 
 
-    public static class SourceVaneFactory
+    public interface ProfilerConfigurator<out T> :
+        FeatherVaneConfigurator<T>
     {
-        public static SourceVane<T> New<T>(Action<SourceVaneConfigurator<T>> configureCallback)
-        {
-            var configurator = new SourceVaneConfiguratorImpl<T>();
+        /// <summary>
+        /// Sets the output text writer for the profiler
+        /// </summary>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        ProfilerConfigurator<T> SetOutput(TextWriter output);
 
-            configureCallback(configurator);
-
-            return configurator.ValidateAndCreate();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="minimumDuration">The minimum duration to log</param>
+        /// <returns></returns>
+        ProfilerConfigurator<T> Threshold(TimeSpan minimumDuration);
     }
 }

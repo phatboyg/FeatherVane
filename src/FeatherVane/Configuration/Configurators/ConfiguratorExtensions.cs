@@ -11,24 +11,34 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Configurators
 {
-    using System;
-
-
     public static class ConfiguratorExtensions
     {
-        public static ConfigurationResult ValidateConfigurator(this Configurator configurator)
+        public static Vane<T> ValidateAndCreate<T>(this VaneFactory<T> vaneFactory)
         {
-            var result = new ValidateConfigurationResult(configurator.Validate());
+            var result = new ValidateConfigurationResult(vaneFactory.Validate());
             if (result.ContainsFailure)
-            {
-                string message = "The vane was not properly configured: "
-                                 + Environment.NewLine
-                                 + result.Message;
+                throw new VaneConfigurationException(result);
 
-                throw new VaneConfigurationException(message);
-            }
+            return vaneFactory.Create();
+        }
 
-            return result;
+        public static Vane<T> Create<T>(this VaneFactory<T> vaneFactory)
+        {
+            return vaneFactory.Create();
+        }
+
+        public static SourceVane<T> ValidateAndCreate<T>(this SourceVaneFactory<T> vaneFactory)
+        {
+            var result = new ValidateConfigurationResult(vaneFactory.Validate());
+            if (result.ContainsFailure)
+                throw new VaneConfigurationException(result);
+
+            return vaneFactory.Create();
+        }
+
+        public static SourceVane<T> Create<T>(this SourceVaneFactory<T> vaneFactory)
+        {
+            return vaneFactory.Create();
         }
     }
 }

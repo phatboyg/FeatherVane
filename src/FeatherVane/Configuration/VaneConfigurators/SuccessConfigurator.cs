@@ -11,9 +11,16 @@
 // permissions and limitations under the License.
 namespace FeatherVane.VaneConfigurators
 {
+    using Vanes;
+
+
     public class SuccessConfigurator<T> :
         VaneConfiguratorImpl<T>,
         VaneConfigurator<T>
     {
+        public SuccessConfigurator()
+            : base(() => new Success<T>())
+        {
+        }
     }
 }

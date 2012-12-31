@@ -41,7 +41,7 @@ namespace FeatherVane
         /// <typeparam name="T">The vane type</typeparam>
         /// <param name="configurator">The vane configurator</param>
         /// <param name="continuationTask">The continuation to create the Task</param>
-        public static void Execute<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, Task> continuationTask)
+        public static void ExecuteTask<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, Task> continuationTask)
         {
             if (configurator == null)
                 throw new ArgumentNullException("configurator");

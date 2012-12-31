@@ -9,49 +9,44 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneConfigurators
+namespace FeatherVane.FeatherVaneConfigurators
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
+    using FeatherVaneBuilders;
     using VaneBuilders;
 
 
-    public abstract class VaneConfiguratorImpl<T> :
-        VaneFactory<T>
+    public class FanoutConfiguratorImpl<T> :
+        FanoutConfigurator<T>,
+        VaneBuilderConfigurator<T>
     {
-        readonly Func<Vane<T>> _tailFactory;
         readonly IList<VaneBuilderConfigurator<T>> _vaneBuilderConfigurators;
 
-        protected VaneConfiguratorImpl(Func<Vane<T>> tailFactory)
+        public FanoutConfiguratorImpl()
         {
-            _tailFactory = tailFactory;
-
             _vaneBuilderConfigurators = new List<VaneBuilderConfigurator<T>>();
+        }
+
+        void VaneConfigurator<T>.Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
+        {
+            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
+        }
+
+        void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
+        {
+            var fanoutBuilder = new FanoutBuilder<T>();
+
+            foreach (var configurator in _vaneBuilderConfigurators)
+                configurator.Configure(fanoutBuilder);
+
+            builder.Add(fanoutBuilder);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            if (_tailFactory == null)
-                yield return this.Failure("TailFactory", "must not be null");
-
-            foreach (ValidateResult result in _vaneBuilderConfigurators.SelectMany(x => x.Validate()))
-                yield return result;
-        }
-
-        Vane<T> VaneFactory<T>.Create()
-        {
-            var builder = new VaneBuilderImpl<T>(_tailFactory);
-            foreach (var configurator in _vaneBuilderConfigurators)
-                configurator.Configure(builder);
-
-            return builder.Build();
-        }
-
-        public void Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
-        {
-            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
+            return _vaneBuilderConfigurators.SelectMany(vaneConfigurator => vaneConfigurator.Validate());
         }
     }
 }

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Tests", "Feathe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Web", "FeatherVane.Web\FeatherVane.Web.csproj", "{F1851622-9293-4FB3-A6B8-CB7F81B06096}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Messaging", "FeatherVane.Messaging\FeatherVane.Messaging.csproj", "{FDC93173-1C85-43B0-9A7D-F3B22962924C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Visualizer", "FeatherVane.Visualizer\FeatherVane.Visualizer.csproj", "{F5C8C430-2104-47F1-BF65-44F1F17DD002}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.NHibernateIntegration", "FeatherVane.NHibernateIntegration\FeatherVane.NHibernateIntegration.csproj", "{39AD5E19-4C1B-4764-A007-25DE3CE9117E}"
@@ -31,10 +29,6 @@ Global
 		{F1851622-9293-4FB3-A6B8-CB7F81B06096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1851622-9293-4FB3-A6B8-CB7F81B06096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1851622-9293-4FB3-A6B8-CB7F81B06096}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDC93173-1C85-43B0-9A7D-F3B22962924C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5C8C430-2104-47F1-BF65-44F1F17DD002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5C8C430-2104-47F1-BF65-44F1F17DD002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5C8C430-2104-47F1-BF65-44F1F17DD002}.Release|Any CPU.ActiveCfg = Release|Any CPU

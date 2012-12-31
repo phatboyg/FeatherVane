@@ -15,9 +15,7 @@ namespace FeatherVane.Tests.Messaging
     using System.Threading;
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
-    using FeatherVane.Messaging.Vanes;
     using NUnit.Framework;
-    using Vanes;
     using Visualization;
 
 
@@ -27,16 +25,14 @@ namespace FeatherVane.Tests.Messaging
         [Test]
         public void Should_support_delivery()
         {
-            SourceVane<TestConsumer> factoryVane = SourceVaneFactory.New(() => new TestConsumer());
-
-            Vane<Message<A>> messageAVane = factoryVane.New(x => x.Consumer<A>(v => v.Consume));
-            var messageVane = new MessageVane<A>(messageAVane);
-
-            Vane<Message<B>> messageBVane = factoryVane.New(x => x.Consumer<B>(v => v.Consume));
-            var messageVaneB = new MessageVane<B>(messageBVane);
-
-            var fanOutVane = new Fanout<Message>(new FeatherVane<Message>[] {messageVane, messageVaneB});
-            Vane<Message> vane = VaneFactory.Success(fanOutVane);
+            Vane<Message> vane = VaneFactory.New<Message>(x =>
+                {
+                    x.Consumer(() => new TestConsumer(), xc =>
+                        {
+                            xc.Consume<A>(c => c.Consume);
+                            xc.Consume<B>(c => c.Consume);
+                        });
+                });
 
             var a = new A {Value = "Hello"};
             Payload<Message> payload = new MessagePayload<A>(a);
@@ -87,10 +83,13 @@ namespace FeatherVane.Tests.Messaging
         [Test]
         public void Should_be_disposed()
         {
-            Vane<Message<A>> vane = SourceVaneFactory
-                .New(() => new FailingConsumer())
-                .New(x => x.Consumer<A>(v => v.Consume));
-
+            Vane<Message> vane = VaneFactory.New<Message>(x =>
+            {
+                x.Consumer(() => new FailingConsumer(), xc =>
+                {
+                    xc.Consume<A>(c => c.Consume);
+                });
+            });
 
             var a = new A {Value = "Hello"};
             Payload<Message<A>> payload = new MessagePayload<A>(a);

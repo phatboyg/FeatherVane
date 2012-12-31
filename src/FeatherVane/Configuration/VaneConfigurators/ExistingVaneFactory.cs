@@ -9,18 +9,31 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneBuilders
+namespace FeatherVane.VaneConfigurators
 {
-    using Vanes;
+    using System.Collections.Generic;
+    using Configurators;
 
 
-    public class UnhandledBuilder<T> :
-        VaneBuilderImpl<T>,
-        VaneBuilder<T>
+    public class ExistingVaneFactory<T> :
+        VaneFactory<T>
     {
-        Vane<T> VaneBuilder<T>.Build()
+        readonly Vane<T> _vane;
+
+        public ExistingVaneFactory(Vane<T> vane)
         {
-            return Build(new Unhandled<T>());
+            _vane = vane;
+        }
+
+        public Vane<T> Create()
+        {
+            return _vane;
+        }
+
+        public IEnumerable<ValidateResult> Validate()
+        {
+            if (_vane == null)
+                yield return this.Failure("Vane", "must not be null");
         }
     }
 }

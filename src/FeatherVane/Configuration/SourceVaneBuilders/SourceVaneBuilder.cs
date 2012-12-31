@@ -9,22 +9,23 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneBuilders
+namespace FeatherVane.SourceVaneBuilders
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using FeatherVaneBuilders;
+    using VaneBuilders;
     using Vanes;
 
 
-    public class VaneBuilderImpl<T> :
+    public class SourceVaneBuilder<T> :
         VaneBuilder<T>
     {
         readonly IList<FeatherVaneBuilder<T>> _featherVaneBuilders;
-        readonly Func<Vane<T>> _tailFactory;
+        readonly Func<SourceVane<T>> _tailFactory;
 
-        public VaneBuilderImpl(Func<Vane<T>> tailFactory)
+        public SourceVaneBuilder(Func<SourceVane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
             _featherVaneBuilders = new List<FeatherVaneBuilder<T>>();
@@ -35,19 +36,14 @@ namespace FeatherVane.VaneBuilders
             _featherVaneBuilders.Add(featherVaneBuilder);
         }
 
-        public Vane<T> Build()
+        public SourceVane<T> Build()
         {
-            return Build(_tailFactory());
+            return Build(_tailFactory(), _featherVaneBuilders.Select(builder => builder.Build()));
         }
 
-        protected Vane<T> Build(Vane<T> tail)
+        static SourceVane<T> Build(SourceVane<T> head, IEnumerable<FeatherVane<T>> vanes)
         {
-            return Build(tail, _featherVaneBuilders.Select(builder => builder.Build()));
-        }
-
-        protected static Vane<T> Build(Vane<T> tail, IEnumerable<FeatherVane<T>> vanes)
-        {
-            return vanes.Reverse().Aggregate(tail, (x, vane) => new NextVane<T>(vane, x));
+            return vanes.Aggregate(head, (x, vane) => new NextSource<T>(x, vane));
         }
     }
 }

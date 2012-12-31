@@ -9,22 +9,28 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.FeatherVaneBuilders
 {
     using System;
-    using Configurators;
-    using SourceVaneConfigurators;
+    using System.IO;
+    using Vanes;
 
 
-    public static class SourceVaneFactory
+    public class ProfilerBuilder<T> :
+        FeatherVaneBuilder<T>
     {
-        public static SourceVane<T> New<T>(Action<SourceVaneConfigurator<T>> configureCallback)
+        readonly TextWriter _output;
+        TimeSpan _threshold;
+
+        public ProfilerBuilder(TextWriter output, TimeSpan threshold)
         {
-            var configurator = new SourceVaneConfiguratorImpl<T>();
+            _output = output;
+            _threshold = threshold;
+        }
 
-            configureCallback(configurator);
-
-            return configurator.ValidateAndCreate();
+        public FeatherVane<T> Build()
+        {
+            return new Profiler<T>(_output, _threshold);
         }
     }
 }

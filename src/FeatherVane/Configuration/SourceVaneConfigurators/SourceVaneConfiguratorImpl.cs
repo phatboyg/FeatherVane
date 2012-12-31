@@ -9,49 +9,55 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneConfigurators
+namespace FeatherVane.SourceVaneConfigurators
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
-    using VaneBuilders;
+    using SourceVaneBuilders;
 
 
-    public abstract class VaneConfiguratorImpl<T> :
-        VaneFactory<T>
+    public class SourceVaneConfiguratorImpl<T> :
+        SourceVaneFactory<T>,
+        SourceVaneConfigurator<T>
     {
-        readonly Func<Vane<T>> _tailFactory;
         readonly IList<VaneBuilderConfigurator<T>> _vaneBuilderConfigurators;
+        Func<SourceVane<T>> _sourceVaneFactory;
 
-        protected VaneConfiguratorImpl(Func<Vane<T>> tailFactory)
+        public SourceVaneConfiguratorImpl()
         {
-            _tailFactory = tailFactory;
-
             _vaneBuilderConfigurators = new List<VaneBuilderConfigurator<T>>();
         }
 
-        IEnumerable<ValidateResult> Configurator.Validate()
+        void VaneConfigurator<T>.Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
         {
-            if (_tailFactory == null)
-                yield return this.Failure("TailFactory", "must not be null");
-
-            foreach (ValidateResult result in _vaneBuilderConfigurators.SelectMany(x => x.Validate()))
-                yield return result;
+            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
         }
 
-        Vane<T> VaneFactory<T>.Create()
+        SourceVaneConfigurator<T> SourceVaneConfigurator<T>.UseSourceVaneFactory(Func<SourceVane<T>> sourceVaneFactory)
         {
-            var builder = new VaneBuilderImpl<T>(_tailFactory);
+            _sourceVaneFactory = sourceVaneFactory;
+
+            return this;
+        }
+
+        SourceVane<T> SourceVaneFactory<T>.Create()
+        {
+            var builder = new SourceVaneBuilder<T>(_sourceVaneFactory);
             foreach (var configurator in _vaneBuilderConfigurators)
                 configurator.Configure(builder);
 
             return builder.Build();
         }
 
-        public void Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
+        IEnumerable<ValidateResult> Configurator.Validate()
         {
-            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
+            if (_sourceVaneFactory == null)
+                yield return this.Failure("SourceVaneFactory", "must not be null");
+
+            foreach (ValidateResult result in _vaneBuilderConfigurators.SelectMany(x => x.Validate()))
+                yield return result;
         }
     }
 }

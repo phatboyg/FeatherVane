@@ -20,6 +20,6 @@ namespace FeatherVane
     {
         LoggerConfigurator<T> SetOutput(TextWriter output);
 
-        LoggerConfigurator<T> SetFormatter(Func<Payload<T>, string> formatter);
+        LoggerConfigurator<T> SetFormat(Func<Payload<T>, string> format);
     }
 }

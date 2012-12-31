@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -13,18 +13,11 @@ namespace FeatherVane
 {
     using System;
     using Configurators;
-    using SourceVaneConfigurators;
 
 
-    public static class SourceVaneFactory
+    public interface SpliceSourceConfigurator<T> :
+        FeatherVaneConfigurator<T>
     {
-        public static SourceVane<T> New<T>(Action<SourceVaneConfigurator<T>> configureCallback)
-        {
-            var configurator = new SourceVaneConfiguratorImpl<T>();
-
-            configureCallback(configurator);
-
-            return configurator.ValidateAndCreate();
-        }
+        void Source<TSource>(SourceVaneFactory<TSource> sourceVaneFactory, Action<SpliceConfigurator<T, TSource>> configureCallback);
     }
 }

@@ -13,6 +13,7 @@ namespace FeatherVane.Messaging.Payloads
 {
     using System;
 
+
     /// <summary>
     /// An object-based message, where the message is an instance of an object and
     /// any related message types are handled by reflection.

@@ -9,32 +9,31 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Messaging.Configuration
+namespace FeatherVane.SourceVaneConfigurators
 {
-    using System;
-    using FeatherVane.Vanes;
-    using Vanes;
+    using System.Collections.Generic;
+    using Configurators;
 
 
-    class SourceVaneFactoryImpl<T> :
+    public class ExistingSourceVaneFactory<T> :
         SourceVaneFactory<T>
     {
         readonly SourceVane<T> _sourceVane;
 
-        public SourceVaneFactoryImpl(SourceVane<T> sourceVane)
+        public ExistingSourceVaneFactory(SourceVane<T> sourceVane)
         {
             _sourceVane = sourceVane;
         }
 
-        Vane<Message<TMessage>> SourceVaneFactory<T>.Consumer<TMessage>(
-            Func<T, Action<Payload, Message<TMessage>>> methodSelector)
+        public SourceVane<T> Create()
         {
-            var messageConsumerVane = new MessageConsumerVane<TMessage, T>(methodSelector);
-            Vane<Tuple<Message<TMessage>, T>> messageVane = VaneFactory.Success(messageConsumerVane);
+            return _sourceVane;
+        }
 
-            var consumerVane = new Splice<Message<TMessage>, T>(messageVane, _sourceVane);
-
-            return VaneFactory.Success(consumerVane);
+        public IEnumerable<ValidateResult> Validate()
+        {
+            if (_sourceVane == null)
+                yield return this.Failure("SourceVane", "must not be null");
         }
     }
 }

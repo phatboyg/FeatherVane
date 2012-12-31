@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2012 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -13,33 +13,46 @@ namespace FeatherVane.FeatherVaneConfigurators
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
+    using System.IO;
     using Configurators;
     using FeatherVaneBuilders;
     using VaneBuilders;
 
 
-    public class ExecuteTaskConfigurator<T> :
-        FeatherVaneConfigurator<T>,
+    public class ProfilerConfiguratorImpl<T> :
+        ProfilerConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
-        readonly Func<Payload<T>, Task> _continuation;
+        TextWriter _output;
+        TimeSpan _threshold;
 
-        public ExecuteTaskConfigurator(Func<Payload<T>, Task> continuation)
+        ProfilerConfigurator<T> ProfilerConfigurator<T>.SetOutput(TextWriter output)
         {
-            _continuation = continuation;
+            _output = output;
+
+            return this;
+        }
+
+        public ProfilerConfigurator<T> Threshold(TimeSpan minimumDuration)
+        {
+            _threshold = minimumDuration;
+
+            return this;
         }
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var executeBuilder = new ExecuteTaskBuilder<T>(_continuation);
-            builder.Add(executeBuilder);
+            var featherVaneBuilder = new ProfilerBuilder<T>(_output, _threshold);
+            builder.Add(featherVaneBuilder);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            if (_continuation == null)
-                yield return this.Failure("Continuation", "must not be null");
+            if (_output == null)
+                yield return this.Failure("Output", "must specify an output text writer");
+
+            if (_threshold < TimeSpan.Zero)
+                yield return this.Failure("Threshold", "must be >= 0");
         }
     }
 }

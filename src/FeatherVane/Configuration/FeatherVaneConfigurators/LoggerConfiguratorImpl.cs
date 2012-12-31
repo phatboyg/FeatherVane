@@ -38,20 +38,17 @@ namespace FeatherVane.FeatherVaneConfigurators
             return this;
         }
 
-        LoggerConfigurator<T> LoggerConfigurator<T>.SetFormatter(Func<Payload<T>, string> formatter)
+        LoggerConfigurator<T> LoggerConfigurator<T>.SetFormat(Func<Payload<T>, string> format)
         {
-            _formatter = formatter;
+            _formatter = format;
 
             return this;
         }
 
-        VaneBuilder<T> VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
+        void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
             var featherVaneBuilder = new LoggerBuilder<T>(_output, _formatter);
-
             builder.Add(featherVaneBuilder);
-
-            return builder;
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()

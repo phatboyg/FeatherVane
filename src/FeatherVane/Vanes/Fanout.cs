@@ -12,6 +12,7 @@
 namespace FeatherVane.Vanes
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Internals.Caching;
 
@@ -20,6 +21,7 @@ namespace FeatherVane.Vanes
     /// A fan-out Vane composes over a list of subsequent vanes for every execution
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DebuggerDisplay("Count: {Count}")]
     public class Fanout<T> :
         FeatherVane<T>,
         AcceptVaneVisitor
@@ -35,12 +37,22 @@ namespace FeatherVane.Vanes
             _vanes.Fill(vanes);
         }
 
-        public bool Accept(VaneVisitor visitor)
+        public IEnumerable<FeatherVane<T>> Vanes
+        {
+            get { return _vanes; }
+        }
+
+        public int Count
+        {
+            get { return _vanes.Count; }
+        }
+
+        bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
             return _vanes.All(visitor.Visit);
         }
 
-        public void Compose(Composer composer, Payload<T> payload, Vane<T> next)
+        void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
             foreach (var vane in _vanes)
                 vane.Compose(composer, payload, next);

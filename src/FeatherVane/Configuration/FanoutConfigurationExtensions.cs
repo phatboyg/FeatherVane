@@ -15,22 +15,21 @@ namespace FeatherVane
     using FeatherVaneConfigurators;
 
 
-    public static class LoggerConfigurationExtensions
+    public static class FanoutConfigurationExtensions
     {
-        public static void Logger<T>(this VaneConfigurator<T> configurator,
-            Action<LoggerConfigurator<T>> configureCallback)
+        public static void Fanout<T>(this VaneConfigurator<T> configurator,
+            Action<FanoutConfigurator<T>> configureCallback)
         {
-            var loggerConfigurator = new LoggerConfiguratorImpl<T>();
+            if (configurator == null)
+                throw new ArgumentNullException("configurator");
+            if (configureCallback == null)
+                throw new ArgumentNullException("configureCallback");
 
-            configureCallback(loggerConfigurator);
+            var fanoutConfigurator = new FanoutConfiguratorImpl<T>();
 
-            configurator.Add(loggerConfigurator);
-        }
+            configureCallback(fanoutConfigurator);
 
-
-        public static void ConsoleLogger<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, string> formatter)
-        {
-            configurator.Logger(x => x.SetOutput(Console.Out).SetFormat(formatter));
+            configurator.Add(fanoutConfigurator);
         }
     }
 }

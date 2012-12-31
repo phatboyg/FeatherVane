@@ -9,22 +9,14 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Messaging
 {
     using System;
-    using Configurators;
-    using SourceVaneConfigurators;
 
 
-    public static class SourceVaneFactory
-    {
-        public static SourceVane<T> New<T>(Action<SourceVaneConfigurator<T>> configureCallback)
-        {
-            var configurator = new SourceVaneConfiguratorImpl<T>();
-
-            configureCallback(configurator);
-
-            return configurator.ValidateAndCreate();
-        }
-    }
+//    public interface SourceVaneFactory<out T>
+//    {
+//        Vane<Message<TMessage>> Consumer<TMessage>(Func<T, Action<Payload, Message<TMessage>>> methodSelector)
+//            where TMessage : class;
+//    }
 }
