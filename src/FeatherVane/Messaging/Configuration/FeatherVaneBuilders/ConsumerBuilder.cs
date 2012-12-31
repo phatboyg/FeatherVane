@@ -11,22 +11,20 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Messaging.FeatherVaneBuilders
 {
-    using System;
     using System.Collections.Generic;
-    using Configurators;
+    using System.Linq;
     using FeatherVane.FeatherVaneBuilders;
     using FeatherVane.Vanes;
-    using VaneConfigurators;
 
 
     public class ConsumerBuilder<T> :
         FeatherVaneBuilder<Message>
     {
-        readonly IList<VaneBuilderConfigurator<Tuple<Message, T>>> _consumerConfigurators;
+        readonly IList<FeatherVaneBuilder<Message>> _consumerConfigurators;
         readonly SourceVaneFactory<T> _sourceVaneFactory;
 
         public ConsumerBuilder(SourceVaneFactory<T> sourceVaneFactory,
-            IList<VaneBuilderConfigurator<Tuple<Message, T>>> consumerConfigurators)
+            IList<FeatherVaneBuilder<Message>> consumerConfigurators)
         {
             _sourceVaneFactory = sourceVaneFactory;
             _consumerConfigurators = consumerConfigurators;
@@ -34,25 +32,12 @@ namespace FeatherVane.Messaging.FeatherVaneBuilders
 
         FeatherVane<Message> FeatherVaneBuilder<Message>.Build()
         {
-            var vaneConfigurator = new SuccessConfigurator<Tuple<Message, T>>();
             if (_consumerConfigurators.Count == 0)
-                vaneConfigurator.Fanout(x => { });
-            else if (_consumerConfigurators.Count == 1)
-                vaneConfigurator.Add(_consumerConfigurators[0]);
-            else
-            {
-                vaneConfigurator.Fanout(x =>
-                {
-                    foreach (var configurator in _consumerConfigurators)
-                        x.Add(configurator);
-                });
-            }
-            Vane<Tuple<Message, T>> messageVane = vaneConfigurator.Create();
-            SourceVane<T> sourceVane = _sourceVaneFactory.Create();
+                return new Shunt<Message>();
 
-            var spliceVane = new Splice<Message, T>(messageVane, sourceVane);
+            IEnumerable<FeatherVane<Message>> featherVanes = _consumerConfigurators.Select(x => x.Build());
 
-            return spliceVane;
+            return new Fanout<Message>(featherVanes);
         }
     }
 }

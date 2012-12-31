@@ -14,24 +14,37 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using System;
     using System.Collections.Generic;
     using Configurators;
+    using FeatherVane.FeatherVaneBuilders;
     using FeatherVaneBuilders;
     using VaneBuilders;
 
 
     public class MessageConsumerConfigurator<TMessage, TConsumer> :
-        VaneBuilderConfigurator<Tuple<Message, TConsumer>>
+        FeatherVaneBuilder<Message>,
+        VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>
         where TMessage : class
     {
         readonly Func<TConsumer, Action<Payload, Message<TMessage>>> _consumeMethod;
+        readonly SourceVaneFactory<TConsumer> _sourceVaneFactory;
 
-        public MessageConsumerConfigurator(Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
+        public MessageConsumerConfigurator(SourceVaneFactory<TConsumer> sourceVaneFactory,
+            Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
         {
             _consumeMethod = consumeMethod;
+            _sourceVaneFactory = sourceVaneFactory;
         }
 
-        public void Configure(VaneBuilder<Tuple<Message, TConsumer>> builder)
+        public FeatherVane<Message> Build()
         {
-            builder.Add(new MessageConsumerBuilder<TMessage, TConsumer>(_consumeMethod));
+            FeatherVaneBuilder<Message> builder = new MessageConsumerBuilder<TMessage, TConsumer>(_sourceVaneFactory,
+                _consumeMethod);
+
+            return builder.Build();
+        }
+
+
+        public void Configure(VaneBuilder<Tuple<Message<TMessage>, TConsumer>> builder)
+        {
         }
 
         public IEnumerable<ValidateResult> Validate()

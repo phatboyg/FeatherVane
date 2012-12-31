@@ -138,6 +138,7 @@
     <Compile Include="Vanes\Missing.cs" />
     <Compile Include="Vanes\NextSource.cs" />
     <Compile Include="Vanes\LeftMerge.cs" />
+    <Compile Include="Vanes\Shunt.cs" />
     <Compile Include="Vanes\Splice.cs" />
     <Compile Include="Vanes\NextVane.cs" />
     <Compile Include="Vanes\LeftSplit.cs" />

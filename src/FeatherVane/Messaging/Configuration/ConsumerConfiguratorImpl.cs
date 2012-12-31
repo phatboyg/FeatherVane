@@ -15,6 +15,7 @@ namespace FeatherVane.Messaging
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
+    using FeatherVane.FeatherVaneBuilders;
     using FeatherVaneBuilders;
     using FeatherVaneConfigurators;
     using VaneBuilders;
@@ -24,19 +25,19 @@ namespace FeatherVane.Messaging
         ConsumerConfigurator<T>,
         VaneBuilderConfigurator<Message>
     {
-        readonly IList<VaneBuilderConfigurator<Tuple<Message, T>>> _consumerConfigurators;
+        readonly IList<FeatherVaneBuilder<Message>> _consumerConfigurators;
         readonly SourceVaneFactory<T> _sourceVaneFactory;
 
         public ConsumerConfiguratorImpl(SourceVaneFactory<T> sourceVaneFactory)
         {
             _sourceVaneFactory = sourceVaneFactory;
 
-            _consumerConfigurators = new List<VaneBuilderConfigurator<Tuple<Message, T>>>();
+            _consumerConfigurators = new List<FeatherVaneBuilder<Message>>();
         }
 
         void ConsumerConfigurator<T>.Consume<TMessage>(Func<T, Action<Payload, Message<TMessage>>> consumeMethod)
         {
-            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(consumeMethod);
+            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(_sourceVaneFactory, consumeMethod);
 
             _consumerConfigurators.Add(messageConsumerConfigurator);
         }
@@ -49,7 +50,7 @@ namespace FeatherVane.Messaging
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            return _sourceVaneFactory.Validate().Concat(_consumerConfigurators.SelectMany(x => x.Validate()));
+            return _sourceVaneFactory.Validate();//.Concat(_consumerConfigurators.SelectMany(x => x.Validate()));
         }
     }
 }

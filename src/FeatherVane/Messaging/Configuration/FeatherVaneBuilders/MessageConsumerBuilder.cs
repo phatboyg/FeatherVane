@@ -18,24 +18,30 @@ namespace FeatherVane.Messaging.FeatherVaneBuilders
 
 
     public class MessageConsumerBuilder<TMessage, TConsumer> :
-        FeatherVaneBuilder<Tuple<Message, TConsumer>>
+        FeatherVaneBuilder<Message>
         where TMessage : class
     {
         readonly Func<TConsumer, Action<Payload, Message<TMessage>>> _consumeMethod;
+        readonly SourceVaneFactory<TConsumer> _sourceVaneFactory;
 
-        public MessageConsumerBuilder(Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
+        public MessageConsumerBuilder(SourceVaneFactory<TConsumer> sourceVaneFactory,
+            Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
         {
+            _sourceVaneFactory = sourceVaneFactory;
             _consumeMethod = consumeMethod;
         }
 
-        public FeatherVane<Tuple<Message, TConsumer>> Build()
+        FeatherVane<Message> FeatherVaneBuilder<Message>.Build()
         {
             var messageConsumerVane = new MessageConsumerVane<TMessage, TConsumer>(_consumeMethod);
-            var success = new Success<Tuple<Message<TMessage>, TConsumer>>();
-            var nextVane = new NextVane<Tuple<Message<TMessage>, TConsumer>>(messageConsumerVane, success);
+            Vane<Tuple<Message<TMessage>, TConsumer>> messageVane = VaneFactory.Success(messageConsumerVane);
 
-            var messageVane = new MessageVane<TMessage, TConsumer>(nextVane);
-            return messageVane;
+            SourceVane<TConsumer> sourceVane = _sourceVaneFactory.Create();
+
+            var spliceVane = new Splice<Message<TMessage>, TConsumer>(messageVane, sourceVane);
+            Vane<Message<TMessage>> consumerVane = VaneFactory.Success(spliceVane);
+
+            return new MessageVane<TMessage>(consumerVane);
         }
     }
 }

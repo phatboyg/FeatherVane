@@ -1,8 +1,10 @@
 ﻿namespace FeatherVane.Tests.Messaging
 {
+    using System.IO;
     using FeatherVane.Messaging;
     using NUnit.Framework;
     using Vanes;
+    using Visualizer;
 
 
     [TestFixture]
@@ -23,8 +25,15 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Splice<Message, TestConsumer>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<Fanout<Message>>(nextVane.FeatherVane);
             Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+
+            var fanoutVane = nextVane.FeatherVane as Fanout<Message>;
+            Assert.IsNotNull(fanoutVane);
+
+            Assert.AreEqual(2, fanoutVane.Count);
+
+            vane.RenderGraphToFile(new FileInfo("messageVaneGraph.png"));
         }
 
 
