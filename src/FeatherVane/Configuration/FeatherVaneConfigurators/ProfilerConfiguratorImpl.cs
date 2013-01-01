@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -15,8 +15,8 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.IO;
     using Configurators;
-    using FeatherVaneBuilders;
     using VaneBuilders;
+    using Vanes;
 
 
     public class ProfilerConfiguratorImpl<T> :
@@ -42,8 +42,8 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var featherVaneBuilder = new ProfilerBuilder<T>(_output, _threshold);
-            builder.Add(featherVaneBuilder);
+            var profiler = new Profiler<T>(_output, _threshold);
+            builder.Add(profiler);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()

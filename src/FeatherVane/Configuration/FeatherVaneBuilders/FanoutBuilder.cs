@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,32 +12,28 @@
 namespace FeatherVane.FeatherVaneBuilders
 {
     using System.Collections.Generic;
-    using System.Linq;
     using VaneBuilders;
     using Vanes;
 
 
     public class FanoutBuilder<T> :
-        FeatherVaneBuilder<T>,
         VaneBuilder<T>
     {
-        readonly IList<FeatherVaneBuilder<T>> _vanes;
+        readonly IList<FeatherVane<T>> _vanes;
 
         public FanoutBuilder()
         {
-            _vanes = new List<FeatherVaneBuilder<T>>();
+            _vanes = new List<FeatherVane<T>>();
         }
 
-        FeatherVane<T> FeatherVaneBuilder<T>.Build()
+        void VaneBuilder<T>.Add(FeatherVane<T> featherVaneFactory)
         {
-            IEnumerable<FeatherVane<T>> featherVanes = _vanes.Select(x => x.Build());
-
-            return new Fanout<T>(featherVanes);
+            _vanes.Add(featherVaneFactory);
         }
 
-        void VaneBuilder<T>.Add(FeatherVaneBuilder<T> featherVaneBuilder)
+        public FeatherVane<T> Build()
         {
-            _vanes.Add(featherVaneBuilder);
+            return new Fanout<T>(_vanes);
         }
     }
 }

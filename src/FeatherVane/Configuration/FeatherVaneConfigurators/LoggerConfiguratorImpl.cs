@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -15,52 +15,50 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.IO;
     using Configurators;
-    using FeatherVaneBuilders;
     using VaneBuilders;
+    using Vanes;
 
 
     public class LoggerConfiguratorImpl<T> :
         LoggerConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
-        Func<Payload<T>, string> _formatter;
+        Func<Payload<T>, string> _format;
         TextWriter _output;
 
         public LoggerConfiguratorImpl()
         {
-            _formatter = DefaultFormatter;
+            _format = DefaultFormat;
         }
 
         LoggerConfigurator<T> LoggerConfigurator<T>.SetOutput(TextWriter output)
         {
             _output = output;
-
             return this;
         }
 
         LoggerConfigurator<T> LoggerConfigurator<T>.SetFormat(Func<Payload<T>, string> format)
         {
-            _formatter = format;
-
+            _format = format;
             return this;
         }
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var featherVaneBuilder = new LoggerBuilder<T>(_output, _formatter);
-            builder.Add(featherVaneBuilder);
+            var logger = new Logger<T>(_output, _format);
+            builder.Add(logger);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            if (_formatter == null)
-                yield return this.Failure("GetLogMessage", "must specify a log message formatter");
+            if (_format == null)
+                yield return this.Failure("Format", "must specify a log message format");
 
             if (_output == null)
                 yield return this.Failure("Output", "must specify an output text writer");
         }
 
-        static string DefaultFormatter(Payload<T> payload)
+        static string DefaultFormat(Payload<T> payload)
         {
             return payload.Data.ToString();
         }

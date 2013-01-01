@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -14,32 +14,30 @@ namespace FeatherVane.SourceVaneBuilders
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FeatherVaneBuilders;
     using SourceVanes;
     using VaneBuilders;
-    using Vanes;
 
 
     public class SourceVaneBuilder<T> :
         VaneBuilder<T>
     {
-        readonly IList<FeatherVaneBuilder<T>> _featherVaneBuilders;
         readonly Func<SourceVane<T>> _tailFactory;
+        readonly IList<FeatherVane<T>> _featherVanes;
 
         public SourceVaneBuilder(Func<SourceVane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
-            _featherVaneBuilders = new List<FeatherVaneBuilder<T>>();
+            _featherVanes = new List<FeatherVane<T>>();
         }
 
-        public void Add(FeatherVaneBuilder<T> featherVaneBuilder)
+        public void Add(FeatherVane<T> featherVaneFactory)
         {
-            _featherVaneBuilders.Add(featherVaneBuilder);
+            _featherVanes.Add(featherVaneFactory);
         }
 
         public SourceVane<T> Build()
         {
-            return Build(_tailFactory(), _featherVaneBuilders.Select(builder => builder.Build()));
+            return Build(_tailFactory(), _featherVanes);
         }
 
         static SourceVane<T> Build(SourceVane<T> head, IEnumerable<FeatherVane<T>> vanes)

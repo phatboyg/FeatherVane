@@ -15,13 +15,13 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
-    using FeatherVane.FeatherVaneBuilders;
-    using FeatherVaneBuilders;
     using VaneBuilders;
+    using Vanes;
 
 
     public class MessageHandlerConfigurator<T> :
         VaneBuilderConfigurator<Message>,
+        VaneBuilderConfigurator<Message<T>>,
         VaneConfigurator<Message<T>>
         where T : class
     {
@@ -34,12 +34,18 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
             _vaneConfigurators = new List<VaneBuilderConfigurator<Message<T>>>();
         }
 
+        public void Configure(VaneBuilder<Message<T>> builder)
+        {
+            var handler = new MessageHandler<T>(_handlerMethod);
+            builder.Add(handler);
+        }
+
         void VaneBuilderConfigurator<Message>.Configure(VaneBuilder<Message> builder)
         {
-            FeatherVaneBuilder<Message> messageConsumerBuilder =
-                new MessageHandlerBuilder<T>(_vaneConfigurators, _handlerMethod);
+            Vane<Message<T>> handlerVane = ConfigureHandlerVane();
 
-            builder.Add(messageConsumerBuilder);
+            var messageType = new MessageType<T>(handlerVane);
+            builder.Add(messageType);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
@@ -50,6 +56,17 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
         void VaneConfigurator<Message<T>>.Add(VaneBuilderConfigurator<Message<T>> vaneBuilderConfigurator)
         {
             _vaneConfigurators.Add(vaneBuilderConfigurator);
+        }
+
+        Vane<Message<T>> ConfigureHandlerVane()
+        {
+            return VaneFactory.New<Message<T>>(x =>
+                {
+                    foreach (var configurator1 in _vaneConfigurators)
+                        x.Add(configurator1);
+
+                    x.Add(this);
+                });
         }
     }
 }

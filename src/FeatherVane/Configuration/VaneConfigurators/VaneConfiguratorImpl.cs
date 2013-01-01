@@ -22,13 +22,13 @@ namespace FeatherVane.VaneConfigurators
         VaneFactory<T>
     {
         readonly Func<Vane<T>> _tailFactory;
-        readonly IList<VaneBuilderConfigurator<T>> _vaneBuilderConfigurators;
+        readonly IList<VaneBuilderConfigurator<T>> _configurators;
 
         protected VaneConfiguratorImpl(Func<Vane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
 
-            _vaneBuilderConfigurators = new List<VaneBuilderConfigurator<T>>();
+            _configurators = new List<VaneBuilderConfigurator<T>>();
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
@@ -36,14 +36,15 @@ namespace FeatherVane.VaneConfigurators
             if (_tailFactory == null)
                 yield return this.Failure("TailFactory", "must not be null");
 
-            foreach (ValidateResult result in _vaneBuilderConfigurators.SelectMany(x => x.Validate()))
+            foreach (ValidateResult result in _configurators.SelectMany(x => x.Validate()))
                 yield return result;
         }
 
         Vane<T> VaneFactory<T>.Create()
         {
             var builder = new VaneBuilderImpl<T>(_tailFactory);
-            foreach (var configurator in _vaneBuilderConfigurators)
+
+            foreach (var configurator in _configurators)
                 configurator.Configure(builder);
 
             return builder.Build();
@@ -51,7 +52,7 @@ namespace FeatherVane.VaneConfigurators
 
         public void Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
         {
-            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
+            _configurators.Add(vaneBuilderConfigurator);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -22,31 +22,32 @@ namespace FeatherVane.FeatherVaneConfigurators
         FanoutConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
-        readonly IList<VaneBuilderConfigurator<T>> _vaneBuilderConfigurators;
+        readonly IList<VaneBuilderConfigurator<T>> _configurators;
 
         public FanoutConfiguratorImpl()
         {
-            _vaneBuilderConfigurators = new List<VaneBuilderConfigurator<T>>();
+            _configurators = new List<VaneBuilderConfigurator<T>>();
         }
 
         void VaneConfigurator<T>.Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
         {
-            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
+            _configurators.Add(vaneBuilderConfigurator);
         }
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
             var fanoutBuilder = new FanoutBuilder<T>();
 
-            foreach (var configurator in _vaneBuilderConfigurators)
+            foreach (var configurator in _configurators)
                 configurator.Configure(fanoutBuilder);
 
-            builder.Add(fanoutBuilder);
+            FeatherVane<T> fanout = fanoutBuilder.Build();
+            builder.Add(fanout);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            return _vaneBuilderConfigurators.SelectMany(vaneConfigurator => vaneConfigurator.Validate());
+            return _configurators.SelectMany(x => x.Validate());
         }
     }
 }

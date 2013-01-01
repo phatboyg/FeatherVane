@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -14,40 +14,33 @@ namespace FeatherVane.VaneBuilders
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FeatherVaneBuilders;
     using Vanes;
 
 
     public class VaneBuilderImpl<T> :
         VaneBuilder<T>
     {
-        readonly IList<FeatherVaneBuilder<T>> _featherVaneBuilders;
+        readonly IList<FeatherVane<T>> _featherVanes;
         readonly Func<Vane<T>> _tailFactory;
 
         public VaneBuilderImpl(Func<Vane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
-            _featherVaneBuilders = new List<FeatherVaneBuilder<T>>();
+            _featherVanes = new List<FeatherVane<T>>();
         }
 
-        public void Add(FeatherVaneBuilder<T> featherVaneBuilder)
+        void VaneBuilder<T>.Add(FeatherVane<T> featherVane)
         {
-            _featherVaneBuilders.Add(featherVaneBuilder);
+            _featherVanes.Add(featherVane);
         }
 
         public Vane<T> Build()
         {
-            return Build(_tailFactory());
-        }
+            Vane<T> tail = _tailFactory();
 
-        protected Vane<T> Build(Vane<T> tail)
-        {
-            return Build(tail, _featherVaneBuilders.Select(builder => builder.Build()));
-        }
-
-        protected static Vane<T> Build(Vane<T> tail, IEnumerable<FeatherVane<T>> vanes)
-        {
-            return vanes.Reverse().Aggregate(tail, (x, vane) => new NextVane<T>(vane, x));
+            return _featherVanes
+                .Reverse()
+                .Aggregate(tail, (x, vane) => new NextVane<T>(vane, x));
         }
     }
 }

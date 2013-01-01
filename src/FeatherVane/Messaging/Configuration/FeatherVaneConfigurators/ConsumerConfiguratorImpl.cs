@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -33,14 +33,6 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
             _configurators = new List<VaneBuilderConfigurator<Message>>();
         }
 
-        void ConsumerConfigurator<T>.Consume<TMessage>(Func<T, Action<Payload, Message<TMessage>>> consumeMethod)
-        {
-            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(_sourceVaneFactory,
-                consumeMethod);
-
-            _configurators.Add(messageConsumerConfigurator);
-        }
-
         public void Consume<TMessage>(Func<T, Action<Payload, Message<TMessage>>> consumeMethod,
             Action<VaneConfigurator<Tuple<Message<TMessage>, T>>> configureCallback)
             where TMessage : class
@@ -53,10 +45,27 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
             _configurators.Add(messageConsumerConfigurator);
         }
 
+        void ConsumerConfigurator<T>.Consume<TMessage>(Func<T, Action<Payload, Message<TMessage>>> consumeMethod)
+        {
+            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(_sourceVaneFactory,
+                consumeMethod);
+
+            _configurators.Add(messageConsumerConfigurator);
+        }
+
         void VaneBuilderConfigurator<Message>.Configure(VaneBuilder<Message> builder)
         {
-            var consumerBuilder = new ConsumerBuilder<T>(_configurators);
-            builder.Add(consumerBuilder);
+            if (_configurators.Count == 0)
+                return;
+
+            var fanoutBuilder = new FanoutBuilder<Message>();
+
+            foreach (var configurator in _configurators)
+                configurator.Configure(fanoutBuilder);
+
+            FeatherVane<Message> fanout = fanoutBuilder.Build();
+
+            builder.Add(fanout);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()

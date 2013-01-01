@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -14,9 +14,9 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System;
     using System.Collections.Generic;
     using Configurators;
-    using FeatherVaneBuilders;
     using VaneBuilders;
     using VaneConfigurators;
+    using Vanes;
 
 
     public class SpliceConfiguratorImpl<T, TSource> :
@@ -39,9 +39,12 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var spliceBuilder = new SpliceBuilder<T, TSource>(_vaneConfigurator, _sourceVaneFactory);
+            Vane<Tuple<T, TSource>> outputVane = _vaneConfigurator.Create();
+            SourceVane<TSource> sourceVane = _sourceVaneFactory.Create();
 
-            builder.Add(spliceBuilder);
+            var splice = new Splice<T, TSource>(outputVane, sourceVane);
+
+            builder.Add(splice);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()

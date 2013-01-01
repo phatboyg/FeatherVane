@@ -22,19 +22,19 @@ namespace FeatherVane.SourceVaneConfigurators
         SourceVaneFactory<T>,
         SourceVaneConfigurator<T>
     {
-        readonly IList<VaneBuilderConfigurator<T>> _vaneBuilderConfigurators;
+        readonly IList<VaneBuilderConfigurator<T>> _configurators;
         Lazy<SourceVane<T>> _sourceVane;
         Func<SourceVane<T>> _sourceVaneFactory;
 
         public SourceVaneConfiguratorImpl()
         {
-            _vaneBuilderConfigurators = new List<VaneBuilderConfigurator<T>>();
+            _configurators = new List<VaneBuilderConfigurator<T>>();
             _sourceVane = new Lazy<SourceVane<T>>(Create);
         }
 
         void VaneConfigurator<T>.Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
         {
-            _vaneBuilderConfigurators.Add(vaneBuilderConfigurator);
+            _configurators.Add(vaneBuilderConfigurator);
         }
 
         SourceVaneConfigurator<T> SourceVaneConfigurator<T>.UseSourceVaneFactory(Func<SourceVane<T>> sourceVaneFactory)
@@ -54,14 +54,14 @@ namespace FeatherVane.SourceVaneConfigurators
             if (_sourceVaneFactory == null)
                 yield return this.Failure("SourceVaneFactory", "must not be null");
 
-            foreach (ValidateResult result in _vaneBuilderConfigurators.SelectMany(x => x.Validate()))
+            foreach (ValidateResult result in _configurators.SelectMany(x => x.Validate()))
                 yield return result;
         }
 
         SourceVane<T> Create()
         {
             var builder = new SourceVaneBuilder<T>(_sourceVaneFactory);
-            foreach (var configurator in _vaneBuilderConfigurators)
+            foreach (var configurator in _configurators)
                 configurator.Configure(builder);
 
             return builder.Build();

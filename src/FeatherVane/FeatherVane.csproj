@@ -54,13 +54,7 @@
     <Compile Include="Configuration\FactorySourceConfigurationExtensions.cs" />
     <Compile Include="Configuration\FanoutConfigurationExtensions.cs" />
     <Compile Include="Configuration\FanoutConfigurator.cs" />
-    <Compile Include="Configuration\FeatherVaneBuilders\ExecuteTaskBuilder.cs" />
-    <Compile Include="Configuration\FeatherVaneBuilders\ExecuteBuilder.cs" />
     <Compile Include="Configuration\FeatherVaneBuilders\FanoutBuilder.cs" />
-    <Compile Include="Configuration\FeatherVaneBuilders\FeatherVaneBuilder.cs" />
-    <Compile Include="Configuration\FeatherVaneBuilders\LoggerBuilder.cs" />
-    <Compile Include="Configuration\FeatherVaneBuilders\ProfilerBuilder.cs" />
-    <Compile Include="Configuration\FeatherVaneBuilders\SpliceBuilder.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurator.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\FanoutConfiguratorImpl.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\LoggerConfiguratorImpl.cs" />
@@ -97,9 +91,6 @@
     <Compile Include="Exceptions\VaneConfigurationException.cs" />
     <Compile Include="Messaging\Configuration\ConsumerConfigurationExtensions.cs" />
     <Compile Include="Messaging\Configuration\ConsumerConfigurator.cs" />
-    <Compile Include="Messaging\Configuration\FeatherVaneBuilders\ConsumerBuilder.cs" />
-    <Compile Include="Messaging\Configuration\FeatherVaneBuilders\MessageConsumerBuilder.cs" />
-    <Compile Include="Messaging\Configuration\FeatherVaneBuilders\MessageHandlerBuilder.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\ConsumerConfiguratorImpl.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageConsumerConfigurator.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageHandlerConfigurator.cs" />
@@ -174,6 +165,7 @@
     <Compile Include="Vanes\WireTap.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configuration\BuilderConfigurators\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

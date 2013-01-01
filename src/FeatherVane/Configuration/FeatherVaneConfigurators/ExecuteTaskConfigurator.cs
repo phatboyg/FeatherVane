@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -15,31 +15,31 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Configurators;
-    using FeatherVaneBuilders;
     using VaneBuilders;
+    using Vanes;
 
 
     public class ExecuteTaskConfigurator<T> :
         FeatherVaneConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
-        readonly Func<Payload<T>, Task> _continuation;
+        readonly Func<Payload<T>, Task> _continuationTask;
 
-        public ExecuteTaskConfigurator(Func<Payload<T>, Task> continuation)
+        public ExecuteTaskConfigurator(Func<Payload<T>, Task> continuationTask)
         {
-            _continuation = continuation;
+            _continuationTask = continuationTask;
         }
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var executeBuilder = new ExecuteTaskBuilder<T>(_continuation);
-            builder.Add(executeBuilder);
+            var executeTask = new ExecuteTask<T>(_continuationTask);
+            builder.Add(executeTask);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            if (_continuation == null)
-                yield return this.Failure("Continuation", "must not be null");
+            if (_continuationTask == null)
+                yield return this.Failure("ContinuationTask", "must not be null");
         }
     }
 }
