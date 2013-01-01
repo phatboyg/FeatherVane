@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -13,21 +13,27 @@ namespace FeatherVane.Messaging
 {
     using System;
     using FeatherVaneConfigurators;
-    using SourceVaneConfigurators;
 
 
-    public static class ConsumerConfigurationExtensions
+    public static class HandlerConfigurationExtensions
     {
-        public static void Consumer<TConsumer>(this VaneConfigurator<Message> configurator,
-            Func<TConsumer> consumerFactory,
-            Action<ConsumerConfigurator<TConsumer>> configureCallback)
+        public static void Handler<T>(this VaneConfigurator<Message> configurator,
+            Action<Payload, Message<T>> handlerMethod,
+            Action<VaneConfigurator<Message<T>>> configureCallback)
+            where T : class
         {
-            var sourceVaneConfigurator = new SourceVaneConfiguratorImpl<TConsumer>();
-            sourceVaneConfigurator.Factory(consumerFactory);
-
-            var consumerConfigurator = new ConsumerConfiguratorImpl<TConsumer>(sourceVaneConfigurator);
+            var consumerConfigurator = new MessageHandlerConfigurator<T>(handlerMethod);
 
             configureCallback(consumerConfigurator);
+
+            configurator.Add(consumerConfigurator);
+        }
+
+        public static void Handler<T>(this VaneConfigurator<Message> configurator,
+            Action<Payload, Message<T>> handlerMethod)
+            where T : class
+        {
+            var consumerConfigurator = new MessageHandlerConfigurator<T>(handlerMethod);
 
             configurator.Add(consumerConfigurator);
         }

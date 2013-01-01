@@ -17,6 +17,7 @@ namespace FeatherVane.Tests.Messaging
     using FeatherVane.Messaging.Payloads;
     using FeatherVane.Messaging.Vanes;
     using NUnit.Framework;
+    using SourceVanes;
     using Vanes;
     using Visualization;
     using Visualizer;
@@ -58,10 +59,10 @@ namespace FeatherVane.Tests.Messaging
         [TestFixtureSetUp]
         public void Setup()
         {
-            var messageConsumerVane = new MessageConsumerVane<A, WorkingConsumer>(x => x.Consume);
+            var messageConsumerVane = new MessageConsumer<A, WorkingConsumer>(x => x.Consume);
             Vane<Tuple<Message<A>, WorkingConsumer>> consumerVane = VaneFactory.Success(messageConsumerVane);
 
-            var messageConsumerVaneB = new MessageConsumerVane<B, WorkingConsumer>(x => x.Consume);
+            var messageConsumerVaneB = new MessageConsumer<B, WorkingConsumer>(x => x.Consume);
             Vane<Tuple<Message<B>, WorkingConsumer>> consumerVaneB = VaneFactory.Success(messageConsumerVaneB);
 
             var factoryVane = new Factory<WorkingConsumer>(() => new WorkingConsumer());
@@ -71,10 +72,10 @@ namespace FeatherVane.Tests.Messaging
             var sourceVane = VaneFactory.Source(factoryVane, loggerVane, profilerVane);
             var spliceVane = new Splice<Message<A>, WorkingConsumer>(consumerVane, sourceVane);
 
-            var messageVane = new MessageVane<A>(VaneFactory.Success(spliceVane));
+            var messageVane = new MessageType<A>(VaneFactory.Success(spliceVane));
 
             var spliceVaneB = new Splice<Message<B>, WorkingConsumer>(consumerVaneB, sourceVane);
-            var messageVaneB = new MessageVane<B>(VaneFactory.Success(spliceVaneB));
+            var messageVaneB = new MessageType<B>(VaneFactory.Success(spliceVaneB));
 
             var fanOutVane = new Fanout<Message>(new FeatherVane<Message>[] { messageVane, messageVaneB });
             

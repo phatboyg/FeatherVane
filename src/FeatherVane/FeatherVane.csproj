@@ -67,6 +67,7 @@
     <Compile Include="Configuration\FeatherVaneConfigurators\ProfilerConfiguratorImpl.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\SpliceConfiguratorImpl.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\SpliceSourceConfiguratorImpl.cs" />
+    <Compile Include="Configuration\InstanceSourceConfigurationExtensions.cs" />
     <Compile Include="Configuration\LoggerConfigurationExtensions.cs" />
     <Compile Include="Configuration\LoggerConfigurator.cs" />
     <Compile Include="Configuration\ProfilerConfigurationExtensions.cs" />
@@ -96,19 +97,28 @@
     <Compile Include="Exceptions\VaneConfigurationException.cs" />
     <Compile Include="Messaging\Configuration\ConsumerConfigurationExtensions.cs" />
     <Compile Include="Messaging\Configuration\ConsumerConfigurator.cs" />
-    <Compile Include="Messaging\Configuration\ConsumerConfiguratorImpl.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneBuilders\ConsumerBuilder.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneBuilders\MessageConsumerBuilder.cs" />
+    <Compile Include="Messaging\Configuration\FeatherVaneBuilders\MessageHandlerBuilder.cs" />
+    <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\ConsumerConfiguratorImpl.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageConsumerConfigurator.cs" />
+    <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageHandlerConfigurator.cs" />
+    <Compile Include="Messaging\Configuration\HandlerConfigurationExtensions.cs" />
+    <Compile Include="Messaging\Configuration\InstanceConfigurationExtensions.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="Messaging\Payloads\MessagePayload.cs" />
     <Compile Include="Messaging\Payloads\ObjectMessage.cs" />
     <Compile Include="Messaging\SourceVaneFactory.cs" />
-    <Compile Include="Messaging\Vanes\ConsumerMessageVane.cs" />
-    <Compile Include="Messaging\Vanes\HandlerMessageVane.cs" />
-    <Compile Include="Messaging\Vanes\MessageVane.cs" />
+    <Compile Include="Messaging\Vanes\MessageConsumer.cs" />
+    <Compile Include="Messaging\Vanes\MessageHandler.cs" />
+    <Compile Include="Messaging\Vanes\MessageType.cs" />
     <Compile Include="SourceVane.cs" />
     <Compile Include="SourceVaneFactory.cs" />
+    <Compile Include="SourceVanes\Factory.cs" />
+    <Compile Include="SourceVanes\Id.cs" />
+    <Compile Include="SourceVanes\Instance.cs" />
+    <Compile Include="SourceVanes\Missing.cs" />
+    <Compile Include="SourceVanes\NextSource.cs" />
     <Compile Include="TaskCompensation.cs" />
     <Compile Include="Payloads\ProxyPayload.cs" />
     <Compile Include="Exceptions\FeatherVaneException.cs" />
@@ -132,11 +142,7 @@
     <Compile Include="Vanes\AsyncLogger.cs" />
     <Compile Include="Vanes\Compensate.cs" />
     <Compile Include="Vanes\ExecuteTask.cs" />
-    <Compile Include="Vanes\Factory.cs" />
     <Compile Include="Vanes\Fanout.cs" />
-    <Compile Include="Vanes\Id.cs" />
-    <Compile Include="Vanes\Missing.cs" />
-    <Compile Include="Vanes\NextSource.cs" />
     <Compile Include="Vanes\LeftMerge.cs" />
     <Compile Include="Vanes\Shunt.cs" />
     <Compile Include="Vanes\Splice.cs" />
@@ -147,6 +153,7 @@
     <Compile Include="Visualization\GraphVaneVisitor.cs" />
     <Compile Include="Visualization\FeatherVaneGraph.cs" />
     <Compile Include="Visualization\StringVaneVisitor.cs" />
+    <Compile Include="Visualization\VaneTypeNameFormatter.cs" />
     <Compile Include="Visualization\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>

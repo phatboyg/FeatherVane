@@ -16,16 +16,15 @@ namespace FeatherVane.Messaging
     using SourceVaneConfigurators;
 
 
-    public static class ConsumerConfigurationExtensions
+    public static class InstanceConfigurationExtensions
     {
-        public static void Consumer<TConsumer>(this VaneConfigurator<Message> configurator,
-            Func<TConsumer> consumerFactory,
-            Action<ConsumerConfigurator<TConsumer>> configureCallback)
+        public static void Instance<TInstance>(this VaneConfigurator<Message> configurator,
+            TInstance instance, Action<ConsumerConfigurator<TInstance>> configureCallback)
         {
-            var sourceVaneConfigurator = new SourceVaneConfiguratorImpl<TConsumer>();
-            sourceVaneConfigurator.Factory(consumerFactory);
+            var sourceVaneConfigurator = new SourceVaneConfiguratorImpl<TInstance>();
+            sourceVaneConfigurator.Instance(instance);
 
-            var consumerConfigurator = new ConsumerConfiguratorImpl<TConsumer>(sourceVaneConfigurator);
+            var consumerConfigurator = new ConsumerConfiguratorImpl<TInstance>(sourceVaneConfigurator);
 
             configureCallback(consumerConfigurator);
 

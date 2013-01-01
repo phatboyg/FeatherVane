@@ -18,6 +18,7 @@ namespace FeatherVane.Tests.NHibernateIntegration
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
     using NUnit.Framework;
+    using SourceVanes;
     using Vanes;
     using Visualizer;
 

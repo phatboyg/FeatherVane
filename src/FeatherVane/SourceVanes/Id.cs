@@ -9,39 +9,40 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.SourceVanes
 {
     using System;
-    using Internals.Extensions;
 
 
     /// <summary>
-    /// Throwing an ObjectNotFoundException if composed
+    /// Selects an Id from an object
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Missing<T> :
+    /// <typeparam name="TObject"></typeparam>
+    public class Id<TObject, T> :
         SourceVane<T>
     {
-        Func<Exception> _exceptionFactory;
+        readonly Func<TObject, T> _provider;
 
-        public Missing()
+        public Id(Func<TObject, T> provider)
         {
-            _exceptionFactory = CreateDefaultException;
-        }
-
-        public Missing(Func<Exception> exceptionFactory)
-        {
-            _exceptionFactory = exceptionFactory;
+            _provider = provider;
         }
 
         public void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next)
         {
-            composer.Failed(_exceptionFactory());
-        }
+            composer.Execute(() =>
+                {
+                    var objectPayload = payload as Payload<TObject>;
+                    if (objectPayload == null)
+                        throw new FeatherVaneException("Unable to map payload to " + typeof(TObject).Name);
 
-        static ObjectNotFoundException CreateDefaultException()
-        {
-            return new ObjectNotFoundException(string.Format("The object was not found: {0}", typeof(T).GetTypeName()));
+                    T data = _provider(objectPayload.Data);
+
+                    Payload<Tuple<TPayload, T>> nextPayload = payload.CreateProxy(Tuple.Create(payload.Data, data));
+
+                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
+                });
         }
     }
 }

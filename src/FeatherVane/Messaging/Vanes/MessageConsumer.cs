@@ -20,13 +20,13 @@ namespace FeatherVane.Messaging.Vanes
     /// </summary>
     /// <typeparam name="TMessage">The message type</typeparam>
     /// <typeparam name="TConsumer">The consumer type</typeparam>
-    public class MessageConsumerVane<TMessage, TConsumer> :
+    public class MessageConsumer<TMessage, TConsumer> :
         FeatherVane<Tuple<Message<TMessage>, TConsumer>>
         where TMessage : class
     {
         readonly Func<TConsumer, Action<Payload, Message<TMessage>>> _selector;
 
-        public MessageConsumerVane(Func<TConsumer, Action<Payload, Message<TMessage>>> selector)
+        public MessageConsumer(Func<TConsumer, Action<Payload, Message<TMessage>>> selector)
         {
             _selector = selector;
         }

@@ -12,7 +12,7 @@
 namespace FeatherVane.Messaging.FeatherVaneBuilders
 {
     using System.Collections.Generic;
-    using System.Linq;
+    using Configurators;
     using FeatherVane.FeatherVaneBuilders;
     using FeatherVane.Vanes;
 
@@ -20,24 +20,24 @@ namespace FeatherVane.Messaging.FeatherVaneBuilders
     public class ConsumerBuilder<T> :
         FeatherVaneBuilder<Message>
     {
-        readonly IList<FeatherVaneBuilder<Message>> _consumerConfigurators;
-        readonly SourceVaneFactory<T> _sourceVaneFactory;
+        readonly IList<VaneBuilderConfigurator<Message>> _vaneConfigurators;
 
-        public ConsumerBuilder(SourceVaneFactory<T> sourceVaneFactory,
-            IList<FeatherVaneBuilder<Message>> consumerConfigurators)
+        public ConsumerBuilder(IList<VaneBuilderConfigurator<Message>> vaneConfigurators)
         {
-            _sourceVaneFactory = sourceVaneFactory;
-            _consumerConfigurators = consumerConfigurators;
+            _vaneConfigurators = vaneConfigurators;
         }
 
         FeatherVane<Message> FeatherVaneBuilder<Message>.Build()
         {
-            if (_consumerConfigurators.Count == 0)
+            if (_vaneConfigurators.Count == 0)
                 return new Shunt<Message>();
 
-            IEnumerable<FeatherVane<Message>> featherVanes = _consumerConfigurators.Select(x => x.Build());
+            var fanoutBuilder = new FanoutBuilder<Message>();
 
-            return new Fanout<Message>(featherVanes);
+            foreach (var configurator in _vaneConfigurators)
+                configurator.Configure(fanoutBuilder);
+
+            return ((FeatherVaneBuilder<Message>)fanoutBuilder).Build();
         }
     }
 }

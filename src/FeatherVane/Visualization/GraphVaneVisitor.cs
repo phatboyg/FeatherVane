@@ -15,6 +15,7 @@ namespace FeatherVane.Visualization
     using System.Collections.Generic;
     using Internals.Caching;
     using Internals.Extensions;
+    using SourceVanes;
     using Vanes;
 
 
@@ -26,6 +27,7 @@ namespace FeatherVane.Visualization
         readonly Stack<Vertex> _stack = new Stack<Vertex>();
         readonly Cache<int, Vertex> _vertices = new DictionaryCache<int, Vertex>();
         Vertex _current;
+        static VaneTypeNameFormatter _typeNameFormatter = new VaneTypeNameFormatter();
 
         public bool Visit<T>(Vane<T> vane)
         {
@@ -80,40 +82,7 @@ namespace FeatherVane.Visualization
 
         static string GetTitle(Type vaneType)
         {
-            string typeName = vaneType.GetTypeName();
-
-            if (typeName.StartsWith("FeatherVane."))
-                typeName = typeName.Substring(vaneType.Namespace.Length + 1);
-
-            if (vaneType.IsGenericType)
-            {
-                Type[] genericArguments = vaneType.GetGenericArguments();
-                for (int i = 0; i < genericArguments.Length; i++)
-                {
-                    Type argument = genericArguments[i];
-
-                    if (argument.IsNested)
-                        typeName = typeName.Replace(argument.FullName, argument.Name);
-                    if (argument.IsGenericType)
-                    {
-                        Type[] arguments = argument.GetGenericArguments();
-                        for (int j = 0; j < arguments.Length; j++)
-                        {
-                            Type generic = arguments[j];
-                            if (generic.IsNested)
-                                typeName = typeName.Replace(generic.FullName, generic.Name);
-                        }
-                    }
-                }
-                for (int i = 0; i < genericArguments.Length; i++)
-                {
-                    Type argument = genericArguments[i];
-                    if (argument.Namespace.StartsWith("FeatherVane."))
-                        typeName = typeName.Replace(argument.Namespace + ".", "");
-                }
-            }
-
-            return typeName;
+            return _typeNameFormatter.GetTypeName(vaneType);
         }
 
         void VisitFeatherVane<T>(FeatherVane<T> vane)

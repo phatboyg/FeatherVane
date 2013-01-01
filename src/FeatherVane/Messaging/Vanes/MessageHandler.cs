@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -15,24 +15,24 @@ namespace FeatherVane.Messaging.Vanes
 
 
     /// <summary>
-    /// Invokes a handler for a message
+    /// Wraps a handler method into a FV so it can be executed
     /// </summary>
     /// <typeparam name="TMessage">The message type</typeparam>
-    public class HandlerMessageVane<TMessage> :
+    public class MessageHandler<TMessage> :
         FeatherVane<Message<TMessage>>
         where TMessage : class
     {
-        readonly Action<Payload<Message<TMessage>>> _handler;
+        readonly Action<Payload, Message<TMessage>> _handlerMethod;
 
-        public HandlerMessageVane(Action<Payload<Message<TMessage>>> handler)
+        public MessageHandler(Action<Payload, Message<TMessage>> handlerMethod)
         {
-            _handler = handler;
+            _handlerMethod = handlerMethod;
         }
 
         void FeatherVane<Message<TMessage>>.Compose(Composer composer, Payload<Message<TMessage>> payload,
             Vane<Message<TMessage>> next)
         {
-            composer.Execute(() => _handler(payload));
+            composer.Execute(() => _handlerMethod(payload, payload.Data));
 
             next.Compose(composer, payload);
         }

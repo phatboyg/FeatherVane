@@ -20,38 +20,34 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using VaneBuilders;
 
 
-    public class MessageConsumerConfigurator<TMessage, TConsumer> :
+    public class MessageHandlerConfigurator<T> :
         VaneBuilderConfigurator<Message>,
-        VaneConfigurator<Tuple<Message<TMessage>, TConsumer>>
-        where TMessage : class
+        VaneConfigurator<Message<T>>
+        where T : class
     {
-        readonly Func<TConsumer, Action<Payload, Message<TMessage>>> _consumeMethod;
-        readonly SourceVaneFactory<TConsumer> _sourceVaneFactory;
-        readonly IList<VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>> _vaneConfigurators;
+        readonly Action<Payload, Message<T>> _handlerMethod;
+        readonly IList<VaneBuilderConfigurator<Message<T>>> _vaneConfigurators;
 
-        public MessageConsumerConfigurator(SourceVaneFactory<TConsumer> sourceVaneFactory,
-            Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
+        public MessageHandlerConfigurator(Action<Payload, Message<T>> handlerMethod)
         {
-            _consumeMethod = consumeMethod;
-            _sourceVaneFactory = sourceVaneFactory;
-            _vaneConfigurators = new List<VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>>();
+            _handlerMethod = handlerMethod;
+            _vaneConfigurators = new List<VaneBuilderConfigurator<Message<T>>>();
         }
 
-        public void Configure(VaneBuilder<Message> builder)
+        void VaneBuilderConfigurator<Message>.Configure(VaneBuilder<Message> builder)
         {
             FeatherVaneBuilder<Message> messageConsumerBuilder =
-                new MessageConsumerBuilder<TMessage, TConsumer>(_sourceVaneFactory,
-                    _vaneConfigurators, _consumeMethod);
+                new MessageHandlerBuilder<T>(_vaneConfigurators, _handlerMethod);
 
             builder.Add(messageConsumerBuilder);
         }
 
-        public IEnumerable<ValidateResult> Validate()
+        IEnumerable<ValidateResult> Configurator.Validate()
         {
             return _vaneConfigurators.SelectMany(x => x.Validate());
         }
 
-        public void Add(VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>> vaneBuilderConfigurator)
+        void VaneConfigurator<Message<T>>.Add(VaneBuilderConfigurator<Message<T>> vaneBuilderConfigurator)
         {
             _vaneConfigurators.Add(vaneBuilderConfigurator);
         }

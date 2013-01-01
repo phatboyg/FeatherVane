@@ -15,6 +15,7 @@ namespace FeatherVane.SourceVaneBuilders
     using System.Collections.Generic;
     using System.Linq;
     using FeatherVaneBuilders;
+    using SourceVanes;
     using VaneBuilders;
     using Vanes;
 

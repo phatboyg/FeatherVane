@@ -32,7 +32,7 @@ namespace FeatherVane.Tests.Benchmarks
                 });
             });
 
-            var messageVane = new MessageVane<Subject>(vane);
+            var messageVane = new MessageType<Subject>(vane);
 
             var fanOutVane = new Fanout<Message>(new[] {messageVane});
 

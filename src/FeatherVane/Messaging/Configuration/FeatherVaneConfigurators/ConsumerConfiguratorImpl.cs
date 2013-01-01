@@ -9,15 +9,13 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Messaging
+namespace FeatherVane.Messaging.FeatherVaneConfigurators
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
-    using FeatherVane.FeatherVaneBuilders;
     using FeatherVaneBuilders;
-    using FeatherVaneConfigurators;
     using VaneBuilders;
 
 
@@ -25,32 +23,45 @@ namespace FeatherVane.Messaging
         ConsumerConfigurator<T>,
         VaneBuilderConfigurator<Message>
     {
-        readonly IList<FeatherVaneBuilder<Message>> _consumerConfigurators;
+        readonly IList<VaneBuilderConfigurator<Message>> _configurators;
         readonly SourceVaneFactory<T> _sourceVaneFactory;
 
         public ConsumerConfiguratorImpl(SourceVaneFactory<T> sourceVaneFactory)
         {
             _sourceVaneFactory = sourceVaneFactory;
 
-            _consumerConfigurators = new List<FeatherVaneBuilder<Message>>();
+            _configurators = new List<VaneBuilderConfigurator<Message>>();
         }
 
         void ConsumerConfigurator<T>.Consume<TMessage>(Func<T, Action<Payload, Message<TMessage>>> consumeMethod)
         {
-            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(_sourceVaneFactory, consumeMethod);
+            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(_sourceVaneFactory,
+                consumeMethod);
 
-            _consumerConfigurators.Add(messageConsumerConfigurator);
+            _configurators.Add(messageConsumerConfigurator);
+        }
+
+        public void Consume<TMessage>(Func<T, Action<Payload, Message<TMessage>>> consumeMethod,
+            Action<VaneConfigurator<Tuple<Message<TMessage>, T>>> configureCallback)
+            where TMessage : class
+        {
+            var messageConsumerConfigurator = new MessageConsumerConfigurator<TMessage, T>(_sourceVaneFactory,
+                consumeMethod);
+
+            configureCallback(messageConsumerConfigurator);
+
+            _configurators.Add(messageConsumerConfigurator);
         }
 
         void VaneBuilderConfigurator<Message>.Configure(VaneBuilder<Message> builder)
         {
-            var consumerBuilder = new ConsumerBuilder<T>(_sourceVaneFactory, _consumerConfigurators);
+            var consumerBuilder = new ConsumerBuilder<T>(_configurators);
             builder.Add(consumerBuilder);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            return _sourceVaneFactory.Validate();//.Concat(_consumerConfigurators.SelectMany(x => x.Validate()));
+            return _sourceVaneFactory.Validate().Concat(_configurators.SelectMany(x => x.Validate()));
         }
     }
 }

@@ -12,36 +12,66 @@
 namespace FeatherVane.Messaging.FeatherVaneBuilders
 {
     using System;
+    using System.Collections.Generic;
+    using Configurators;
     using FeatherVane.FeatherVaneBuilders;
     using FeatherVane.Vanes;
+    using VaneBuilders;
     using Vanes;
 
 
     public class MessageConsumerBuilder<TMessage, TConsumer> :
-        FeatherVaneBuilder<Message>
+        FeatherVaneBuilder<Message>,
+        VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>,
+        FeatherVaneBuilder<Tuple<Message<TMessage>, TConsumer>>
         where TMessage : class
     {
         readonly Func<TConsumer, Action<Payload, Message<TMessage>>> _consumeMethod;
         readonly SourceVaneFactory<TConsumer> _sourceVaneFactory;
+        readonly IList<VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>> _vaneConfigurators;
 
         public MessageConsumerBuilder(SourceVaneFactory<TConsumer> sourceVaneFactory,
+            IList<VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>> vaneConfigurators,
             Func<TConsumer, Action<Payload, Message<TMessage>>> consumeMethod)
         {
             _sourceVaneFactory = sourceVaneFactory;
+            _vaneConfigurators = vaneConfigurators;
             _consumeMethod = consumeMethod;
         }
 
         FeatherVane<Message> FeatherVaneBuilder<Message>.Build()
         {
-            var messageConsumerVane = new MessageConsumerVane<TMessage, TConsumer>(_consumeMethod);
-            Vane<Tuple<Message<TMessage>, TConsumer>> messageVane = VaneFactory.Success(messageConsumerVane);
+            Vane<Tuple<Message<TMessage>, TConsumer>> messageVane =
+                VaneFactory.New<Tuple<Message<TMessage>, TConsumer>>(x =>
+                    {
+                        foreach (var configurator in _vaneConfigurators)
+                            x.Add(configurator);
+
+                        x.Add(this);
+                    });
 
             SourceVane<TConsumer> sourceVane = _sourceVaneFactory.Create();
 
             var spliceVane = new Splice<Message<TMessage>, TConsumer>(messageVane, sourceVane);
             Vane<Message<TMessage>> consumerVane = VaneFactory.Success(spliceVane);
 
-            return new MessageVane<TMessage>(consumerVane);
+            return new MessageType<TMessage>(consumerVane);
+        }
+
+        FeatherVane<Tuple<Message<TMessage>, TConsumer>> FeatherVaneBuilder<Tuple<Message<TMessage>, TConsumer>>.Build()
+        {
+            return new MessageConsumer<TMessage, TConsumer>(_consumeMethod);
+        }
+
+        void VaneBuilderConfigurator<Tuple<Message<TMessage>, TConsumer>>.Configure(
+            VaneBuilder<Tuple<Message<TMessage>, TConsumer>> builder)
+        {
+            builder.Add(this);
+        }
+
+        IEnumerable<ValidateResult> Configurator.Validate()
+        {
+            yield break;
         }
     }
 }

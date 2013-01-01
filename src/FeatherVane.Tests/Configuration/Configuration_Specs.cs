@@ -16,6 +16,7 @@ namespace FeatherVane.Tests.Configuration
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
     using NUnit.Framework;
+    using SourceVanes;
     using Vanes;
 
 

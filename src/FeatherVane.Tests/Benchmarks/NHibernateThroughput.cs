@@ -20,6 +20,7 @@ namespace FeatherVane.Tests.Benchmarks
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
     using NHibernateIntegration;
+    using SourceVanes;
     using Vanes;
 
 
@@ -35,7 +36,7 @@ namespace FeatherVane.Tests.Benchmarks
 
             _sessionFactory = sessionFactoryProvider.GetSessionFactory();
 
-            var consumerVane = new MessageConsumerVane<Subject, SubjectConsumer>(x => x.Consume);
+            var consumerVane = new MessageConsumer<Subject, SubjectConsumer>(x => x.Consume);
             Vane<Tuple<Message<Subject>, SubjectConsumer>> finalVane = VaneFactory.Success(consumerVane);
 
             var id = new Id<Message<Subject>, int>(x => x.Body.Id);
@@ -46,7 +47,7 @@ namespace FeatherVane.Tests.Benchmarks
             var spliceVane = new Splice<Message<Subject>, SubjectConsumer>(finalVane, sourceVane);
             Vane<Message<Subject>> vane = VaneFactory.Success(spliceVane);
 
-            var messageVane = new MessageVane<Subject>(vane);
+            var messageVane = new MessageType<Subject>(vane);
 
             var fanOutVane = new Fanout<Message>(new[] {messageVane});
 

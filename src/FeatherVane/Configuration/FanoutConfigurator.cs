@@ -15,10 +15,5 @@ namespace FeatherVane
         FeatherVaneConfigurator<T>,
         VaneConfigurator<T>
     {
-//        /// <summary>
-//        /// Add an existing Vane to the Fanout
-//        /// </summary>
-//        /// <param name="vane"></param>
-//        FanoutConfigurator<T> Add(FeatherVane<T> vane);
     }
 }

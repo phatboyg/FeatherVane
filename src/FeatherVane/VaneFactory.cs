@@ -13,6 +13,7 @@ namespace FeatherVane
 {
     using System;
     using Configurators;
+    using SourceVanes;
     using VaneConfigurators;
     using Vanes;
 

@@ -13,7 +13,7 @@ namespace FeatherVane
 {
     using System;
     using SourceVaneConfigurators;
-    using Vanes;
+    using SourceVanes;
 
 
     public static class FactorySourceConfigurationExtensions

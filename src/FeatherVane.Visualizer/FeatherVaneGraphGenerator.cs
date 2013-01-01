@@ -18,6 +18,7 @@ namespace FeatherVane.Visualizer
     using Microsoft.Glee.GraphViewerGdi;
     using QuickGraph;
     using QuickGraph.Glee;
+    using SourceVanes;
     using Vanes;
     using Visualization;
 
@@ -78,7 +79,8 @@ namespace FeatherVane.Visualizer
 
                 args.Node.Attr.Label = "Unhandled";
             }
-            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Factory<>))
+            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Factory<>)
+                     || args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Instance<>))
             {
                 args.Node.Attr.Fontcolor = Microsoft.Glee.Drawing.Color.White;
                 args.Node.Attr.Fillcolor = Microsoft.Glee.Drawing.Color.Navy;
@@ -101,7 +103,9 @@ namespace FeatherVane.Visualizer
             e.GEdge.EdgeAttr.FontName = "Tahoma";
             e.GEdge.EdgeAttr.Fontsize = 6;
 
-            if(e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(Factory<>))
+            if (e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(Factory<>))
+                e.GEdge.EdgeAttr.AddStyle(Style.Dashed);
+            if (e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(Instance<>))
                 e.GEdge.EdgeAttr.AddStyle(Style.Dashed);
         }
     }

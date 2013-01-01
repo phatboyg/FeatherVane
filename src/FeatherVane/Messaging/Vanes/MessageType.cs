@@ -19,14 +19,14 @@ namespace FeatherVane.Messaging.Vanes
     /// executed by the fork in the vane before continuing
     /// </summary>
     /// <typeparam name="TMessage">The message type</typeparam>
-    public class MessageVane<TMessage> :
+    public class MessageType<TMessage> :
         FeatherVane<Message>,
         AcceptVaneVisitor
         where TMessage : class
     {
         readonly Vane<Message<TMessage>> _vane;
 
-        public MessageVane(Vane<Message<TMessage>> vane)
+        public MessageType(Vane<Message<TMessage>> vane)
         {
             _vane = vane;
         }
