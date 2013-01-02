@@ -34,26 +34,24 @@ namespace FeatherVane.Tests.NHibernateIntegration
         {
             Console.WriteLine("Running test with id {0}", _id);
             Vane<A> vane =
-                VaneFactory.New<A>(x =>
+                VaneFactory.New<A>(vc =>
                     {
-                        x.Profiler(p => p.Threshold(TimeSpan.FromMilliseconds(1)).SetOutput(Console.Out));
+                        vc.Profiler(v => v.Threshold(TimeSpan.FromMilliseconds(1)).SetOutput(Console.Out));
 
-                        x.Load(y => y.Object<Subject, int>(sx =>
+                        vc.Load(xl => xl.Object<Subject, int>(load =>
                             {
-                                sx.UseSessionFactory(SessionFactory);
-                                sx.Id(msg => msg.Id);
-                                sx.Missing(mx =>
+                                load.UseSessionFactory(SessionFactory);
+                                load.Id(msg => msg.Id);
+                                load.Missing(mx =>
                                     {
                                         mx.Factory(() => new Subject());
                                         mx.Log(lx => lx.SetOutput(Console.Out)
                                                        .SetFormat(fs => "Created subject: " + fs.Data.Id));
                                     });
 
-                                sx.Log(
-                                    lx =>
-                                    lx.SetOutput(Console.Out).SetFormat(fs => "Loaded subject: " + fs.Data.Id));
-                            },
-                            vx => vx.Execute(payload =>
+                                load.Log(v => v.SetOutput(Console.Out)
+                                               .SetFormat(fs => "Loaded subject: " + fs.Data.Id));
+                            }, v => v.Execute(payload =>
                                 {
                                     payload.Data.Item2.Id = payload.Data.Item1.Id;
                                     payload.Data.Item2.Name = payload.Data.Item1.GetType().Name;
@@ -70,15 +68,13 @@ namespace FeatherVane.Tests.NHibernateIntegration
             var a2 = new A {Id = 47, Value = "Cool"};
             vane.Execute(a2);
 
-            using(var session = SessionFactory.OpenSession())
+            using (ISession session = SessionFactory.OpenSession())
             {
                 IList<Subject> query = session.QueryOver<Subject>()
-                                                            .List();
+                                              .List();
 
-                foreach (var row in query)
-                {
+                foreach (Subject row in query)
                     Console.WriteLine("{0}: {1} = {2}", row.Id, row.Name, row.Value);
-                }
             }
         }
 

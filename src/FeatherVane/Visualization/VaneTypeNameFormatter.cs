@@ -87,7 +87,7 @@ namespace FeatherVane.Visualization
                 if (index > 0)
                     name = name.Remove(index);
 
-                sb.Append(name);
+                sb.Append(CleanName(name));
                 sb.Append(_genericOpen);
 
                 Type[] arguments = type.GetGenericArguments();
@@ -102,9 +102,22 @@ namespace FeatherVane.Visualization
                 sb.Append(_genericClose);
             }
             else
-                sb.Append(type.Name);
+                sb.Append(CleanName(type.Name));
 
             return sb.ToString();
+        }
+
+        static string CleanName(string name)
+        {
+            var cleanName = name;
+            const string sourcevane = "SourceVane";
+            if (cleanName.EndsWith(sourcevane))
+                cleanName = cleanName.Substring(0, cleanName.Length - sourcevane.Length);
+
+            const string vane = "Vane";
+            if (cleanName.EndsWith(vane))
+                cleanName = cleanName.Substring(0, cleanName.Length - vane.Length);
+            return cleanName;
         }
     }
 }

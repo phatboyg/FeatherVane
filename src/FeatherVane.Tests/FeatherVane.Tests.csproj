@@ -80,6 +80,7 @@
     <Compile Include="Messaging\Consumer_Specs.cs" />
     <Compile Include="Messaging\SourceVane_Specs.cs" />
     <Compile Include="NHibernateIntegration\Benchmark_Test.cs" />
+    <Compile Include="NHibernateIntegration\Consume_Specs.cs" />
     <Compile Include="NHibernateIntegration\SimpleDemandObject_Specs.cs" />
     <Compile Include="NHibernateIntegration\SingleConnectionSessionFactory.cs" />
     <Compile Include="NHibernateIntegration\SQLiteTestFixture.cs" />

@@ -92,11 +92,14 @@
     <Compile Include="Messaging\Configuration\ConsumerConfigurationExtensions.cs" />
     <Compile Include="Messaging\Configuration\ConsumerConfigurator.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\ConsumerConfiguratorImpl.cs" />
+    <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\ConsumeMessageConfigurator.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageConsumerConfigurator.cs" />
     <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageHandlerConfigurator.cs" />
+    <Compile Include="Messaging\Configuration\FeatherVaneConfigurators\MessageTypeConfigurator.cs" />
     <Compile Include="Messaging\Configuration\HandlerConfigurationExtensions.cs" />
     <Compile Include="Messaging\Configuration\InstanceConfigurationExtensions.cs" />
     <Compile Include="Messaging\Message.cs" />
+    <Compile Include="Messaging\MessageTypeConfigurationExtensions.cs" />
     <Compile Include="Messaging\Payloads\MessagePayload.cs" />
     <Compile Include="Messaging\Payloads\ObjectMessage.cs" />
     <Compile Include="Messaging\Vanes\MessageConsumerVane.cs" />

@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -14,14 +14,11 @@ namespace FeatherVane.Tests.Benchmarks
     using System;
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
-    using FeatherVane.Messaging.Vanes;
-    using FeatherVane.NHibernateIntegration.SourceVanes;
+    using FeatherVane.NHibernateIntegration;
     using NHibernate;
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
     using NHibernateIntegration;
-    using SourceVanes;
-    using Vanes;
 
 
     public class NHibernateThroughput :
@@ -36,26 +33,34 @@ namespace FeatherVane.Tests.Benchmarks
 
             _sessionFactory = sessionFactoryProvider.GetSessionFactory();
 
-            var consumerVane = new MessageConsumerVane<Subject, SubjectConsumer>(x => x.Consume);
-            Vane<Tuple<Message<Subject>, SubjectConsumer>> finalVane = VaneFactory.Success(consumerVane);
+            _vane = VaneFactory.New<Message>(m =>
+                {
+                    m.MessageType<Subject>(sub =>
+                        {
+                            sub.Load(y => y.Object<SubjectConsumer, int>(load =>
+                                {
+                                    load.UseSessionFactory(_sessionFactory);
+                                    load.Id(d => d.Body.Id);
+                                    load.Missing(mv => mv.Factory(() => new SubjectConsumer()));
+                                }, subj => subj.Consume(t => t.Consume)));
+                        });
+                });
 
-            var id = new IdentitySourceVane<Message<Subject>, int>(x => x.Body.Id);
-            var factory = new FactorySourceVane<SubjectConsumer>(() => new SubjectConsumer());
-            var loadVane = new LoadSourceVane<SubjectConsumer, int>(_sessionFactory, id, factory);
+            PreloadData(_sessionFactory);
+        }
 
-            SourceVane<SubjectConsumer> sourceVane = VaneFactory.Source(loadVane);
-            var spliceVane = new SpliceVane<Message<Subject>, SubjectConsumer>(finalVane, sourceVane);
-            Vane<Message<Subject>> vane = VaneFactory.Success(spliceVane);
+        public void Execute(Subject subject)
+        {
+            var messagePayload = new MessagePayload<Subject>(subject);
 
-            var messageVane = new MessageTypeVane<Subject>(vane);
+            _vane.Execute(messagePayload);
+        }
 
-            var fanOutVane = new FanoutVane<Message>(new[] {messageVane});
-
-            _vane = VaneFactory.Success(fanOutVane);
-
+        void PreloadData(ISessionFactory sessionFactory)
+        {
             var subject = new SubjectConsumer {Name = "Joe", Value = "Cool"};
 
-            using (ISession session = _sessionFactory.OpenSession())
+            using (ISession session = sessionFactory.OpenSession())
             using (ITransaction tx = session.BeginTransaction())
             {
                 session.Save(subject);
@@ -64,13 +69,6 @@ namespace FeatherVane.Tests.Benchmarks
 
             if (subject.Id != 1)
                 throw new InvalidOperationException("First insert should be 1");
-        }
-
-        public void Execute(Subject subject)
-        {
-            var messagePayload = new MessagePayload<Subject>(subject);
-
-            _vane.Execute(messagePayload);
         }
 
 
