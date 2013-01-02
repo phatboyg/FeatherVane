@@ -42,7 +42,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var profiler = new Profiler<T>(_output, _threshold);
+            var profiler = new ProfilerVane<T>(_output, _threshold);
             builder.Add(profiler);
         }
 

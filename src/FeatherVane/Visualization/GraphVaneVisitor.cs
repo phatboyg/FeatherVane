@@ -103,7 +103,7 @@ namespace FeatherVane.Visualization
         {
             _seen.Add(vane);
 
-            var nextSourceVane = vane as NextSource<T>;
+            var nextSourceVane = vane as NextSourceVane<T>;
             if (nextSourceVane != null)
             {
                 VisitNextSourceVane(nextSourceVane);
@@ -131,11 +131,11 @@ namespace FeatherVane.Visualization
                 return;
             }
 
-            var successVane = vane as Success<T>;
+            var successVane = vane as SuccessVane<T>;
             if (successVane != null)
                 return;
 
-            var unhandled = vane as Unhandled<T>;
+            var unhandled = vane as UnhandledVane<T>;
             if (unhandled != null)
                 return;
 
@@ -152,7 +152,7 @@ namespace FeatherVane.Visualization
             Push(() => Visit(nextVane.Next));
         }
 
-        void VisitNextSourceVane<T>(NextSource<T> nextVane)
+        void VisitNextSourceVane<T>(NextSourceVane<T> nextVane)
         {
             _current = GetVertex(nextVane.Next);
             if (_stack.Count > 0)

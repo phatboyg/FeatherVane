@@ -14,7 +14,6 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
-    using FeatherVaneBuilders;
     using VaneBuilders;
 
 

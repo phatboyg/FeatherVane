@@ -23,9 +23,9 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_render_properly()
         {
-            Vane<A> vane = VaneFactory.Success(new Transaction<A>(),
-                new Execute<A>(x => { }),
-                new Compensate<A>(x => false));
+            Vane<A> vane = VaneFactory.Success(new TransactionVane<A>(),
+                new ExecuteVane<A>(x => { }),
+                new CompensateVane<A>(x => false));
 
             var graphVisitor = new GraphVaneVisitor();
             graphVisitor.Visit(vane);

@@ -13,7 +13,9 @@ namespace FeatherVane.FeatherVaneConfigurators
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Configurators;
+    using SourceVaneConfigurators;
     using VaneBuilders;
     using VaneConfigurators;
     using Vanes;
@@ -21,15 +23,26 @@ namespace FeatherVane.FeatherVaneConfigurators
 
     public class SpliceConfiguratorImpl<T, TSource> :
         SpliceConfigurator<T, TSource>,
+        SourceVaneConfigurator<TSource>,
         VaneBuilderConfigurator<T>
     {
-        readonly SourceVaneFactory<TSource> _sourceVaneFactory;
         readonly VaneConfiguratorImpl<Tuple<T, TSource>> _vaneConfigurator;
+        SourceVaneConfiguratorImpl<TSource> _sourceConfigurator;
 
-        public SpliceConfiguratorImpl(SourceVaneFactory<TSource> sourceVaneFactory)
+        public SpliceConfiguratorImpl()
         {
-            _sourceVaneFactory = sourceVaneFactory;
             _vaneConfigurator = new SuccessConfigurator<Tuple<T, TSource>>();
+            _sourceConfigurator = new SourceVaneConfiguratorImpl<TSource>();
+        }
+
+        void SourceVaneConfigurator<TSource>.UseSourceVane(Func<SourceVane<TSource>> sourceVaneFactory)
+        {
+            ((SourceVaneConfigurator<TSource>)_sourceConfigurator).UseSourceVane(sourceVaneFactory);
+        }
+
+        void VaneConfigurator<TSource>.Add(VaneBuilderConfigurator<TSource> vaneBuilderConfigurator)
+        {
+            ((SourceVaneConfigurator<TSource>)_sourceConfigurator).Add(vaneBuilderConfigurator);
         }
 
         void VaneConfigurator<Tuple<T, TSource>>.Add(VaneBuilderConfigurator<Tuple<T, TSource>> vaneBuilderConfigurator)
@@ -40,18 +53,19 @@ namespace FeatherVane.FeatherVaneConfigurators
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
             Vane<Tuple<T, TSource>> outputVane = _vaneConfigurator.Create();
-            SourceVane<TSource> sourceVane = _sourceVaneFactory.Create();
+            SourceVane<TSource> sourceVane = _sourceConfigurator.Create();
 
-            var splice = new Splice<T, TSource>(outputVane, sourceVane);
+            var splice = new SpliceVane<T, TSource>(outputVane, sourceVane);
 
             builder.Add(splice);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            Configurator configurator = _vaneConfigurator;
+            Configurator vaneConfigurator = _vaneConfigurator;
+            Configurator sourceConfigurator = _sourceConfigurator;
 
-            return configurator.Validate();
+            return vaneConfigurator.Validate().Concat(sourceConfigurator.Validate());
         }
     }
 }

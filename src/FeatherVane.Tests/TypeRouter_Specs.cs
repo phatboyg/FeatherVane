@@ -10,11 +10,11 @@
         [Test]
         public void Should_allow_the_type_to_be_dispatched()
         {
-            var lambda = new Execute<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
+            var lambda = new ExecuteVane<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
 
-            Vane<ConsumeContext<A>> messageAVane = VaneFactory.Connect(new Success<ConsumeContext<A>>(), lambda);
+            Vane<ConsumeContext<A>> messageAVane = VaneFactory.Connect(new SuccessVane<ConsumeContext<A>>(), lambda);
 
-            var typeRouter = new TypeRouter<ConsumeContext>(context => context.Data.ContextType);
+            var typeRouter = new TypeRouterVane<ConsumeContext>(context => context.Data.ContextType);
             typeRouter.Add(messageAVane, x =>
                 {
                     ConsumeContext<A> context;
@@ -23,7 +23,7 @@
                     return x.CreateProxy(context);
                 });
 
-            var messageVane = VaneFactory.Connect(new Unhandled<ConsumeContext>(), typeRouter);
+            var messageVane = VaneFactory.Connect(new UnhandledVane<ConsumeContext>(), typeRouter);
 
             var message = new MessageConsumeContext<A>(new A {Value = "Hello!"});
 

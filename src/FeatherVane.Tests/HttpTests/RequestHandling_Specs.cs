@@ -122,8 +122,8 @@ namespace FeatherVane.Tests.HttpTests
 
         protected override Vane<ConnectionContext> CreateMainVane()
         {
-            return VaneFactory.Connect(new Unhandled<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(10)),
+            return VaneFactory.Connect(new UnhandledVane<ConnectionContext>(),
+                new ProfilerVane<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(10)),
                 new HelloFeatherVane(),
                 new NotFoundFeatherVane());
         }

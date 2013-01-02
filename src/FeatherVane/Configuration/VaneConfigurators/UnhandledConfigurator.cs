@@ -19,7 +19,7 @@ namespace FeatherVane.VaneConfigurators
         VaneConfigurator<T>
     {
         public UnhandledConfigurator()
-            : base(() => new Unhandled<T>())
+            : base(() => new UnhandledVane<T>())
         {
         }
     }

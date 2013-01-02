@@ -21,7 +21,7 @@
                             cx.Consume<A>(c => c.Consume);
                             cx.Consume<B>(c => c.Consume, mx =>
                                 {
-                                    mx.ConsoleLogger(v => string.Format("Logging: {0}", v.Data.Item2.Id));
+                                    mx.ConsoleLog(v => string.Format("Logging: {0}", v.Data.Item2.Id));
                                 });
                         });
                 });
@@ -29,10 +29,10 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Fanout<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanoutVane = nextVane.FeatherVane as Fanout<Message>;
+            var fanoutVane = nextVane.FeatherVane as FanoutVane<Message>;
             Assert.IsNotNull(fanoutVane);
 
             Assert.AreEqual(2, fanoutVane.Count);
@@ -55,10 +55,10 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Fanout<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanoutVane = nextVane.FeatherVane as Fanout<Message>;
+            var fanoutVane = nextVane.FeatherVane as FanoutVane<Message>;
             Assert.IsNotNull(fanoutVane);
 
             Assert.AreEqual(2, fanoutVane.Count);
@@ -74,7 +74,7 @@
                     x.Fanout(fx =>
                         {
                             fx.Handler<A>((payload, message) => { });
-                            fx.Handler<B>((payload, message) => { }, hx => hx.ConsoleLogger(v => ""));
+                            fx.Handler<B>((payload, message) => { }, hx => hx.ConsoleLog(v => ""));
                         });
                 });
 
@@ -83,10 +83,10 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Fanout<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanoutVane = nextVane.FeatherVane as Fanout<Message>;
+            var fanoutVane = nextVane.FeatherVane as FanoutVane<Message>;
             Assert.IsNotNull(fanoutVane);
 
             Assert.AreEqual(2, fanoutVane.Count);

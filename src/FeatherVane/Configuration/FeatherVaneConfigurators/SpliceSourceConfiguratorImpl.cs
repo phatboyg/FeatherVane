@@ -24,12 +24,13 @@ namespace FeatherVane.FeatherVaneConfigurators
             _vaneConfigurator = vaneConfigurator;
         }
 
-        void SpliceSourceConfigurator<T>.Source<TSource>(SourceVaneFactory<TSource> sourceVaneFactory,
-            Action<SpliceConfigurator<T, TSource>> configureCallback)
+        public void Source<TSource>(Action<SourceVaneConfigurator<TSource>> configureSource,
+            Action<SpliceConfigurator<T, TSource>> configureSplice)
         {
-            var spliceConfigurator = new SpliceConfiguratorImpl<T, TSource>(sourceVaneFactory);
+            var spliceConfigurator = new SpliceConfiguratorImpl<T, TSource>();
 
-            configureCallback(spliceConfigurator);
+            configureSource(spliceConfigurator);
+            configureSplice(spliceConfigurator);
 
             _vaneConfigurator.Add(spliceConfigurator);
         }

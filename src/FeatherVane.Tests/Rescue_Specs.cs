@@ -24,7 +24,7 @@ namespace FeatherVane.Tests
 
             var fail = new TestFail();
             var middle = new TestVane();
-            var rescue = new Rescue<TestSubject>(success);
+            var rescue = new RescueVane<TestSubject>(success);
             Vane<TestSubject> vane = VaneFactory.Connect(fail, rescue, middle);
 
             vane.Execute(_testSubject);

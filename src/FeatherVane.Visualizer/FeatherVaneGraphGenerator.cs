@@ -63,7 +63,7 @@ namespace FeatherVane.Visualizer
             args.Node.Attr.FontName = "Arial";
             args.Node.Attr.Padding = 1.2;
 
-            if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Success<>))
+            if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(SuccessVane<>))
             {
                 args.Node.Attr.Fontcolor = Microsoft.Glee.Drawing.Color.White;
                 args.Node.Attr.Fillcolor = Microsoft.Glee.Drawing.Color.Green;
@@ -71,7 +71,7 @@ namespace FeatherVane.Visualizer
 
                 args.Node.Attr.Label = "Success";
             }
-            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Unhandled<>))
+            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(UnhandledVane<>))
             {
                 args.Node.Attr.Fontcolor = Microsoft.Glee.Drawing.Color.White;
                 args.Node.Attr.Fillcolor = Microsoft.Glee.Drawing.Color.DarkRed;
@@ -79,8 +79,8 @@ namespace FeatherVane.Visualizer
 
                 args.Node.Attr.Label = "Unhandled";
             }
-            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Factory<>)
-                     || args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(Instance<>))
+            else if (args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(FactorySourceVane<>)
+                     || args.Vertex.VertexType.GetGenericTypeDefinition() == typeof(InstanceSourceVane<>))
             {
                 args.Node.Attr.Fontcolor = Microsoft.Glee.Drawing.Color.White;
                 args.Node.Attr.Fillcolor = Microsoft.Glee.Drawing.Color.Navy;
@@ -103,9 +103,9 @@ namespace FeatherVane.Visualizer
             e.GEdge.EdgeAttr.FontName = "Tahoma";
             e.GEdge.EdgeAttr.Fontsize = 6;
 
-            if (e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(Factory<>))
+            if (e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(FactorySourceVane<>))
                 e.GEdge.EdgeAttr.AddStyle(Style.Dashed);
-            if (e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(Instance<>))
+            if (e.Edge.Source.VertexType.GetGenericTypeDefinition() == typeof(InstanceSourceVane<>))
                 e.GEdge.EdgeAttr.AddStyle(Style.Dashed);
         }
     }

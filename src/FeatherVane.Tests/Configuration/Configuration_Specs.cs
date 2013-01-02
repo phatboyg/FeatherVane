@@ -28,7 +28,7 @@ namespace FeatherVane.Tests.Configuration
         {
             Vane<Message> vane = VaneFactory.New<Message>(x => { });
 
-            Assert.IsInstanceOf<Success<Message>>(vane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(vane);
         }
 
         [Test]
@@ -44,8 +44,8 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<ExecuteTask<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<ExecuteTaskVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
         [Test]
@@ -56,21 +56,21 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Execute<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<ExecuteVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
         [Test]
         public void Should_include_a_logger_vane()
         {
             Vane<Message> vane =
-                VaneFactory.New<Message>(x => x.Logger(v => v.SetOutput(Console.Out).SetFormat(d => d.GetType().Name)));
+                VaneFactory.New<Message>(x => x.Log(v => v.SetOutput(Console.Out).SetFormat(d => d.GetType().Name)));
 
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Logger<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<LogVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
         [Test]
@@ -82,8 +82,8 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Profiler<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<ProfilerVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace FeatherVane.Tests.Configuration
                 {
                     x.Fanout(fx =>
                         {
-                            fx.Logger(v => v.SetOutput(Console.Out).SetFormat(k => ""));
+                            fx.Log(v => v.SetOutput(Console.Out).SetFormat(k => ""));
                             fx.Profiler(v => v.SetOutput(Console.Out));
                         });
                 });
@@ -101,10 +101,10 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Fanout<Message>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanout = nextVane.FeatherVane as Fanout<Message>;
+            var fanout = nextVane.FeatherVane as FanoutVane<Message>;
             Assert.IsNotNull(fanout);
 
             Assert.AreEqual(2, fanout.Count);
@@ -116,9 +116,9 @@ namespace FeatherVane.Tests.Configuration
             SourceVane<A> sourceVane = null;
             Vane<Message> vane = VaneFactory.New<Message>(x =>
                 {
-                    x.Splice(s => s.Source(sourceVane, fx =>
+                    x.Splice(s => s.Source<A>(sx => sx.UseSourceVane(() => sourceVane), fx =>
                         {
-                            fx.Logger(v => v.SetOutput(Console.Out).SetFormat(k => ""));
+                            fx.Log(v => v.SetOutput(Console.Out).SetFormat(k => ""));
                             fx.Profiler(v => v.SetOutput(Console.Out));
                         }));
                 });
@@ -126,8 +126,8 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Splice<Message, A>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<SpliceVane<Message, A>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
         [Test]
@@ -135,22 +135,23 @@ namespace FeatherVane.Tests.Configuration
         {
             Vane<Message> vane = VaneFactory.New<Message>(x =>
                 {
-                    x.Splice(s => s.Factory(() => new A(), fx =>
+                    x.Splice(s => s.Source<A>(sx =>
                         {
-                            fx.Logger(v => v.SetOutput(Console.Out).SetFormat(k => ""));
-                            fx.Profiler(v => v.SetOutput(Console.Out));
-                        }, sx =>
+                            sx.Factory(() => new A());
+                            sx.Log(v => v.SetOutput(Console.Out).SetFormat(k => ""));
+                            sx.Profiler(v => v.SetOutput(Console.Out));
+                        }, vx =>
                             {
                                 // output
-                                sx.Execute(message => { });
+                                vx.Execute(message => { });
                             }));
                 });
 
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<Splice<Message, A>>(nextVane.FeatherVane);
-            Assert.IsInstanceOf<Success<Message>>(nextVane.Next);
+            Assert.IsInstanceOf<SpliceVane<Message, A>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
         [Test]
@@ -162,7 +163,7 @@ namespace FeatherVane.Tests.Configuration
                     x.Factory(() => new A());
                 });
 
-            Assert.IsInstanceOf<Factory<A>>(sourceVane);
+            Assert.IsInstanceOf<FactorySourceVane<A>>(sourceVane);
 
         }
 

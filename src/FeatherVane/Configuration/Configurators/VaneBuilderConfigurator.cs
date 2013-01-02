@@ -14,9 +14,18 @@ namespace FeatherVane.Configurators
     using VaneBuilders;
 
 
+    /// <summary>
+    /// Implemented to configure a vane, including adding FeatherVanes and
+    /// future concepts yet to be discovered.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface VaneBuilderConfigurator<T> :
         Configurator
     {
+        /// <summary>
+        /// Called as the vane is built, allowing the configuration to be adjusted.
+        /// </summary>
+        /// <param name="builder"></param>
         void Configure(VaneBuilder<T> builder);
     }
 }

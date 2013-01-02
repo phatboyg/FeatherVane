@@ -17,6 +17,6 @@ namespace FeatherVane
     public interface SourceVaneConfigurator<T> :
         VaneConfigurator<T>
     {
-        SourceVaneConfigurator<T> UseSourceVaneFactory(Func<SourceVane<T>> sourceVaneFactory);
+        void UseSourceVane(Func<SourceVane<T>> sourceVaneFactory);
     }
 }

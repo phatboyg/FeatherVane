@@ -17,14 +17,14 @@
 
             Vane<TestSubject> wired = VaneFactory.Success<TestSubject>();
 
-            var typeRouter = new TypeRouter<TestSubject>(x => typeof(ISubjectA));
+            var typeRouter = new TypeRouterVane<TestSubject>(x => typeof(ISubjectA));
             typeRouter.Add(VaneFactory.Success<ISubjectA>(), x => x);
             typeRouter.Add(VaneFactory.Success<ISubjectB>(), x => x);
 
-            Vane<TestSubject> vane = VaneFactory.Success(new Logger<TestSubject>(sw, x => ""),
-                new WireTap<TestSubject>(wired),
-                new Profiler<TestSubject>(sw, TimeSpan.FromMilliseconds(2)),
-                new Transaction<TestSubject>(),
+            Vane<TestSubject> vane = VaneFactory.Success(new LogVane<TestSubject>(sw, x => ""),
+                new WireTapVane<TestSubject>(wired),
+                new ProfilerVane<TestSubject>(sw, TimeSpan.FromMilliseconds(2)),
+                new TransactionVane<TestSubject>(),
                 new TestVane(),
                 typeRouter);
 

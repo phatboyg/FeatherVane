@@ -42,7 +42,7 @@ namespace FeatherVane.SourceVaneBuilders
 
         static SourceVane<T> Build(SourceVane<T> head, IEnumerable<FeatherVane<T>> vanes)
         {
-            return vanes.Aggregate(head, (x, vane) => new NextSource<T>(x, vane));
+            return vanes.Aggregate(head, (x, vane) => new NextSourceVane<T>(x, vane));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var execute = new Execute<T>(_continuation);
+            var execute = new ExecuteVane<T>(_continuation);
             builder.Add(execute);
         }
 

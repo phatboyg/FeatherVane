@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,8 +12,10 @@
 namespace FeatherVane.Tests.NHibernateIntegration
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
-    using FeatherVane.NHibernateIntegration.Vanes;
+    using FeatherVane.NHibernateIntegration;
+    using FeatherVane.NHibernateIntegration.SourceVanes;
     using NHibernate;
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
@@ -31,47 +33,67 @@ namespace FeatherVane.Tests.NHibernateIntegration
         public void Should_pass_if_it_exists()
         {
             Console.WriteLine("Running test with id {0}", _id);
+            Vane<A> vane =
+                VaneFactory.New<A>(x =>
+                    {
+                        x.Profiler(p => p.Threshold(TimeSpan.FromMilliseconds(1)).SetOutput(Console.Out));
 
-            var executeVane = new Execute<Tuple<A, Subject>>(x => { });
-            Vane<Tuple<A, Subject>> finalVane = VaneFactory.Success(executeVane);
+                        x.Load(y => y.Object<Subject, int>(sx =>
+                            {
+                                sx.UseSessionFactory(SessionFactory);
+                                sx.Id(msg => msg.Id);
+                                sx.Missing(mx =>
+                                    {
+                                        mx.Factory(() => new Subject());
+                                        mx.Log(lx => lx.SetOutput(Console.Out)
+                                                       .SetFormat(fs => "Created subject: " + fs.Data.Id));
+                                    });
 
-            var id = new Id<A, int>(x => x.Id);
-            var factory = new Factory<Subject>(() => new Subject());
-            var loadVane = new Load<Subject, int>(SessionFactory, id, factory);
+                                sx.Log(
+                                    lx =>
+                                    lx.SetOutput(Console.Out).SetFormat(fs => "Loaded subject: " + fs.Data.Id));
+                            },
+                            vx => vx.Execute(payload =>
+                                {
+                                    payload.Data.Item2.Id = payload.Data.Item1.Id;
+                                    payload.Data.Item2.Name = payload.Data.Item1.GetType().Name;
+                                    payload.Data.Item2.Value = payload.Data.Item1.Value;
+                                })));
+                    });
 
-            var loggerVane = new Logger<Subject>(Console.Out, x => "Loaded subject: " + x.Data.Id);
-
-            SourceVane<Subject> sourceVane = VaneFactory.Source(loadVane, loggerVane);
-            var spliceVane = new Splice<A, Subject>(finalVane, sourceVane);
-
-
-            var fanOutVane = new Fanout<A>(new FeatherVane<A>[] {spliceVane});
-
-            var profilerVane = new Profiler<A>(Console.Out, TimeSpan.FromMilliseconds(1));
-
-            Vane<A> vane = VaneFactory.Success(profilerVane, fanOutVane);
 
             vane.RenderGraphToFile(new FileInfo("NHibernateTestGraph.png"));
 
-            var a = new A {Id = _id};
+            var a = new A {Id = _id, Value = "Joe"};
             vane.Execute(a);
             vane.Execute(a);
-            var a2 = new A {Id = 47};
+            var a2 = new A {Id = 47, Value = "Cool"};
             vane.Execute(a2);
+
+            using(var session = SessionFactory.OpenSession())
+            {
+                IList<Subject> query = session.QueryOver<Subject>()
+                                                            .List();
+
+                foreach (var row in query)
+                {
+                    Console.WriteLine("{0}: {1} = {2}", row.Id, row.Name, row.Value);
+                }
+            }
         }
 
         [Test]
         public void Should_throw_if_an_object_is_not_found()
         {
-            var executeVane = new Execute<Tuple<A, Subject>>(x => { });
+            var executeVane = new ExecuteVane<Tuple<A, Subject>>(x => { });
             Vane<Tuple<A, Subject>> finalVane = VaneFactory.Success(executeVane);
 
-            var id = new Id<A, int>(x => x.Id);
-            var factory = new Missing<Subject>();
-            var loadVane = new Load<Subject, int>(SessionFactory, id, factory);
+            var id = new IdentitySourceVane<A, int>(x => x.Id);
+            var factory = new MissingSourceVane<Subject>();
+            var loadVane = new LoadSourceVane<Subject, int>(SessionFactory, id, factory);
 
             SourceVane<Subject> sourceVane = VaneFactory.Source(loadVane);
-            var spliceVane = new Splice<A, Subject>(finalVane, sourceVane);
+            var spliceVane = new SpliceVane<A, Subject>(finalVane, sourceVane);
 
             Vane<A> vane = VaneFactory.Success(spliceVane);
 
@@ -107,12 +129,14 @@ namespace FeatherVane.Tests.NHibernateIntegration
         class A
         {
             public int Id { get; set; }
+
+            public string Value { get; set; }
         }
 
 
         public class Subject
         {
-            public int Id { get; private set; }
+            public int Id { get; set; }
             public string Name { get; set; }
             public string Value { get; set; }
         }

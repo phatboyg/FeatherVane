@@ -32,9 +32,9 @@ namespace FeatherVane.Tests.Benchmarks
                 });
             });
 
-            var messageVane = new MessageType<Subject>(vane);
+            var messageVane = new MessageTypeVane<Subject>(vane);
 
-            var fanOutVane = new Fanout<Message>(new[] {messageVane});
+            var fanOutVane = new FanoutVane<Message>(new[] {messageVane});
 
             _vane = VaneFactory.Success(fanOutVane);
         }

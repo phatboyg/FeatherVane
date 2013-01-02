@@ -15,7 +15,7 @@ namespace FeatherVane.Tests.Benchmarks
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
     using FeatherVane.Messaging.Vanes;
-    using FeatherVane.NHibernateIntegration.Vanes;
+    using FeatherVane.NHibernateIntegration.SourceVanes;
     using NHibernate;
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
@@ -36,20 +36,20 @@ namespace FeatherVane.Tests.Benchmarks
 
             _sessionFactory = sessionFactoryProvider.GetSessionFactory();
 
-            var consumerVane = new MessageConsumer<Subject, SubjectConsumer>(x => x.Consume);
+            var consumerVane = new MessageConsumerVane<Subject, SubjectConsumer>(x => x.Consume);
             Vane<Tuple<Message<Subject>, SubjectConsumer>> finalVane = VaneFactory.Success(consumerVane);
 
-            var id = new Id<Message<Subject>, int>(x => x.Body.Id);
-            var factory = new Factory<SubjectConsumer>(() => new SubjectConsumer());
-            var loadVane = new Load<SubjectConsumer, int>(_sessionFactory, id, factory);
+            var id = new IdentitySourceVane<Message<Subject>, int>(x => x.Body.Id);
+            var factory = new FactorySourceVane<SubjectConsumer>(() => new SubjectConsumer());
+            var loadVane = new LoadSourceVane<SubjectConsumer, int>(_sessionFactory, id, factory);
 
             SourceVane<SubjectConsumer> sourceVane = VaneFactory.Source(loadVane);
-            var spliceVane = new Splice<Message<Subject>, SubjectConsumer>(finalVane, sourceVane);
+            var spliceVane = new SpliceVane<Message<Subject>, SubjectConsumer>(finalVane, sourceVane);
             Vane<Message<Subject>> vane = VaneFactory.Success(spliceVane);
 
-            var messageVane = new MessageType<Subject>(vane);
+            var messageVane = new MessageTypeVane<Subject>(vane);
 
-            var fanOutVane = new Fanout<Message>(new[] {messageVane});
+            var fanOutVane = new FanoutVane<Message>(new[] {messageVane});
 
             _vane = VaneFactory.Success(fanOutVane);
 

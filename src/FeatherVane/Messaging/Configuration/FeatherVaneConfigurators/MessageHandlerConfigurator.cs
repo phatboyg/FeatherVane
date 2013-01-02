@@ -36,7 +36,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
 
         public void Configure(VaneBuilder<Message<T>> builder)
         {
-            var handler = new MessageHandler<T>(_handlerMethod);
+            var handler = new MessageHandlerVane<T>(_handlerMethod);
             builder.Add(handler);
         }
 
@@ -44,7 +44,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
         {
             Vane<Message<T>> handlerVane = ConfigureHandlerVane();
 
-            var messageType = new MessageType<T>(handlerVane);
+            var messageType = new MessageTypeVane<T>(handlerVane);
             builder.Add(messageType);
         }
 

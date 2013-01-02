@@ -48,7 +48,7 @@ namespace FeatherVane
         /// <returns>An executable Vane</returns>
         public static Vane<T> Success<T>(params FeatherVane<T>[] vanes)
         {
-            var success = new Success<T>();
+            var success = new SuccessVane<T>();
 
             return Connect(success, vanes);
         }
@@ -62,7 +62,7 @@ namespace FeatherVane
         /// <returns>An executable Vane</returns>
         public static Vane<T> Unhandled<T>(params FeatherVane<T>[] vanes)
         {
-            var unhandled = new Unhandled<T>();
+            var unhandled = new UnhandledVane<T>();
 
             return Connect(unhandled, vanes);
         }
@@ -71,7 +71,7 @@ namespace FeatherVane
         {
             SourceVane<T> current = source;
             for (int i = 0; i < vanes.Length; i++)
-                current = new NextSource<T>(current, vanes[i]);
+                current = new NextSourceVane<T>(current, vanes[i]);
             return current;
         }
 

@@ -15,6 +15,7 @@ namespace FeatherVane.SourceVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
+    using Factories;
     using SourceVaneBuilders;
 
 
@@ -37,11 +38,9 @@ namespace FeatherVane.SourceVaneConfigurators
             _configurators.Add(vaneBuilderConfigurator);
         }
 
-        SourceVaneConfigurator<T> SourceVaneConfigurator<T>.UseSourceVaneFactory(Func<SourceVane<T>> sourceVaneFactory)
+        void SourceVaneConfigurator<T>.UseSourceVane(Func<SourceVane<T>> sourceVaneFactory)
         {
             _sourceVaneFactory = sourceVaneFactory;
-
-            return this;
         }
 
         SourceVane<T> SourceVaneFactory<T>.Create()

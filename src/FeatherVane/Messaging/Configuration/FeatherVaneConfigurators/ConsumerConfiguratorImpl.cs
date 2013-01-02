@@ -15,7 +15,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
-    using FeatherVaneBuilders;
+    using Factories;
     using VaneBuilders;
 
 

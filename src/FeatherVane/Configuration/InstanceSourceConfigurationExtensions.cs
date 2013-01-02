@@ -22,7 +22,7 @@ namespace FeatherVane
             if (configurator == null)
                 throw new ArgumentNullException("configurator");
 
-            configurator.UseSourceVaneFactory(() => new Instance<T>(instance));
+            configurator.UseSourceVane(() => new InstanceSourceVane<T>(instance));
         }
     }
 }

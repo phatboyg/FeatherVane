@@ -13,5 +13,6 @@ namespace FeatherVane
 {
     public interface FeatherVaneConfigurator<out T>
     {
+
     }
 }

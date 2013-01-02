@@ -22,7 +22,7 @@ namespace FeatherVane.Tests.Benchmarks
 
         public AsyncThroughput()
         {
-            var executeVane = new ExecuteTask<Subject>(x => Task.Factory.StartNew(() => { }));
+            var executeVane = new ExecuteTaskVane<Subject>(x => Task.Factory.StartNew(() => { }));
             _vane = VaneFactory.Success(executeVane);
         }
 

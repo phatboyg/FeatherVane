@@ -21,7 +21,7 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_be_able_to_push_in_front()
         {
-            Vane<string> original = VaneFactory.Connect(new Success<string>(),
+            Vane<string> original = VaneFactory.Connect(new SuccessVane<string>(),
                 new Original());
 
             original.Execute("First");

@@ -19,7 +19,7 @@ namespace FeatherVane.VaneConfigurators
         VaneConfigurator<T>
     {
         public SuccessConfigurator()
-            : base(() => new Success<T>())
+            : base(() => new SuccessVane<T>())
         {
         }
     }

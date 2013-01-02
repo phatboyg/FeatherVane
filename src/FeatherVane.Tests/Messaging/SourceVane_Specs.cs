@@ -59,25 +59,25 @@ namespace FeatherVane.Tests.Messaging
         [TestFixtureSetUp]
         public void Setup()
         {
-            var messageConsumerVane = new MessageConsumer<A, WorkingConsumer>(x => x.Consume);
+            var messageConsumerVane = new MessageConsumerVane<A, WorkingConsumer>(x => x.Consume);
             Vane<Tuple<Message<A>, WorkingConsumer>> consumerVane = VaneFactory.Success(messageConsumerVane);
 
-            var messageConsumerVaneB = new MessageConsumer<B, WorkingConsumer>(x => x.Consume);
+            var messageConsumerVaneB = new MessageConsumerVane<B, WorkingConsumer>(x => x.Consume);
             Vane<Tuple<Message<B>, WorkingConsumer>> consumerVaneB = VaneFactory.Success(messageConsumerVaneB);
 
-            var factoryVane = new Factory<WorkingConsumer>(() => new WorkingConsumer());
-            var loggerVane = new Logger<WorkingConsumer>(Console.Out, x => "Logging");
-            var profilerVane = new Profiler<WorkingConsumer>(Console.Out, TimeSpan.FromMilliseconds(1));
+            var factoryVane = new FactorySourceVane<WorkingConsumer>(() => new WorkingConsumer());
+            var loggerVane = new LogVane<WorkingConsumer>(Console.Out, x => "Logging");
+            var profilerVane = new ProfilerVane<WorkingConsumer>(Console.Out, TimeSpan.FromMilliseconds(1));
 
             var sourceVane = VaneFactory.Source(factoryVane, loggerVane, profilerVane);
-            var spliceVane = new Splice<Message<A>, WorkingConsumer>(consumerVane, sourceVane);
+            var spliceVane = new SpliceVane<Message<A>, WorkingConsumer>(consumerVane, sourceVane);
 
-            var messageVane = new MessageType<A>(VaneFactory.Success(spliceVane));
+            var messageVane = new MessageTypeVane<A>(VaneFactory.Success(spliceVane));
 
-            var spliceVaneB = new Splice<Message<B>, WorkingConsumer>(consumerVaneB, sourceVane);
-            var messageVaneB = new MessageType<B>(VaneFactory.Success(spliceVaneB));
+            var spliceVaneB = new SpliceVane<Message<B>, WorkingConsumer>(consumerVaneB, sourceVane);
+            var messageVaneB = new MessageTypeVane<B>(VaneFactory.Success(spliceVaneB));
 
-            var fanOutVane = new Fanout<Message>(new FeatherVane<Message>[] { messageVane, messageVaneB });
+            var fanOutVane = new FanoutVane<Message>(new FeatherVane<Message>[] { messageVane, messageVaneB });
             
             _vane = VaneFactory.Success(fanOutVane);
         }

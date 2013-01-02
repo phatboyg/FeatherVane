@@ -32,7 +32,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var executeTask = new ExecuteTask<T>(_continuationTask);
+            var executeTask = new ExecuteTaskVane<T>(_continuationTask);
             builder.Add(executeTask);
         }
 

@@ -48,9 +48,9 @@ namespace FeatherVane.Tests.HttpTests
 
         protected virtual Vane<ConnectionContext> CreateMainVane()
         {
-            return VaneFactory.Connect(new Unhandled<ConnectionContext>(),
-                new Profiler<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
-                new Logger<ConnectionContext>(Console.Error, x => x.Get<RequestContext>().Url.ToString()),
+            return VaneFactory.Connect(new UnhandledVane<ConnectionContext>(),
+                new ProfilerVane<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
+                new LogVane<ConnectionContext>(Console.Error, x => x.Get<RequestContext>().Url.ToString()),
                 new NotFoundFeatherVane());
         }
     }

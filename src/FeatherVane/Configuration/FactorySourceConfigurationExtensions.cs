@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,31 +12,11 @@
 namespace FeatherVane
 {
     using System;
-    using SourceVaneConfigurators;
     using SourceVanes;
 
 
     public static class FactorySourceConfigurationExtensions
     {
-        public static void Factory<T, TSource>(this SpliceSourceConfigurator<T> configurator,
-            Func<TSource> factoryMethod,
-            Action<SourceVaneConfigurator<TSource>> configureCallback,
-            Action<VaneConfigurator<Tuple<T, TSource>>> outputConfigureCallback)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException("configurator");
-            if (configureCallback == null)
-                throw new ArgumentNullException("configureCallback");
-
-            var sourceConfigurator = new SourceVaneConfiguratorImpl<TSource>();
-
-            sourceConfigurator.Factory(factoryMethod);
-
-            configureCallback(sourceConfigurator);
-
-            configurator.Source(sourceConfigurator, outputConfigureCallback);
-        }
-
         /// <summary>
         /// Sets the source vane to a factory, using the factory method to create a new instance of T
         /// </summary>
@@ -48,7 +28,29 @@ namespace FeatherVane
             if (configurator == null)
                 throw new ArgumentNullException("configurator");
 
-            configurator.UseSourceVaneFactory(() => new Factory<T>(factoryMethod));
+            configurator.UseSourceVane(() => new FactorySourceVane<T>(factoryMethod));
+        }
+
+        /// <summary>
+        /// Plug an existing source vane as the source
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="configurator"></param>
+        /// <param name="sourceVane"></param>
+        public static void Existing<T>(this SourceVaneConfigurator<T> configurator, SourceVane<T> sourceVane)
+        {
+            if (configurator == null)
+                throw new ArgumentNullException("configurator");
+
+            configurator.UseSourceVane(() => sourceVane);
+        }
+
+        public static void UseSourceVane<T>(this SourceVaneConfigurator<T> configurator, Func<SourceVane<T>> sourceVaneFactory)
+        {
+            if (configurator == null)
+                throw new ArgumentNullException("configurator");
+
+            configurator.UseSourceVane(sourceVaneFactory);
         }
     }
 }
