@@ -39,6 +39,14 @@ namespace FeatherVane
             return innerTask ?? task.Unwrap();
         }
 
+        internal static Task<T> FastUnwrap<T>(this Task<Task<T>> task)
+        {
+            Task<T> innerTask = task.Status == TaskStatus.RanToCompletion
+                                 ? task.Result
+                                 : null;
+            return innerTask ?? task.Unwrap();
+        }
+
 
         internal static Task Completed()
         {
