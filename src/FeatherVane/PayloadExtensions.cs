@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,10 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using System;
+    using Internals.Extensions;
     using Payloads;
+
 
     public static class PayloadExtensions
     {
@@ -31,12 +34,40 @@ namespace FeatherVane
         static TContext ContextNotFoundContextFactory<TContext>()
             where TContext : class
         {
-            throw new ContextNotFoundException("No context factory provided.");
+            throw new ContextNotFoundException("No context factory provided: " + typeof(TContext).GetTypeName());
         }
 
         public static Payload<T> CreateProxy<T>(this Payload context, T body)
         {
             return new ProxyPayload<T>(context, body);
+        }
+
+        /// <summary>
+        /// Merge data into the left side of a payload, resulting in a Tuple payload
+        /// </summary>
+        /// <typeparam name="T">The payload type</typeparam>
+        /// <typeparam name="TLeft">The new type to merge</typeparam>
+        /// <param name="payload">The original payload</param>
+        /// <param name="left">The new value to merge</param>
+        /// <returns></returns>
+        public static Payload<Tuple<TLeft, T>> MergeLeft<T, TLeft>(this Payload<T> payload, TLeft left)
+        {
+            return new ProxyPayload<Tuple<TLeft, T>>(payload, Tuple.Create(left, payload.Data));
+        }
+
+        public static Payload<Tuple<T, TRight>> MergeRight<T, TRight>(this Payload<T> payload, TRight right)
+        {
+            return new ProxyPayload<Tuple<T, TRight>>(payload, Tuple.Create(payload.Data, right));
+        }
+
+        public static Payload<TLeft> SplitLeft<TLeft, TRight>(this Payload<Tuple<TLeft, TRight>> payload)
+        {
+            return new ProxyPayload<TLeft>(payload, payload.Data.Item1);
+        }
+
+        public static Payload<TRight> SplitRight<TLeft, TRight>(this Payload<Tuple<TLeft, TRight>> payload)
+        {
+            return new ProxyPayload<TRight>(payload, payload.Data.Item2);
         }
     }
 }

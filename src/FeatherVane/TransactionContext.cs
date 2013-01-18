@@ -12,25 +12,27 @@
 namespace FeatherVane
 {
     using System;
-    using FeatherVaneConfigurators;
+    using System.Transactions;
 
 
-    public static class LogConfigurationExtensions
+    public interface TransactionContext :
+        IDisposable
     {
-        public static void Log<T>(this VaneConfigurator<T> configurator,
-            Action<LogConfigurator<T>> configureCallback)
-        {
-            var loggerConfigurator = new LogConfiguratorImpl<T>();
+        /// <summary>
+        /// Returns the current transaction scope, creating a dependent scope if a thread switch
+        /// occurred
+        /// </summary>
+        Transaction Current { get; }
 
-            configureCallback(loggerConfigurator);
+        /// <summary>
+        /// Complete the transaction scope
+        /// </summary>
+        void Complete();
 
-            configurator.Add(loggerConfigurator);
-        }
-
-
-        public static void ConsoleLog<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, string> formatter)
-        {
-            configurator.Log(x => x.SetOutput(Console.Out).SetFormat(formatter));
-        }
+        /// <summary>
+        /// Creates a transaction scope using the existing transaction
+        /// </summary>
+        /// <returns></returns>
+        TransactionScope CreateTransactionScope();
     }
 }

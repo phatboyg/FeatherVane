@@ -15,22 +15,23 @@ namespace FeatherVane
     using FeatherVaneConfigurators;
 
 
-    public static class LogConfigurationExtensions
+    public static class TransactionConfigurationExtensions
     {
-        public static void Log<T>(this VaneConfigurator<T> configurator,
-            Action<LogConfigurator<T>> configureCallback)
+        public static void Transaction<T>(this VaneConfigurator<T> configurator,
+            Action<TransactionConfigurator<T>> configureCallback)
         {
-            var loggerConfigurator = new LogConfiguratorImpl<T>();
+            var transactionConfigurator = new TransactionConfiguratorImpl<T>();
 
-            configureCallback(loggerConfigurator);
+            configureCallback(transactionConfigurator);
 
-            configurator.Add(loggerConfigurator);
+            configurator.Add(transactionConfigurator);
         }
 
-
-        public static void ConsoleLog<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, string> formatter)
+        public static void Transaction<T>(this VaneConfigurator<T> configurator)
         {
-            configurator.Log(x => x.SetOutput(Console.Out).SetFormat(formatter));
+            var transactionConfigurator = new TransactionConfiguratorImpl<T>();
+
+            configurator.Add(transactionConfigurator);
         }
     }
 }

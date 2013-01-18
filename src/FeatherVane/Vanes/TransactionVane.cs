@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -11,6 +11,7 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
+    using System;
     using System.Transactions;
 
 
@@ -21,41 +22,40 @@ namespace FeatherVane.Vanes
     public class TransactionVane<T> :
         FeatherVane<T>
     {
-        readonly TransactionScopeOption _scopeOptions;
+        TransactionOptions _options;
 
-        public TransactionVane(TransactionScopeOption scopeOptions)
+        public TransactionVane(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
+            TimeSpan timeout = default(TimeSpan))
         {
-            _scopeOptions = scopeOptions;
-        }
+            if (timeout == default(TimeSpan))
+                timeout = TimeSpan.FromSeconds(30);
 
-        public TransactionVane()
-        {
-            _scopeOptions = TransactionScopeOption.Required;
+            _options = new TransactionOptions();
+            _options.IsolationLevel = isolationLevel;
+            _options.Timeout = timeout;
         }
 
         void FeatherVane<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
-            TransactionScopeOption options = _scopeOptions;
-
-            TransactionScope createdScope = null;
+            TransactionContext transactionContext = null;
             composer.Execute(() => payload.GetOrAdd(() =>
                 {
-                    createdScope = new TransactionScope(options);
-                    return createdScope;
+                    transactionContext = new SystemTransactionContext(_options);
+                    return transactionContext;
                 }));
 
             next.Compose(composer, payload);
 
             composer.Execute(() =>
                 {
-                    if (createdScope != null)
-                        createdScope.Complete();
+                    if (transactionContext != null)
+                        transactionContext.Complete();
                 });
 
             composer.Finally(() =>
                 {
-                    if (createdScope != null)
-                        createdScope.Dispose();
+                    if (transactionContext != null)
+                        transactionContext.Dispose();
                 });
         }
     }

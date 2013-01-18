@@ -102,10 +102,7 @@ namespace FeatherVane.Tests.WebClient
                                                          Description = text
                                                      };
 
-                                                 Payload<Tuple<TPayload, WeatherConditions>> nextPayload =
-                                                     payload.CreateProxy(Tuple.Create(payload.Data, data));
-
-                                                 return TaskComposer.Compose(next, nextPayload,
+                                                 return TaskComposer.Compose(next, payload.MergeRight(data),
                                                      composer.CancellationToken);
                                              },
                                              composer.CancellationToken,

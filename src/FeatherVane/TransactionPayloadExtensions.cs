@@ -11,15 +11,23 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
-    using System;
-    using System.IO;
+    using System.Transactions;
 
 
-    public interface LogConfigurator<out T> :
-        FeatherVaneConfigurator<T>
+    public static class TransactionPayloadExtensions
     {
-        LogConfigurator<T> SetOutput(TextWriter output);
+        /// <summary>
+        /// Create a transaction scope using the TransactionVane, to ensure that any transactions 
+        /// are carried between any threads.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static TransactionScope CreateTransactionScope<T>(this Payload<T> payload)
+        {
+            var context = payload.Get<TransactionContext>();
 
-        LogConfigurator<T> SetFormat(Func<Payload<T>, string> format);
+            return context.CreateTransactionScope();
+        }
     }
 }

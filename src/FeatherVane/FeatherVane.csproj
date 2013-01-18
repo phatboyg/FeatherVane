@@ -55,6 +55,9 @@
     <Compile Include="Configuration\FactorySourceConfigurationExtensions.cs" />
     <Compile Include="Configuration\FanoutConfigurationExtensions.cs" />
     <Compile Include="Configuration\FanoutConfigurator.cs" />
+    <Compile Include="Configuration\FeatherVaneConfigurators\TransactionConfigurator.cs" />
+    <Compile Include="Configuration\FeatherVaneConfigurators\TransactionConfiguratorImpl.cs" />
+    <Compile Include="Configuration\TransactionConfigurationExtensions.cs" />
     <Compile Include="Configuration\VaneBuilders\FanoutBuilder.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurator.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\FanoutConfiguratorImpl.cs" />
@@ -123,6 +126,8 @@
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="TaskComposer.cs" />
     <Compile Include="TaskUtil.cs" />
+    <Compile Include="TransactionContext.cs" />
+    <Compile Include="TransactionPayloadExtensions.cs" />
     <Compile Include="Vane.cs" />
     <Compile Include="VaneExecuteExtensions.cs">
       <AutoGen>True</AutoGen>
@@ -132,6 +137,7 @@
     <Compile Include="Payloads\PayloadContextCache.cs" />
     <Compile Include="Payload.cs" />
     <Compile Include="PayloadExtensions.cs" />
+    <Compile Include="Vanes\LatestVane.cs" />
     <Compile Include="Vanes\LogTaskVane.cs" />
     <Compile Include="Vanes\CompensateVane.cs" />
     <Compile Include="Vanes\ExecuteTaskVane.cs" />
@@ -141,6 +147,7 @@
     <Compile Include="Vanes\SpliceVane.cs" />
     <Compile Include="Vanes\NextVane.cs" />
     <Compile Include="Vanes\LeftSplitVane.cs" />
+    <Compile Include="Vanes\SystemTransactionContext.cs" />
     <Compile Include="VaneVisitor.cs" />
     <Compile Include="Visualization\Edge.cs" />
     <Compile Include="Visualization\GraphVaneVisitor.cs" />

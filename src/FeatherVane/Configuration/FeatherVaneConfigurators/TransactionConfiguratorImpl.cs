@@ -9,28 +9,27 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.FeatherVaneConfigurators
 {
-    using System;
-    using FeatherVaneConfigurators;
+    using System.Collections.Generic;
+    using Configurators;
+    using VaneBuilders;
+    using Vanes;
 
 
-    public static class LogConfigurationExtensions
+    public class TransactionConfiguratorImpl<T> :
+        TransactionConfigurator<T>,
+        VaneBuilderConfigurator<T>
     {
-        public static void Log<T>(this VaneConfigurator<T> configurator,
-            Action<LogConfigurator<T>> configureCallback)
+        void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var loggerConfigurator = new LogConfiguratorImpl<T>();
-
-            configureCallback(loggerConfigurator);
-
-            configurator.Add(loggerConfigurator);
+            var transaction = new TransactionVane<T>();
+            builder.Add(transaction);
         }
 
-
-        public static void ConsoleLog<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, string> formatter)
+        IEnumerable<ValidateResult> Configurator.Validate()
         {
-            configurator.Log(x => x.SetOutput(Console.Out).SetFormat(formatter));
+            yield break;
         }
     }
 }

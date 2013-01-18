@@ -35,7 +35,7 @@ namespace FeatherVane.Vanes
         {
             composer.Execute(() =>
                 {
-                    Payload<TRight> nextPayload = payload.CreateProxy(payload.Data.Item2);
+                    Payload<TRight> nextPayload = payload.SplitRight();
 
                     var output = new LeftMergeVane<TLeft, TRight>(payload.Data.Item1, _outputVane);
 

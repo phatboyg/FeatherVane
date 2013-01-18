@@ -210,8 +210,6 @@ namespace FeatherVane
         static Task ExecuteAsync(Task task, Func<Task> continuationTask, CancellationToken cancellationToken,
             bool runSynchronously)
         {
-            SynchronizationContext context = SynchronizationContext.Current;
-
             var source = new TaskCompletionSource<Task>();
             task.ContinueWith(innerTask =>
                 {
@@ -221,22 +219,7 @@ namespace FeatherVane
                         source.TrySetCanceled();
                     else
                     {
-                        if (context != null)
-                        {
-                            context.Post(state =>
-                                {
-                                    try
-                                    {
-                                        source.TrySetResult(continuationTask());
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        source.TrySetException(ex);
-                                    }
-                                }, state: null);
-                        }
-                        else
-                            source.TrySetResult(continuationTask());
+                        source.TrySetResult(continuationTask());
                     }
                 }, runSynchronously
                        ? TaskContinuationOptions.ExecuteSynchronously
@@ -331,34 +314,13 @@ namespace FeatherVane
 
         static Task FinallyAsync(Task task, Action<TaskStatus> continuation, bool runSynchronously = true)
         {
-            SynchronizationContext syncContext = SynchronizationContext.Current;
-
             var source = new TaskCompletionSource<object>();
             task.ContinueWith(innerTask =>
                 {
                     try
                     {
-                        if (syncContext != null)
-                        {
-                            syncContext.Post(state =>
-                                {
-                                    try
-                                    {
-                                        continuation(innerTask.Status);
-                                        source.TrySetFromTask(innerTask);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        innerTask.MarkObserved();
-                                        source.SetException(ex);
-                                    }
-                                }, state: null);
-                        }
-                        else
-                        {
-                            continuation(innerTask.Status);
-                            source.TrySetFromTask(innerTask);
-                        }
+                        continuation(innerTask.Status);
+                        source.TrySetFromTask(innerTask);
                     }
                     catch (Exception ex)
                     {

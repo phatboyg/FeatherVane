@@ -35,7 +35,7 @@ namespace FeatherVane.Vanes
         {
             composer.Execute(() =>
                 {
-                    Payload<Tuple<TLeft, TRight>> nextPayload = payload.CreateProxy(Tuple.Create(_data, payload.Data));
+                    Payload<Tuple<TLeft, TRight>> nextPayload = payload.MergeLeft(_data);
 
                     return TaskComposer.Compose(_outputVane, nextPayload, composer.CancellationToken);
                 });

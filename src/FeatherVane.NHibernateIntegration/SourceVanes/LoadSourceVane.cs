@@ -75,18 +75,17 @@ namespace FeatherVane.NHibernateIntegration.SourceVanes
                     {
                         session = _sessionFactory.OpenSession();
                         transaction = session.BeginTransaction();
+                        
+                        var leftPayload = payload.SplitLeft();
+
                         var data = session.Get<T>(payload.Data.Item2, LockMode.Upgrade);
                         if (data == null)
                         {
                             var save = new Save<TPayload>(session, _next);
-                            return TaskComposer.Compose(_missing, payload.CreateProxy(payload.Data.Item1), save,
-                                composer.CancellationToken);
+                            return TaskComposer.Compose(_missing, leftPayload, save, composer.CancellationToken);
                         }
 
-                        Payload<Tuple<TPayload, T>> nextPayload =
-                            payload.CreateProxy(Tuple.Create(payload.Data.Item1, data));
-
-                        return TaskComposer.Compose(_next, nextPayload, composer.CancellationToken);
+                        return TaskComposer.Compose(_next, leftPayload.MergeRight(data), composer.CancellationToken);
                     });
 
                 composer.Execute(() =>
