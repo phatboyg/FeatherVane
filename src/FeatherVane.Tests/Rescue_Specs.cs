@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
 namespace FeatherVane.Tests
 {
     using NUnit.Framework;
-    using Vanes;
+
 
     [TestFixture]
     public class When_the_main_vane_fails
@@ -20,12 +20,16 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_complete_the_rescue_vane()
         {
-            var success = new TestSuccess();
-
             var fail = new TestFail();
             var middle = new TestVane();
-            var rescue = new RescueVane<TestSubject>(success);
-            Vane<TestSubject> vane = VaneFactory.Connect(fail, rescue, middle);
+
+            var success = new TestSuccess();
+
+            Vane<TestSubject> vane = VaneFactory.New(() => fail, x =>
+                {
+                    x.Rescue(() => success, r => { });
+                    x.FeatherVane(() => middle);
+                });
 
             vane.Execute(_testSubject);
 
@@ -38,7 +42,6 @@ namespace FeatherVane.Tests
             Assert.IsTrue(fail.AssignCalled);
             Assert.IsTrue(fail.ExecuteCalled);
             Assert.IsTrue(fail.CompensateCalled);
-
         }
 
         TestSubject _testSubject = new TestSubject {Street = "123"};

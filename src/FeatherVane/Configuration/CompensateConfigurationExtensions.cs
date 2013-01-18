@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -9,17 +9,22 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.VaneConfigurators
+namespace FeatherVane
 {
-    using Vanes;
+    using System;
+    using FeatherVaneConfigurators;
 
 
-    public class SuccessConfigurator<T> :
-        VaneConfiguratorImpl<T>
+    public static class CompensateConfigurationExtensions
     {
-        public SuccessConfigurator()
-            : base(() => new SuccessVane<T>())
+        public static void Compensate<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, bool> compensate)
         {
+            if (configurator == null)
+                throw new ArgumentNullException("configurator");
+
+            var vaneConfigurator = new CompensateConfigurator<T>(compensate);
+
+            configurator.Add(vaneConfigurator);
         }
     }
 }

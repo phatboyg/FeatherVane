@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -32,6 +32,25 @@ namespace FeatherVane
                 throw new ArgumentNullException("configureCallback");
 
             var configurator = new SuccessConfigurator<T>();
+
+            configureCallback(configurator);
+
+            return configurator.ValidateAndCreate();
+        }
+
+        /// <summary>
+        /// Configures a new vane with a custom tail factory (default is Success otherwise)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tailFactory"></param>
+        /// <param name="configureCallback"></param>
+        /// <returns></returns>
+        public static Vane<T> New<T>(Func<Vane<T>> tailFactory, Action<VaneConfigurator<T>> configureCallback)
+        {
+            if (configureCallback == null)
+                throw new ArgumentNullException("configureCallback");
+
+            var configurator = new VaneConfiguratorImpl<T>(tailFactory);
 
             configureCallback(configurator);
 

@@ -12,23 +12,24 @@
 namespace FeatherVane
 {
     using System;
+    using System.Threading.Tasks;
     using FeatherVaneConfigurators;
 
 
-    public static class ExecuteConfigurationExtensions
+    public static class ExecuteTaskConfigurationExtensions
     {
         /// <summary>
-        /// Execute a continuation (synchronously if possible)
+        /// Execute a Task (returned by the specified continuation)
         /// </summary>
         /// <typeparam name="T">The vane type</typeparam>
         /// <param name="configurator">The vane configurator</param>
-        /// <param name="continuation">The continuation to execute</param>
-        public static void Execute<T>(this VaneConfigurator<T> configurator, Action<Payload<T>> continuation)
+        /// <param name="continuationTask">The continuation to create the Task</param>
+        public static void ExecuteTask<T>(this VaneConfigurator<T> configurator, Func<Payload<T>, Task> continuationTask)
         {
             if (configurator == null)
                 throw new ArgumentNullException("configurator");
 
-            var vaneConfigurator = new ExecuteConfigurator<T>(continuation);
+            var vaneConfigurator = new ExecuteTaskConfigurator<T>(continuationTask);
 
             configurator.Add(vaneConfigurator);
         }

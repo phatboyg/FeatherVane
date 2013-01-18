@@ -15,22 +15,25 @@ namespace FeatherVane
     using FeatherVaneConfigurators;
 
 
-    public static class ExecuteConfigurationExtensions
+    public static class RescueConfigurationExtensions
     {
-        /// <summary>
-        /// Execute a continuation (synchronously if possible)
-        /// </summary>
-        /// <typeparam name="T">The vane type</typeparam>
-        /// <param name="configurator">The vane configurator</param>
-        /// <param name="continuation">The continuation to execute</param>
-        public static void Execute<T>(this VaneConfigurator<T> configurator, Action<Payload<T>> continuation)
+        public static void Rescue<T>(this VaneConfigurator<T> configurator, Action<VaneConfigurator<T>> configureRescue)
         {
-            if (configurator == null)
-                throw new ArgumentNullException("configurator");
+            var rescueConfigurator = new RescueConfiguratorImpl<T>();
 
-            var vaneConfigurator = new ExecuteConfigurator<T>(continuation);
+            configureRescue(rescueConfigurator);
 
-            configurator.Add(vaneConfigurator);
+            configurator.Add(rescueConfigurator);
+        }
+
+        public static void Rescue<T>(this VaneConfigurator<T> configurator, Func<Vane<T>> tailFactory,
+            Action<VaneConfigurator<T>> configureRescue)
+        {
+            var rescueConfigurator = new RescueConfiguratorImpl<T>(tailFactory);
+
+            configureRescue(rescueConfigurator);
+
+            configurator.Add(rescueConfigurator);
         }
     }
 }

@@ -15,8 +15,7 @@ namespace FeatherVane.VaneConfigurators
 
 
     public class UnhandledConfigurator<T> :
-        VaneConfiguratorImpl<T>,
-        VaneConfigurator<T>
+        VaneConfiguratorImpl<T>
     {
         public UnhandledConfigurator()
             : base(() => new UnhandledVane<T>())

@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -11,9 +11,7 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests.Benchmarks
 {
-    using System;
     using System.IO;
-    using Vanes;
 
 
     public class ProfilerLoggerThroughput :
@@ -25,8 +23,12 @@ namespace FeatherVane.Tests.Benchmarks
         {
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
-            _vane = VaneFactory.Success(new LogVane<Subject>(sw, x => ""),
-                new ProfilerVane<Subject>(sw, TimeSpan.FromMilliseconds(2)));
+
+            _vane = VaneFactory.New<Subject>(x =>
+                {
+                    x.Log(l => l.SetOutput(sw).SetFormat(p => ""));
+                    x.Profiler(p => p.SetOutput(sw).Threshold(2));
+                });
         }
 
         public void Execute(Subject subject)

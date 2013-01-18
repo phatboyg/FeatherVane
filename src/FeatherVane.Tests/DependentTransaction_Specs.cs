@@ -33,6 +33,8 @@ namespace FeatherVane.Tests
                             using (TransactionScope scope = payload.CreateTransactionScope())
                             {
                                 Console.WriteLine("ExecuteTask: {0}", Thread.CurrentThread.ManagedThreadId);
+
+                                Assert.IsNotNull(Transaction.Current);
                                 scope.Complete();
                             }
                         }));
@@ -53,7 +55,7 @@ namespace FeatherVane.Tests
                             using (TransactionScope scope = payload.CreateTransactionScope())
                             {
                                 Console.WriteLine("ExecuteTask: {0}", Thread.CurrentThread.ManagedThreadId);
-                                Thread.Sleep(5000);
+                                Thread.SpinWait(5000);
                                 scope.Complete();
                             }
                         }));

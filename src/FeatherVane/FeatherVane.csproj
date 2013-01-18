@@ -40,7 +40,9 @@
     <Compile Include="Compensation.cs" />
     <Compile Include="CompensationResult.cs" />
     <Compile Include="ComposerExtensions.cs" />
-    <Compile Include="Configuration\FactoryExtensions.cs" />
+    <Compile Include="Configuration\CompensateConfigurationExtensions.cs" />
+    <Compile Include="Configuration\Configurators\FactoryExtensions.cs" />
+    <Compile Include="Configuration\ExecuteTaskConfigurationExtensions.cs" />
     <Compile Include="Configuration\Configurators\ConfigurationResult.cs" />
     <Compile Include="Configuration\Configurators\Configurator.cs" />
     <Compile Include="Configuration\Configurators\ValidateConfigurationResult.cs" />
@@ -55,8 +57,14 @@
     <Compile Include="Configuration\FactorySourceConfigurationExtensions.cs" />
     <Compile Include="Configuration\FanoutConfigurationExtensions.cs" />
     <Compile Include="Configuration\FanoutConfigurator.cs" />
+    <Compile Include="Configuration\FeatherVaneConfiguratorExtensions.cs" />
+    <Compile Include="Configuration\FeatherVaneConfigurators\CompensateConfigurator.cs" />
+    <Compile Include="Configuration\FeatherVaneConfigurators\FeatherVaneFactoryConfigurator.cs" />
+    <Compile Include="Configuration\FeatherVaneConfigurators\RescueConfiguratorImpl.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\TransactionConfigurator.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurators\TransactionConfiguratorImpl.cs" />
+    <Compile Include="Configuration\RescueConfigurationExtensions.cs" />
+    <Compile Include="Configuration\RescueConfigurator.cs" />
     <Compile Include="Configuration\TransactionConfigurationExtensions.cs" />
     <Compile Include="Configuration\VaneBuilders\FanoutBuilder.cs" />
     <Compile Include="Configuration\FeatherVaneConfigurator.cs" />

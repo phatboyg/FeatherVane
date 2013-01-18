@@ -18,13 +18,14 @@ namespace FeatherVane.VaneConfigurators
     using VaneBuilders;
 
 
-    public abstract class VaneConfiguratorImpl<T> :
+    public class VaneConfiguratorImpl<T> :
+        VaneConfigurator<T>,
         VaneFactory<T>
     {
         readonly Func<Vane<T>> _tailFactory;
         readonly IList<VaneBuilderConfigurator<T>> _configurators;
 
-        protected VaneConfiguratorImpl(Func<Vane<T>> tailFactory)
+        public VaneConfiguratorImpl(Func<Vane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
 

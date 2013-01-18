@@ -13,10 +13,17 @@ namespace FeatherVane
 {
     using System;
     using FeatherVaneConfigurators;
+    using VaneConfigurators;
 
 
     public static class ProfilerConfigurationExtensions
     {
+        /// <summary>
+        /// Adds a Profiler vane
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="configurator"></param>
+        /// <param name="configureCallback"></param>
         public static void Profiler<T>(this VaneConfigurator<T> configurator,
             Action<ProfilerConfigurator<T>> configureCallback)
         {
@@ -25,6 +32,18 @@ namespace FeatherVane
             configureCallback(profilerConfigurator);
 
             configurator.Add(profilerConfigurator);
+        }
+
+        /// <summary>
+        /// Configures the lower threshold for profile logging (only items that take more than timeout milliseconds are logged)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="configurator"></param>
+        /// <param name="timeout">The timeout in milliseconds</param>
+        /// <returns></returns>
+        public static ProfilerConfigurator<T> Threshold<T>(this ProfilerConfigurator<T> configurator, int timeout)
+        {
+            return configurator.Threshold(TimeSpan.FromMilliseconds(timeout));
         }
     }
 }
