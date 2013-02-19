@@ -44,6 +44,13 @@ namespace FeatherVane.Visualization
             return true;
         }
 
+        public bool Visit<T, TSource>(SourceVane<T, TSource> vane)
+        {
+            VisitSourceVane(vane);
+
+            return true;
+        }
+
         public bool Visit<T>(FeatherVane<T> vane)
         {
             VisitFeatherVane(vane);
@@ -76,6 +83,17 @@ namespace FeatherVane.Visualization
         }
 
         void VisitSourceVane<T>(SourceVane<T> vane)
+        {
+            if (_seen.Contains(vane))
+                return;
+
+            Append(vane.GetType().GetTypeName());
+            _seen.Add(vane);
+
+            VisitAcceptor<T>(vane);
+        }
+
+        void VisitSourceVane<T, TSource>(SourceVane<T, TSource> vane)
         {
             if (_seen.Contains(vane))
                 return;

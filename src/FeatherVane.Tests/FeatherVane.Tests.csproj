@@ -76,10 +76,14 @@
     <Compile Include="ActorThoughts_Specs.cs" />
     <Compile Include="Benchmarks\AsyncThroughput.cs" />
     <Compile Include="Benchmarks\ConsumerThroughput.cs" />
+    <Compile Include="Benchmarks\ControllerActionRoutingThroughput.cs" />
+    <Compile Include="Benchmarks\ControllerRoutingThroughput.cs" />
     <Compile Include="Benchmarks\EmptyThroughput.cs" />
     <Compile Include="Benchmarks\LoggerThroughput.cs" />
     <Compile Include="Benchmarks\NHibernateThroughput.cs" />
     <Compile Include="Benchmarks\ProfilerLoggerThroughput.cs" />
+    <Compile Include="Benchmarks\RoutingThroughput.cs" />
+    <Compile Include="Benchmarks\RoutingThroughputBenchmark.cs" />
     <Compile Include="Benchmarks\Subject.cs" />
     <Compile Include="Benchmarks\Throughput.cs" />
     <Compile Include="Benchmarks\ThroughputBenchmark.cs" />
@@ -102,6 +106,8 @@
     <Compile Include="Plan_Specs.cs" />
     <Compile Include="PushVane_Specs.cs" />
     <Compile Include="Rescue_Specs.cs" />
+    <Compile Include="Routing\ControllerAction_Specs.cs" />
+    <Compile Include="Routing\RouteTestVane.cs" />
     <Compile Include="StreamDecorator_Specs.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="TaskUtil.cs" />

@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -114,6 +114,61 @@ namespace FeatherVane
                 return;
 
             Exception unused = task.Exception;
+        }
+
+        /// <summary>
+        /// Executes a task after the previous task is completed, taking the fast track if it is already completed
+        /// otherwise deferring to async execution
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="continuationTask"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="runSynchronously"></param>
+        /// <returns></returns>
+        internal static Task Then(this Task task, Func<Task> continuationTask, CancellationToken cancellationToken,
+            bool runSynchronously = true)
+        {
+            if (task.IsCompleted)
+            {
+                if (task.IsFaulted)
+                    return CompletedErrors(task.Exception.InnerExceptions);
+
+                if (task.IsCanceled || cancellationToken.IsCancellationRequested)
+                    return Cancelled();
+
+                if (task.Status == TaskStatus.RanToCompletion)
+                {
+                    try
+                    {
+                        return continuationTask();
+                    }
+                    catch (Exception ex)
+                    {
+                        return CompletedError(ex);
+                    }
+                }
+            }
+
+            return ExecuteAsync(task, continuationTask, cancellationToken, runSynchronously);
+        }
+
+        static Task ExecuteAsync(Task task, Func<Task> continuationTask, CancellationToken cancellationToken,
+            bool runSynchronously)
+        {
+            var source = new TaskCompletionSource<Task>();
+            task.ContinueWith(innerTask =>
+                {
+                    if (innerTask.IsFaulted)
+                        source.TrySetException(innerTask.Exception.InnerExceptions);
+                    else if (innerTask.IsCanceled || cancellationToken.IsCancellationRequested)
+                        source.TrySetCanceled();
+                    else
+                        source.TrySetResult(continuationTask());
+                }, runSynchronously
+                       ? TaskContinuationOptions.ExecuteSynchronously
+                       : TaskContinuationOptions.None);
+
+            return source.Task.FastUnwrap();
         }
 
 

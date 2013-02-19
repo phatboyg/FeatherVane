@@ -9,28 +9,32 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Routing
 {
     using System;
+    using System.Collections.Generic;
 
 
     /// <summary>
-    /// A source vane is used to splice another type into a vane
+    /// The arguments that were matched to parameters in the route
     /// </summary>
-    /// <typeparam name="T">The source type</typeparam>
-    public interface SourceVane<T>
+    public interface RouteArguments :
+        IEnumerable<RouteArgument>
     {
-        void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next);
-    }
+        int Count { get; }
 
+        bool Has(string name);
 
-    /// <summary>
-    /// A closed source vane is used to splice a specified type into a vane
-    /// </summary>
-    /// <typeparam name="T">The vane type</typeparam>
-    /// <typeparam name="TSource">The source type to splice</typeparam>
-    public interface SourceVane<T, TSource>
-    {
-        void Compose(Composer composer, Payload<T> payload, Vane<Tuple<T, TSource>> next);
+        void Each(Action<RouteArgument> callback);
+
+        void Each(Action<string, RouteArgument> callback);
+
+        bool Exists(Predicate<RouteArgument> predicate);
+
+        bool Find(Predicate<RouteArgument> predicate, out RouteArgument result);
+
+        string[] GetAllKeys();
+
+        RouteArgument[] GetAll();
     }
 }

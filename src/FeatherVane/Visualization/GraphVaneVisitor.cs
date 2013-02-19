@@ -43,6 +43,13 @@ namespace FeatherVane.Visualization
             return true;
         }
 
+        public bool Visit<T, TSource>(SourceVane<T, TSource> vane)
+        {
+            VisitSourceVane(vane);
+
+            return true;
+        }
+
         public bool Visit<T>(FeatherVane<T> vane)
         {
             VisitFeatherVane(vane);
@@ -75,6 +82,11 @@ namespace FeatherVane.Visualization
             return GetVertex(vane.GetHashCode(), () => GetTitle(vane.GetType()), vane.GetType(), typeof(T));
         }
 
+        Vertex GetVertex<T,TSource>(SourceVane<T,TSource> vane)
+        {
+            return GetVertex(vane.GetHashCode(), () => GetTitle(vane.GetType()), vane.GetType(), typeof(TSource));
+        }
+
         Vertex GetVertex<T>(Vane<T> vane)
         {
             return GetVertex(vane.GetHashCode(), () => GetTitle(vane.GetType()), vane.GetType(), typeof(T));
@@ -100,6 +112,24 @@ namespace FeatherVane.Visualization
         }
 
         void VisitSourceVane<T>(SourceVane<T> vane)
+        {
+            _seen.Add(vane);
+
+            var nextSourceVane = vane as NextSourceVane<T>;
+            if (nextSourceVane != null)
+            {
+                VisitNextSourceVane(nextSourceVane);
+                return;
+            }
+
+            _current = GetVertex(vane);
+            if (_stack.Count > 0)
+                _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
+
+            Push(() => VisitAcceptor(vane));
+        }
+
+        void VisitSourceVane<T,TSource>(SourceVane<T,TSource> vane)
         {
             _seen.Add(vane);
 

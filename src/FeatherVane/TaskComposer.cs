@@ -60,6 +60,16 @@ namespace FeatherVane
             return composer.Complete();
         }
 
+        public static Task Compose<T, TSource>(SourceVane<T, TSource> vane, Payload<T> payload,
+            Vane<Tuple<T, TSource>> next, CancellationToken cancellationToken, bool runSynchronously = true)
+        {
+            var composer = new TaskComposer<TSource>(cancellationToken, runSynchronously);
+
+            vane.Compose(composer, payload, next);
+
+            return composer.Complete();
+        }
+
 
         public static Task Completed<T>(CancellationToken cancellationToken)
         {

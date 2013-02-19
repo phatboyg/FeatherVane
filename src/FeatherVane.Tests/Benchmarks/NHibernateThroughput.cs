@@ -21,8 +21,9 @@ namespace FeatherVane.Tests.Benchmarks
     using NHibernateIntegration;
 
 
-    public class NHibernateThroughput :
-        Throughput
+    public class NHibernateThroughput 
+//        :
+//        Throughput
     {
         readonly ISessionFactory _sessionFactory;
         readonly Vane<Message> _vane;
