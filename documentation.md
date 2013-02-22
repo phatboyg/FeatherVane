@@ -18,11 +18,12 @@ A _FeatherVane_ is a middleware component that performs a specific function. Sin
 
 To create a FeatherVane, a developer creates a class that implements the _FeatherVane<T>_ interface. The interface has a single method, _Compose_, which is shown below.
 
+```csharp
     public interface FeatherVane<T>
     {
         void Compose(Composer composer, Payload<T> payload, Vane<T> next);
     }
-
+```
 
 Middleware provides the glue between infrastructure and application code, so it is important that any type of payload can be transfered from the infrastructure to the application. By leveraging generic types, _FeatherVane<T>_ is a generic interface, FeatherVanes can be written as an open generic type and support any payload type as well as a closed generic type designed for a specific payload type. There are no generic constraints, allowing reference and value types to be transferred efficiently without boxing.
 
@@ -37,15 +38,16 @@ The final argument, _next_, references the next _Vane_ to be composed. An indivi
 
 A set of individual FeatherVanes are composed into a _Vane_. The Vane is then executed by a payload source (usually an infrastructure component, but a vane may also be executed by a different vane as vanes can be composed into larger vanes). Once a vane has been composed, the vane is referenced using a single interface method, which is shown below.
 
+```csharp
     public interface Vane<T>
     {
         void Compose(Composer composer, Payload<T> payload);
     }
-
-
+```
 
 To execute a vane with a payload, there are many extension methods on the _Vane_ interface. There are synchronous and asynchronous _Execute_ methods available, each of which are shown below.
 
+```csharp
     int SomeInfrastructureHandler(InputModel model)
     {
         // invoke the vane synchronously
@@ -56,8 +58,8 @@ To execute a vane with a payload, there are many extension methods on the _Vane_
     {
         return _vane.ExecuteAsync(model, cancellationToken);
     }
-    
-    
+```
+
 In the first example, the _model_ is passed to the _Execute_ method on the _Vane_. The extension method creates a payload wrapper (of the type _Payload<InputModel>_) which matches the vane type (which would be _Vane<InputModel>_). The extension method then creates a _TaskComposer_ and uses it to _compose_ the _Task_. In the case of the synchronous version, the _Task_ is examined to see if it has already completed, and if it is not finished, the _Wait_ method is called. By default, the timeout is infinite, but a timeout can be specified using a _CancellationToken_ (a helper function is available to create the timeout-based cancellationToken as well).
 
 ### The SourceVane Atom
