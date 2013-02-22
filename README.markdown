@@ -1,11 +1,13 @@
-FeatherVane, Lightweight Middleware for .NET Applications
-=========================================================
+# FeatherVane, Lightweight Middleware for .NET Applications
 
-## WARNING! WARNING! WARNING!
+To learn more about FeatherVane, check out the [documentation](documentation.md).
 
-This project is in the conceptualization phase and is not even close to ready!!
 
-DO NOT USE THIS FOR ANYTHING OTHER THAN RESEARCH AT THIS POINT!
+# Release Early, Release Often, But There Be Dragons
+
+
+FeatherVane is in the early stages of development. Conceptualization is mostly complete, and features are being implemented to 
+test the viability of the framework. But I personally have not put it into production anywhere yet. You have been warned.
 
 
 ## Building from Source
