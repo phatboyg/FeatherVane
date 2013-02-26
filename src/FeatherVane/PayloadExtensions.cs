@@ -23,18 +23,35 @@ namespace FeatherVane
         /// approach since they should be using TryGet()
         /// </summary>
         /// <typeparam name="TContext"></typeparam>
-        /// <param name="context"></param>
+        /// <param name="payload"></param>
         /// <returns></returns>
-        public static TContext Get<TContext>(this Payload context)
+        public static TContext Get<TContext>(this Payload payload)
             where TContext : class
         {
-            return context.GetOrAdd(ContextNotFoundContextFactory<TContext>);
+            if (payload == null)
+                throw new ArgumentNullException("payload");
+
+            return payload.GetOrAdd(ContextNotFoundContextFactory<TContext>);
         }
 
         static TContext ContextNotFoundContextFactory<TContext>()
             where TContext : class
         {
             throw new ContextNotFoundException("No context factory provided: " + typeof(TContext).GetTypeName());
+        }
+
+        /// <summary>
+        /// Checks if the specified context type is available
+        /// </summary>
+        /// <typeparam name="T">The context type</typeparam>
+        /// <param name="payload">The payload</param>
+        /// <returns>True if the context is present, otherwise false</returns>
+        public static bool Has<T>(this Payload payload)
+        {
+            if (payload == null)
+                throw new ArgumentNullException("payload");
+
+            return payload.Has(typeof(T));
         }
 
         public static Payload<T> CreateProxy<T>(this Payload context, T body)
@@ -68,6 +85,16 @@ namespace FeatherVane
         public static Payload<TRight> SplitRight<TLeft, TRight>(this Payload<Tuple<TLeft, TRight>> payload)
         {
             return new ProxyPayload<TRight>(payload, payload.Data.Item2);
+        }
+
+        public static TRight Right<TLeft, TRight>(this Payload<Tuple<TLeft, TRight>> payload)
+        {
+            return payload.Data.Item2;
+        }
+
+        public static TLeft Left<TLeft, TRight>(this Payload<Tuple<TLeft, TRight>> payload)
+        {
+            return payload.Data.Item1;
         }
     }
 }

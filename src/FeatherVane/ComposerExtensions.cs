@@ -19,6 +19,7 @@ namespace FeatherVane
         /// <summary>
         /// Adds a continuation that is always run, regardless of a successful or exceptional condition
         /// </summary>
+        /// <param name="composer"></param>
         /// <param name="continuation"></param>
         /// <param name="runSynchronously"></param>
         public static Composer Finally(this Composer composer, Action continuation, bool runSynchronously = true)

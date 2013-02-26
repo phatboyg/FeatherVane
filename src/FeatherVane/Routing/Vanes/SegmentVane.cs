@@ -35,7 +35,8 @@ namespace FeatherVane.Routing.Vanes
             get { return _position; }
         }
 
-        public void Compose(Composer composer, Payload<RoutingContext> payload, Vane<Tuple<RoutingContext, string>> next)
+        public void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, string>> next)
+            where TPayload : RoutingContext
         {
             composer.Execute(() =>
                 {

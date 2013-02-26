@@ -22,7 +22,7 @@ namespace FeatherVane.Vanes
     public class TransactionVane<T> :
         FeatherVane<T>
     {
-        TransactionOptions _options;
+        readonly TransactionOptions _options;
 
         public TransactionVane(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
             TimeSpan timeout = default(TimeSpan))
@@ -49,7 +49,7 @@ namespace FeatherVane.Vanes
             composer.Execute(() =>
                 {
                     if (transactionContext != null)
-                        transactionContext.Complete();
+                        transactionContext.Commit();
                 });
 
             composer.Finally(() =>

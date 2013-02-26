@@ -85,7 +85,33 @@ namespace FeatherVane.Tests
             var exception = Assert.Throws<AggregateException>(() => vane.Execute(27));
             
             Assert.IsInstanceOf<TransactionAbortedException>(exception.InnerException);
+        }
 
+        [Test, Explicit("Too slow for regular test run")]
+        public void Should_timeout()
+        {
+            Vane<int> vane = VaneFactory.New<int>(x =>
+                {
+                    x.Transaction(t => t.SetTimeout(TimeSpan.FromSeconds(1)));
+                    x.Execute(payload => Console.WriteLine("Execute: {0}", Thread.CurrentThread.ManagedThreadId));
+                    x.ExecuteTask(payload => Task.Factory.StartNew(() =>
+                        {
+                            using (TransactionScope scope = payload.CreateTransactionScope())
+                            {
+                                Console.WriteLine("ExecuteTask: {0}", Thread.CurrentThread.ManagedThreadId);
+                                Thread.Sleep(2000);
+                                scope.Complete();
+                            }
+                            Console.WriteLine("Exited Scope");
+                        }));
+                    x.Execute(payload => Console.WriteLine("Part 3"));
+                });
+
+            var exception = Assert.Throws<AggregateException>(() => vane.Execute(27));
+            
+            Assert.IsInstanceOf<TransactionAbortedException>(exception.InnerException);
+
+            Console.WriteLine(exception.InnerException.Message);
         }
 
         [Test]

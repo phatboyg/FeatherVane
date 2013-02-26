@@ -89,6 +89,7 @@
     <Compile Include="Benchmarks\ThroughputBenchmark.cs" />
     <Compile Include="Benchmarks\TransactionProfilerLoggerThroughput.cs" />
     <Compile Include="Benchmarks\TupleConsumerThroughput.cs" />
+    <Compile Include="CircuitBreaker_Specs.cs" />
     <Compile Include="Configuration\Configuration_Specs.cs" />
     <Compile Include="DependentTransaction_Specs.cs" />
     <Compile Include="HttpTests\Http_Specs.cs" />

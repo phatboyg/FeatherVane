@@ -22,17 +22,11 @@ namespace FeatherVane
         /// Returns the current transaction scope, creating a dependent scope if a thread switch
         /// occurred
         /// </summary>
-        Transaction Current { get; }
+        Transaction Transaction { get; }
 
         /// <summary>
         /// Complete the transaction scope
         /// </summary>
-        void Complete();
-
-        /// <summary>
-        /// Creates a transaction scope using the existing transaction
-        /// </summary>
-        /// <returns></returns>
-        TransactionScope CreateTransactionScope();
+        void Commit();
     }
 }

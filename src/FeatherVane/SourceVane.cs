@@ -27,10 +27,11 @@ namespace FeatherVane
     /// <summary>
     /// A closed source vane is used to splice a specified type into a vane
     /// </summary>
-    /// <typeparam name="T">The vane type</typeparam>
-    /// <typeparam name="TSource">The source type to splice</typeparam>
-    public interface SourceVane<T, TSource>
+    /// <typeparam name="TInput">The vane type</typeparam>
+    /// <typeparam name="T">The source type to splice</typeparam>
+    public interface SourceVane<in TInput, T>
     {
-        void Compose(Composer composer, Payload<T> payload, Vane<Tuple<T, TSource>> next);
+        void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next)
+            where TPayload : TInput;
     }
 }

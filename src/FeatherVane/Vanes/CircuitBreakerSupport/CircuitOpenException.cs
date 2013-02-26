@@ -9,20 +9,33 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-using Connection = RabbitMQ.Client.Framing.Impl.v0_9_1.Connection;
-
-namespace FeatherVane.RabbitMQ
+namespace FeatherVane.Vanes.CircuitBreakerSupport
 {
     using System;
+    using System.Runtime.Serialization;
 
 
-    public class ConnectionSourceVane :
-        SourceVane<Connection>
+    [Serializable]
+    public class CircuitOpenException :
+        FeatherVaneException
     {
-        public void Compose<TPayload>(Composer composer, Payload<TPayload> payload,
-            Vane<Tuple<TPayload, Connection>> next)
+        public CircuitOpenException()
         {
-            throw new NotImplementedException();
+        }
+
+        protected CircuitOpenException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
+        public CircuitOpenException(string message)
+            : base(message)
+        {
+        }
+
+        public CircuitOpenException(string message, Exception innerException)
+            : base(message, innerException)
+        {
         }
     }
 }

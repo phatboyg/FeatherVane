@@ -11,8 +11,15 @@
 // permissions and limitations under the License.
 namespace FeatherVane.FeatherVaneConfigurators
 {
-    public interface TransactionConfigurator<T> :
+    using System;
+    using System.Transactions;
+
+
+    public interface TransactionConfigurator<out T> :
         FeatherVaneConfigurator<T>
     {
+        TransactionConfigurator<T> SetTimeout(TimeSpan timeout);
+
+        TransactionConfigurator<T> SetIsolationLevel(IsolationLevel isolationLevel);
     }
 }

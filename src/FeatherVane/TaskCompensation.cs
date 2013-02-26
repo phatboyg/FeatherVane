@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +25,9 @@ namespace FeatherVane
         public TaskCompensation(Task faultedTask)
         {
             _faultedTask = faultedTask;
-            _exception = _faultedTask.Exception.GetBaseException();
+            _exception = faultedTask.Exception != null
+                             ? faultedTask.Exception.GetBaseException()
+                             : null;
         }
 
         public Exception Exception

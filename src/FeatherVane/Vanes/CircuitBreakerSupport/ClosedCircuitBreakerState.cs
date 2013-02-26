@@ -9,34 +9,33 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Factories
+namespace FeatherVane.Vanes.CircuitBreakerSupport
 {
-    using System.Collections.Generic;
-    using Configurators;
+    using System;
+
 
     /// <summary>
-    /// Use an existing Vane as a VaneFactory
+    /// Represents a closed, normally operating circuit breaker state
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ExistingVaneFactory<T> :
-        VaneFactory<T>
+    class ClosedCircuitBreakerState :
+        CircuitBreakerState
     {
-        readonly Vane<T> _vane;
+        readonly object _lock = new object();
+        int _failureCount;
 
-        public ExistingVaneFactory(Vane<T> vane)
+        public ClosedCircuitBreakerState(CircuitBreaker breaker)
+            : base(breaker)
         {
-            _vane = vane;
         }
 
-        public Vane<T> Create()
+        public override void ExecuteFaulted(Exception exception)
         {
-            return _vane;
-        }
-
-        public IEnumerable<ValidateResult> Validate()
-        {
-            if (_vane == null)
-                yield return this.Failure("Vane", "must not be null");
+            lock (_lock)
+            {
+                _failureCount++;
+                if (_failureCount >= Breaker.OpenThreshold)
+                    Breaker.Open(exception);
+            }
         }
     }
 }

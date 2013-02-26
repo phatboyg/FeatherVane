@@ -9,25 +9,29 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane
+namespace FeatherVane.Vanes
 {
-    using System.Transactions;
+    using System;
 
 
-    public static class TransactionPayloadExtensions
+    public class RightVane<TLeft, TRight> :
+        Vane<Tuple<TLeft, TRight>>
     {
-        /// <summary>
-        /// Create a transaction scope using the TransactionVane, to ensure that any transactions 
-        /// are carried between any threads.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="payload"></param>
-        /// <returns></returns>
-        public static TransactionScope CreateTransactionScope<T>(this Payload<T> payload)
-        {
-            var context = payload.Get<TransactionContext>();
+        readonly Vane<TRight> _output;
 
-            return context.CreateTransactionScope();
+        public RightVane(Vane<TRight> output)
+        {
+            _output = output;
+        }
+
+        public void Compose(Composer composer, Payload<Tuple<TLeft, TRight>> payload)
+        {
+            composer.Execute(() =>
+                {
+                    Payload<TRight> nextPayload = payload.SplitRight();
+
+                    return TaskComposer.Compose(_output, nextPayload, composer.CancellationToken);
+                });
         }
     }
 }

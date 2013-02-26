@@ -9,40 +9,31 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Vanes
+namespace FeatherVane.Vanes.CircuitBreakerSupport
 {
-    using System.Transactions;
+    using System;
 
 
-    public class SystemTransactionContext :
-        TransactionContext
+    abstract class CircuitBreakerState
     {
-        readonly CommittableTransaction _transaction;
-        bool _disposed;
+        protected readonly CircuitBreaker Breaker;
 
-        public SystemTransactionContext(TransactionOptions options)
+        protected CircuitBreakerState(CircuitBreaker breaker)
         {
-            _transaction = new CommittableTransaction(options);
+            Breaker = breaker;
         }
 
-        public Transaction Transaction
+        public virtual void BeforeExecute()
         {
-            get { return _transaction; }
         }
 
-        public void Commit()
+        public virtual void ExecuteCompleted()
         {
-            _transaction.Commit();
         }
 
-        public void Dispose()
+        public virtual void ExecuteFaulted(Exception exception)
         {
-            if (_disposed)
-                return;
-
-            _transaction.Dispose();
-
-            _disposed = true;
+            
         }
     }
 }

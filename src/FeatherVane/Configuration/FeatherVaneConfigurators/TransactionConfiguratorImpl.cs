@@ -11,7 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.FeatherVaneConfigurators
 {
+    using System;
     using System.Collections.Generic;
+    using System.Transactions;
     using Configurators;
     using VaneBuilders;
     using Vanes;
@@ -21,15 +23,37 @@ namespace FeatherVane.FeatherVaneConfigurators
         TransactionConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
+        IsolationLevel _isolationLevel;
+        TimeSpan _timeout;
+
+        public TransactionConfiguratorImpl()
+        {
+            _isolationLevel = IsolationLevel.ReadCommitted;
+            _timeout = TimeSpan.FromSeconds(30);
+        }
+
+        public TransactionConfigurator<T> SetTimeout(TimeSpan timeout)
+        {
+            _timeout = timeout;
+            return this;
+        }
+
+        public TransactionConfigurator<T> SetIsolationLevel(IsolationLevel isolationLevel)
+        {
+            _isolationLevel = isolationLevel;
+            return this;
+        }
+
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var transaction = new TransactionVane<T>();
+            var transaction = new TransactionVane<T>(_isolationLevel, _timeout);
             builder.Add(transaction);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
         {
-            yield break;
+            if (_timeout == TimeSpan.Zero)
+                yield return this.Failure("Timeout", "Must not be zero");
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -66,6 +66,16 @@ namespace FeatherVane
             var composer = new TaskComposer<TSource>(cancellationToken, runSynchronously);
 
             vane.Compose(composer, payload, next);
+
+            return composer.Complete();
+        }
+
+        public static Task Compose<T>(CancellationToken cancellationToken, Action<Composer> composeCallback,
+            bool runSynchronously = true)
+        {
+            var composer = new TaskComposer<T>(cancellationToken, runSynchronously);
+
+            composeCallback(composer);
 
             return composer.Complete();
         }
@@ -143,22 +153,6 @@ namespace FeatherVane
             return this;
         }
 
-        void Composer.Completed()
-        {
-            if (_complete)
-                throw _completeException.Value;
-
-            _task = Execute(_task, TaskUtil.Completed, _cancellationToken);
-        }
-
-        void Composer.Failed(Exception exception)
-        {
-            if (_complete)
-                throw _completeException.Value;
-
-            _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
-        }
-
         Composer Composer.Finally(Action<TaskStatus> continuation, bool runSynchronously)
         {
             if (_complete)
@@ -181,6 +175,39 @@ namespace FeatherVane
 
             _task = FinallyAsync(_task, continuation, runSynchronously);
             return this;
+        }
+
+        Composer Composer.Delay(int dueTime)
+        {
+            if (_complete)
+                throw _completeException.Value;
+
+            if (dueTime < -1)
+                throw new ArgumentOutOfRangeException("dueTime", "Delay time must be -1 or >= 0");
+
+            _task = Execute(_task, () => CreateDelayTask(dueTime, _cancellationToken), _cancellationToken);
+            return this;
+        }
+
+        void Composer.Completed()
+        {
+            if (_complete)
+                throw _completeException.Value;
+
+            _task = Execute(_task, TaskUtil.Completed, _cancellationToken);
+        }
+
+        void Composer.Failed(Exception exception)
+        {
+            if (_complete)
+                throw _completeException.Value;
+
+            _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
+        }
+
+        public Task ComposeTask<T1>(Vane<T1> next, Payload<T1> payload, bool runSynchronously = true)
+        {
+            return TaskComposer.Compose(next, payload, _cancellationToken, runSynchronously);
         }
 
         public Task Complete()
@@ -228,14 +255,39 @@ namespace FeatherVane
                     else if (innerTask.IsCanceled || cancellationToken.IsCancellationRequested)
                         source.TrySetCanceled();
                     else
-                    {
                         source.TrySetResult(continuationTask());
-                    }
                 }, runSynchronously
                        ? TaskContinuationOptions.ExecuteSynchronously
                        : TaskContinuationOptions.None);
 
             return source.Task.FastUnwrap();
+        }
+
+        static Task CreateDelayTask(int dueTime, CancellationToken cancellationToken)
+        {
+            if (dueTime == 0)
+                return TaskUtil.Completed();
+
+            var source = new TaskCompletionSource<bool>();
+            var registration = new CancellationTokenRegistration();
+            var timer = new Timer(self =>
+                {
+                    registration.Dispose();
+                    ((Timer)self).Dispose();
+                    source.TrySetResult(true);
+                });
+
+            if (cancellationToken.CanBeCanceled)
+            {
+                registration = cancellationToken.Register(() =>
+                    {
+                        timer.Dispose();
+                        source.TrySetCanceled();
+                    });
+            }
+
+            timer.Change(dueTime, -1);
+            return source.Task;
         }
 
         static Task Compensate(Task task, Func<Task> compensationTask)

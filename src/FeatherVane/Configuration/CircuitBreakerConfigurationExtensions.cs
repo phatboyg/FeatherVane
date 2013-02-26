@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -9,19 +9,21 @@
 // License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
-namespace FeatherVane.Configurators
+namespace FeatherVane
 {
-    /// <summary>
-    /// Creates a Vane (typically configured using a VaneConfigurator)
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface VaneFactory<in T> :
-        Configurator
+    using FeatherVaneConfigurators;
+    using Vanes;
+
+
+    public static class CircuitBreakerConfigurationExtensions
     {
-        /// <summary>
-        /// Create the Vane
-        /// </summary>
-        /// <returns>The Vane</returns>
-        Vane<T> Create();
+        public static void CircuitBreaker<T>(this VaneConfigurator<T> configurator,
+            int openThreshold = 10, int closeThreshold = 5)
+        {
+            var vaneConfigurator = new FeatherVaneFactoryConfigurator<T>(
+                () => new CircuitBreakerVane<T>(openThreshold, closeThreshold));
+
+            configurator.Add(vaneConfigurator);
+        }
     }
 }

@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Visualizer", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.NHibernateIntegration", "FeatherVane.NHibernateIntegration\FeatherVane.NHibernateIntegration.csproj", "{39AD5E19-4C1B-4764-A007-25DE3CE9117E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.RabbitMQ", "FeatherVane.RabbitMQ\FeatherVane.RabbitMQ.csproj", "{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.RabbitMQIntegration", "FeatherVane.RabbitMQ\FeatherVane.RabbitMQIntegration.csproj", "{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.RabbitMQIntegration.Tests", "FeatherVane.RabbitMQIntegration.Tests\FeatherVane.RabbitMQIntegration.Tests.csproj", "{3574CA29-F0C4-4376-9CA1-33F05964D19A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3574CA29-F0C4-4376-9CA1-33F05964D19A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3574CA29-F0C4-4376-9CA1-33F05964D19A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3574CA29-F0C4-4376-9CA1-33F05964D19A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3574CA29-F0C4-4376-9CA1-33F05964D19A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

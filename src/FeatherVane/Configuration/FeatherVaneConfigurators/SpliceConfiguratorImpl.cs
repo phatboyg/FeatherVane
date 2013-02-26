@@ -27,7 +27,7 @@ namespace FeatherVane.FeatherVaneConfigurators
         VaneBuilderConfigurator<T>
     {
         readonly VaneConfiguratorImpl<Tuple<T, TSource>> _vaneConfigurator;
-        SourceVaneConfiguratorImpl<TSource> _sourceConfigurator;
+        readonly SourceVaneConfiguratorImpl<TSource> _sourceConfigurator;
 
         public SpliceConfiguratorImpl()
         {

@@ -20,6 +20,7 @@ namespace FeatherVane.SourceVanes
     /// <typeparam name="TId"></typeparam>
     /// <typeparam name="T"></typeparam>
     public class IdentitySourceVane<T, TId> :
+        SourceVane<T, TId>,
         SourceVane<TId>
     {
         readonly Func<T, TId> _selector;
@@ -29,15 +30,28 @@ namespace FeatherVane.SourceVanes
             _selector = selector;
         }
 
+        void SourceVane<T, TId>.Compose<TPayload>(Composer composer, Payload<TPayload> payload,
+            Vane<Tuple<TPayload, TId>> next)
+        {
+            composer.Execute(() =>
+                {
+                    TId id = _selector(payload.Data);
+
+                    Payload<Tuple<TPayload, TId>> nextPayload = payload.MergeRight(id);
+
+                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
+                });
+        }
+
         public void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, TId>> next)
         {
             composer.Execute(() =>
                 {
-                    var objectPayload = payload as Payload<T>;
-                    if (objectPayload == null)
+                    var obj = payload as Payload<T>;
+                    if (obj == null)
                         throw new FeatherVaneException("Unable to map payload to " + typeof(T).Name);
 
-                    TId id = _selector(objectPayload.Data);
+                    TId id = _selector(obj.Data);
 
                     Payload<Tuple<TPayload, TId>> nextPayload = payload.MergeRight(id);
 
