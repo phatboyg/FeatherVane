@@ -24,9 +24,11 @@ namespace FeatherVane.RabbitMQIntegration.ConnectionManagement
         {
             composer.Execute(() =>
                 {
+                    IConnection connection = payload.Data;
+
                     try
                     {
-                        payload.Data.Close();
+                        connection.Close(200, "ok");
                     }
                     catch
                     {
@@ -35,7 +37,7 @@ namespace FeatherVane.RabbitMQIntegration.ConnectionManagement
                     {
                         try
                         {
-                            payload.Data.Dispose();
+                            connection.Dispose();
                         }
                         catch
                         {

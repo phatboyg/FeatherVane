@@ -40,11 +40,7 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="ConnectionManagement\BlockingObjectPool.cs" />
-    <Compile Include="ConnectionManagement\ConnectionObjectFactory.cs" />
     <Compile Include="ConnectionManagement\DisconnectVane.cs" />
-    <Compile Include="ConnectionManagement\ObjectPool.cs" />
-    <Compile Include="ConnectionManagement\PooledObjectFactory.cs" />
     <Compile Include="ConnectionManagement\ConnectVane.cs" />
     <Compile Include="Exchange.cs" />
     <Compile Include="ExchangeBinding.cs" />
@@ -55,7 +51,6 @@
     <Compile Include="QueueBinding.cs" />
     <Compile Include="QueueBindings.cs" />
     <Compile Include="RabbitMQConsumer.cs" />
-    <Compile Include="Vanes\ConnectionSourceVane.cs" />
     <Compile Include="Vanes\ExchangeBindVane.cs" />
     <Compile Include="Vanes\ModelSourceVane.cs" />
     <Compile Include="Vanes\QueueBindVane.cs" />
