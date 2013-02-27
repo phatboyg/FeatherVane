@@ -21,6 +21,7 @@ _ReSharper*
 *.orig
 *.user
 
+src/.nuget/nuget.exe
 src/packages/**/*
 docs/build/**/*
 

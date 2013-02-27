@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane", "FeatherVane\FeatherVane.csproj", "{0851B204-7FD1-4EEC-BCB4-B4B78DB2D1A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Tests", "FeatherVane.Tests\FeatherVane.Tests.csproj", "{99A2CB0C-3176-4151-A9F9-ADDFC70AF74C}"
@@ -11,9 +11,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.Visualizer", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.NHibernateIntegration", "FeatherVane.NHibernateIntegration\FeatherVane.NHibernateIntegration.csproj", "{39AD5E19-4C1B-4764-A007-25DE3CE9117E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.RabbitMQIntegration", "FeatherVane.RabbitMQ\FeatherVane.RabbitMQIntegration.csproj", "{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.RabbitMQIntegration", "FeatherVane.RabbitMQIntegration\FeatherVane.RabbitMQIntegration.csproj", "{84CF68DE-364A-4E85-ACD6-1F5CB2E46694}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatherVane.RabbitMQIntegration.Tests", "FeatherVane.RabbitMQIntegration.Tests\FeatherVane.RabbitMQIntegration.Tests.csproj", "{3574CA29-F0C4-4376-9CA1-33F05964D19A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A18EC563-6272-4750-B95A-ADDDE6CC1BEC}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -113,9 +113,26 @@ zip :zip_output => [:versioning] do |zip|
 	zip.output_path = props[:artifacts]
 end
 
-desc "Restore NuGet Packages"
-task :nuget_restore do
-  sh "lib/nuget install #{File.join(props[:src],"FeatherVane.Tests","packages.config")} -o #{File.join(props[:src],"packages")}"
+
+desc "restores missing packages"
+msbuild :nuget_restore do |msb|
+  msb.use :net4
+  msb.targets :RestorePackages
+  msb.solution = 'src/FeatherVane.Tests/FeatherVane.Tests.csproj'
+end
+
+desc "restores missing packages"
+msbuild :nuget_restore do |msb|
+  msb.use :net4
+  msb.targets :RestorePackages
+  msb.solution = 'src/FeatherVane.RabbitMQIntegration/FeatherVane.RabbitMQIntegration.csproj'
+end
+
+desc "restores missing packages"
+msbuild :nuget_restore do |msb|
+  msb.use :net4
+  msb.targets :RestorePackages
+  msb.solution = 'src/FeatherVane.RabbitMQIntegration.Tests/FeatherVane.RabbitMQIntegration.Tests.csproj'
 end
 
 desc "Builds the nuget package"
