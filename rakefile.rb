@@ -137,8 +137,8 @@ end
 
 desc "Builds the nuget package"
 task :nuget => [:versioning, :create_nuspec] do
-	sh "lib/nuget pack #{props[:artifacts]}/FeatherVane.nuspec /Symbols /OutputDirectory #{props[:artifacts]}"
-	sh "lib/nuget pack #{props[:artifacts]}/FeatherVane.Web.nuspec /Symbols /OutputDirectory #{props[:artifacts]}"
+	sh "src/.nuget/nuget.exe pack #{props[:artifacts]}/FeatherVane.nuspec /Symbols /OutputDirectory #{props[:artifacts]}"
+	sh "src/.nuget/nuget.exe pack #{props[:artifacts]}/FeatherVane.Web.nuspec /Symbols /OutputDirectory #{props[:artifacts]}"
 end
 
 task :create_nuspec => [:_nuspec]
