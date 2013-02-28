@@ -27,5 +27,9 @@ namespace FeatherVane.Web.Http
         /// Ends the processing for the connection
         /// </summary>
         void End();
+
+        RequestContext Request { get; }
+
+        ResponseContext Response { get; }
     }
 }
