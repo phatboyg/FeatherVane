@@ -87,27 +87,55 @@ namespace FeatherVane
         Task ComposeTask<T>(Vane<T> next, Payload<T> payload, bool runSynchronously = true);
 
         /// <summary>
+        /// Compose a feather using a newly created composer
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="next"></param>
+        /// <param name="feather"></param>
+        /// <param name="payload"></param>
+        /// <param name="runSynchronously"></param>
+        /// <returns></returns>
+        Task ComposeTask<T>(Feather<T> feather, Payload<T> payload, Vane<T> next, bool runSynchronously = true);
+
+        /// <summary>
         /// Compose a source vane into a task using a new composer
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TPayload"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="vane"></param>
         /// <param name="payload"></param>
         /// <param name="next"></param>
         /// <param name="runSynchronously"></param>
         /// <returns></returns>
-        Task ComposeTask<TSource, TPayload>(SourceVane<TSource> vane, Payload<TPayload> payload,
-            Vane<Tuple<TPayload, TSource>> next, bool runSynchronously = true);
+        Task ComposeTask<TSource, T>(SourceVane<TSource> vane, Payload<T> payload,Vane<Tuple<T, TSource>> next, bool runSynchronously = true);
+
+        /// <summary>
+        /// Compose a source vane into a task using a new composer
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="vane"></param>
+        /// <param name="payload"></param>
+        /// <param name="next"></param>
+        /// <param name="runSynchronously"></param>
+        /// <returns></returns>
+        Task ComposeTask<TSource, T>(SourceVane<T, TSource> vane, Payload<T> payload,Vane<Tuple<T, TSource>> next, bool runSynchronously = true);
 
         /// <summary>
         /// Compose a task from a callback
         /// </summary>
-        /// <typeparam name="TPayload"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="payload"></param>
         /// <param name="callback"></param>
         /// <param name="runSynchronously"></param>
         /// <returns></returns>
-        Task ComposeTask<TPayload>(Payload<TPayload> payload, Action<Composer, Payload<TPayload>> callback,
+        Task ComposeTask<T>(Payload<T> payload, Action<Composer, Payload<T>> callback,
             bool runSynchronously = true);
+
+        /// <summary>
+        /// Compose a completed task
+        /// </summary>
+        /// <returns></returns>
+        Task ComposeCompleted();
     }
 }

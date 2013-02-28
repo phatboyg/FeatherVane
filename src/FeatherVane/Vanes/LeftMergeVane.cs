@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -33,12 +33,7 @@ namespace FeatherVane.Vanes
 
         public void Compose(Composer composer, Payload<TRight> payload)
         {
-            composer.Execute(() =>
-                {
-                    Payload<Tuple<TLeft, TRight>> nextPayload = payload.MergeLeft(_data);
-
-                    return TaskComposer.Compose(_outputVane, nextPayload, composer.CancellationToken);
-                });
+            composer.Execute(() => composer.ComposeTask(_outputVane, payload.MergeLeft(_data)));
         }
     }
 }

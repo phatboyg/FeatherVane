@@ -35,11 +35,9 @@ namespace FeatherVane.Vanes
         {
             composer.Execute(() =>
                 {
-                    Payload<TRight> nextPayload = payload.SplitRight();
-
                     var output = new LeftMergeVane<TLeft, TRight>(payload.Data.Item1, _outputVane);
 
-                    return TaskComposer.Compose(_next, nextPayload, output, composer.CancellationToken);
+                    return composer.ComposeTask(_next, payload.SplitRight(), output);
                 });
         }
     }

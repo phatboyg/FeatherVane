@@ -39,7 +39,7 @@ namespace FeatherVane.Feathers
 
         void Feather<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
-            composer.Execute(() => TaskComposer.Compose(_sourceVane, payload, _output, composer.CancellationToken));
+            composer.Execute(() => composer.ComposeTask(_sourceVane, payload, _output));
 
             next.Compose(composer, payload);
         }

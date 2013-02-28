@@ -25,7 +25,7 @@ namespace FeatherVane
 
             vane.Compose(composer, payload);
 
-            return composer.Complete();
+            return composer.Finish();
         }
 
         public static Task Compose<T>(Feather<T> vane, Payload<T> payload, Vane<T> next,
@@ -36,7 +36,7 @@ namespace FeatherVane
 
             vane.Compose(composer, payload, next);
 
-            return composer.Complete();
+            return composer.Finish();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace FeatherVane
 
             vane.Compose(composer, payload, next);
 
-            return composer.Complete();
+            return composer.Finish();
         }
 
         public static Task Compose<T, TSource>(SourceVane<T, TSource> vane, Payload<T> payload,
@@ -67,25 +67,17 @@ namespace FeatherVane
 
             vane.Compose(composer, payload, next);
 
-            return composer.Complete();
+            return composer.Finish();
         }
 
-        public static Task Compose<T>(CancellationToken cancellationToken, Action<Composer> composeCallback,
+        public static Task Compose<T>(Payload<T> payload, CancellationToken cancellationToken, Action<Composer, Payload<T>> composeCallback,
             bool runSynchronously = true)
         {
             var composer = new TaskComposer<T>(cancellationToken, runSynchronously);
 
-            composeCallback(composer);
+            composeCallback(composer, payload);
 
-            return composer.Complete();
-        }
-
-
-        public static Task Completed<T>(CancellationToken cancellationToken)
-        {
-            var composer = new TaskComposer<T>(cancellationToken);
-
-            return composer.Complete();
+            return composer.Finish();
         }
     }
 
@@ -104,7 +96,7 @@ namespace FeatherVane
         readonly Lazy<Exception> _completeException =
             new Lazy<Exception>(() => new TaskComposerException("The composition is already complete."));
 
-        bool _complete;
+        bool _composeFinished;
         Task _task;
 
         public TaskComposer(CancellationToken cancellationToken, bool runSynchronously = true)
@@ -124,7 +116,7 @@ namespace FeatherVane
 
         Composer Composer.Execute(Action continuation, bool runSynchronously)
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             _task = Execute(_task, () => TaskUtil.RunSynchronously(continuation, _cancellationToken), _cancellationToken,
@@ -134,7 +126,7 @@ namespace FeatherVane
 
         Composer Composer.Execute(Func<Task> continuationTask, bool runSynchronously)
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             _task = Execute(_task, continuationTask, _cancellationToken, runSynchronously);
@@ -143,7 +135,7 @@ namespace FeatherVane
 
         Composer Composer.Compensate(Func<Compensation, CompensationResult> compensation)
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             if (_task.Status == TaskStatus.RanToCompletion)
@@ -155,7 +147,7 @@ namespace FeatherVane
 
         Composer Composer.Finally(Action<TaskStatus> continuation, bool runSynchronously)
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             if (_task.IsCompleted)
@@ -179,7 +171,7 @@ namespace FeatherVane
 
         Composer Composer.Delay(int dueTime)
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             if (dueTime < -1)
@@ -192,7 +184,7 @@ namespace FeatherVane
 
         void Composer.Completed()
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             _task = Execute(_task, TaskUtil.Completed, _cancellationToken);
@@ -200,7 +192,7 @@ namespace FeatherVane
 
         void Composer.Failed(Exception exception)
         {
-            if (_complete)
+            if (_composeFinished)
                 throw _completeException.Value;
 
             _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
@@ -211,8 +203,18 @@ namespace FeatherVane
             return TaskComposer.Compose(next, payload, _cancellationToken, runSynchronously);
         }
 
+        public Task ComposeTask<TPayload>(Feather<TPayload> feather, Payload<TPayload> payload, Vane<TPayload> next, bool runSynchronously = true)
+        {
+            return TaskComposer.Compose(feather, payload, next, _cancellationToken, runSynchronously);
+        }
+
         public Task ComposeTask<TSource, TPayload>(SourceVane<TSource> vane, Payload<TPayload> payload,
             Vane<Tuple<TPayload, TSource>> next, bool runSynchronously = true)
+        {
+            return TaskComposer.Compose(vane, payload, next, _cancellationToken, runSynchronously);
+        }
+
+        public Task ComposeTask<TSource, TPayload>(SourceVane<TPayload, TSource> vane, Payload<TPayload> payload, Vane<Tuple<TPayload, TSource>> next, bool runSynchronously = true)
         {
             return TaskComposer.Compose(vane, payload, next, _cancellationToken, runSynchronously);
         }
@@ -220,16 +222,18 @@ namespace FeatherVane
         public Task ComposeTask<TPayload>(Payload<TPayload> payload, Action<Composer, Payload<TPayload>> callback,
             bool runSynchronously = true)
         {
-            var composer = new TaskComposer<T>(_cancellationToken, runSynchronously);
-
-            callback(composer, payload);
-
-            return composer.Complete();
+            return TaskComposer.Compose(payload, _cancellationToken, callback, runSynchronously);
         }
 
-        public Task Complete()
+        public Task ComposeCompleted()
         {
-            _complete = true;
+            var composer = new TaskComposer<T>(_cancellationToken);
+            return composer.Finish();
+        }
+
+        public Task Finish()
+        {
+            _composeFinished = true;
 
             return _task;
         }

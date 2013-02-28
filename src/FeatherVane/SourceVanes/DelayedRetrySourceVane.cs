@@ -24,7 +24,7 @@ namespace FeatherVane.SourceVanes
         SourceVane<T>
     {
         readonly SourceVane<T> _sourceVane;
-        IEnumerable<int> _timeouts;
+        readonly IEnumerable<int> _timeouts;
 
         public DelayedRetrySourceVane(SourceVane<T> sourceVane)
         {
@@ -58,7 +58,7 @@ namespace FeatherVane.SourceVanes
         {
             IEnumerator<int> timeoutEnumerator = null;
             bool useTimeout = false;
-            composer.Execute(() => { timeoutEnumerator = _timeouts.GetEnumerator(); });
+            composer.Execute(() => timeoutEnumerator = _timeouts.GetEnumerator());
 
             Func<Composer, Task> nextTask = null;
             nextTask = outer => outer.ComposeTask(payload, (inner, taskPayload) =>
@@ -110,6 +110,7 @@ namespace FeatherVane.SourceVanes
 
             public void Compose(Composer composer, Payload<Tuple<TPayload, T>> payload)
             {
+                // flag the sourceVane as completed to avoid retrying an exception throw by next
                 composer.Execute(() => _sourceCompleted = true);
 
                 _nextVane.Compose(composer, payload);

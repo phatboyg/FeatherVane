@@ -32,7 +32,7 @@ namespace FeatherVane.RabbitMQIntegration.SourceVanes
                 {
                     var get = new CreateModel<TPayload>(next);
 
-                    return TaskComposer.Compose(_connectionSourceVane, payload, get, composer.CancellationToken);
+                    return composer.ComposeTask(_connectionSourceVane, payload, get);
                 });
         }
 
@@ -59,7 +59,7 @@ namespace FeatherVane.RabbitMQIntegration.SourceVanes
 
                         Payload<TPayload> leftPayload = payload.SplitLeft();
 
-                        return TaskComposer.Compose(_next, leftPayload.MergeRight(model), composer.CancellationToken);
+                        return composer.ComposeTask(_next, leftPayload.MergeRight(model));
                     });
 
                 composer.Finally(() => CloseModel(model));

@@ -47,7 +47,7 @@ namespace FeatherVane.NHibernateIntegration.SourceVanes
                 {
                     var get = new Get<TPayload>(_sessionFactory, _missingVane, next);
 
-                    return TaskComposer.Compose(_identityVane, payload, get, composer.CancellationToken);
+                    return composer.ComposeTask(_identityVane, payload, get);
                 });
         }
 
@@ -82,10 +82,10 @@ namespace FeatherVane.NHibernateIntegration.SourceVanes
                         if (data == null)
                         {
                             var save = new Save<TPayload>(session, _next);
-                            return TaskComposer.Compose(_missing, leftPayload, save, composer.CancellationToken);
+                            return composer.ComposeTask(_missing, leftPayload, save);
                         }
 
-                        return TaskComposer.Compose(_next, leftPayload.MergeRight(data), composer.CancellationToken);
+                        return composer.ComposeTask(_next, leftPayload.MergeRight(data));
                     });
 
                 composer.Execute(() =>
@@ -122,7 +122,7 @@ namespace FeatherVane.NHibernateIntegration.SourceVanes
             {
                 _next.Compose(composer, payload);
 
-                composer.Execute(() => { _session.Save(payload.Data.Item2); });
+                composer.Execute(() => _session.Save(payload.Data.Item2));
             }
         }
     }

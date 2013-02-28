@@ -12,8 +12,6 @@
 namespace FeatherVane.RabbitMQIntegration.SourceVanes
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using RabbitMQ.Client;
 
 
@@ -30,46 +28,15 @@ namespace FeatherVane.RabbitMQIntegration.SourceVanes
             _connectionFactory = connectionFactory;
         }
 
-        static IEnumerable<int> Timeouts
-        {
-            get
-            {
-                yield return 0;
-                yield return 100;
-                yield return 1000;
-                yield return 2000;
-                yield return 5000;
-                yield return 10000;
-                while (true)
-                    yield return 30000;
-            }
-        }
-
         public void Compose<TPayload>(Composer composer, Payload<TPayload> payload,
             Vane<Tuple<TPayload, IConnection>> next)
         {
-            IEnumerator<int> timeoutEnumerator = null;
-            composer.Execute(() => timeoutEnumerator = Timeouts.GetEnumerator());
-
-            Func<Task> connectTask = null;
-            connectTask = () => TaskComposer.Compose<IConnection>(composer.CancellationToken, x =>
+            composer.Execute(() =>
                 {
-                    timeoutEnumerator.MoveNext();
-                    int reconnectDelay = timeoutEnumerator.Current;
-
-                    x.Delay(reconnectDelay);
-
                     IConnection connection = _connectionFactory.CreateConnection();
 
-                    x.Compensate(compensation => compensation.Task(connectTask()));
-
-                    Payload<Tuple<TPayload, IConnection>> nextPayload = payload.MergeRight(connection);
-                    next.Compose(x, nextPayload);
+                    return composer.ComposeTask(next, payload.MergeRight(connection));
                 });
-
-            composer.Execute(connectTask);
-
-            composer.Finally(() => timeoutEnumerator.Dispose());
         }
     }
 }

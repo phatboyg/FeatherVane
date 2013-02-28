@@ -35,9 +35,8 @@ namespace FeatherVane.SourceVanes
             composer.Execute(() =>
                 {
                     data = _factoryMethod();
-                    Payload<Tuple<TPayload, T>> nextPayload = payload.MergeRight(data);
 
-                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
+                    return composer.ComposeTask(next, payload.MergeRight(data));
                 });
 
             composer.Finally(() =>

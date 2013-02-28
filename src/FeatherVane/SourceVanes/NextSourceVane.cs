@@ -19,31 +19,31 @@ namespace FeatherVane.SourceVanes
     /// Curries a SourceVane into a Vane, using the next Vane supplied during
     /// Build operations.
     /// </summary>
-    /// <typeparam name="TSource">The source vane type</typeparam>
-    public class NextSourceVane<TSource> :
-        SourceVane<TSource>,
+    /// <typeparam name="T">The source vane type</typeparam>
+    public class NextSourceVane<T> :
+        SourceVane<T>,
         AcceptVaneVisitor
     {
-        readonly Feather<TSource> _next;
-        readonly SourceVane<TSource> _sourceVane;
+        readonly Feather<T> _next;
+        readonly SourceVane<T> _sourceVane;
 
         /// <summary>
         /// Constructs a NextSource
         /// </summary>
         /// <param name="sourceVane">The FeatherVane to combine with the next Vane</param>
-        /// <param name="nextVane"></param>
-        public NextSourceVane(SourceVane<TSource> sourceVane, Feather<TSource> next)
+        /// <param name="next"></param>
+        public NextSourceVane(SourceVane<T> sourceVane, Feather<T> next)
         {
             _sourceVane = sourceVane;
             _next = next;
         }
 
-        public SourceVane<TSource> Source
+        public SourceVane<T> Source
         {
             get { return _sourceVane; }
         }
 
-        public Feather<TSource> Next
+        public Feather<T> Next
         {
             get { return _next; }
         }
@@ -53,10 +53,10 @@ namespace FeatherVane.SourceVanes
             return visitor.Visit(_sourceVane) && visitor.Visit(_next);
         }
 
-        void SourceVane<TSource>.Compose<TPayload>(Composer composer, Payload<TPayload> payload,
-            Vane<Tuple<TPayload, TSource>> next)
+        void SourceVane<T>.Compose<TPayload>(Composer composer, Payload<TPayload> payload,
+            Vane<Tuple<TPayload, T>> next)
         {
-            var nextVane = new LeftSplitVane<TPayload, TSource>(_next, next);
+            var nextVane = new LeftSplitVane<TPayload, T>(_next, next);
 
             _sourceVane.Compose(composer, payload, nextVane);
         }

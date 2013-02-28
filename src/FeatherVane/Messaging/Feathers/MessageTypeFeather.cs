@@ -45,10 +45,10 @@ namespace FeatherVane.Messaging.Feathers
                     {
                         var messagePayload = new MessagePayload<T>(payload, message);
 
-                        return TaskComposer.Compose(_vane, messagePayload, composer.CancellationToken);
+                        return composer.ComposeTask(_vane, messagePayload);
                     }
 
-                    return TaskComposer.Completed<Message>(composer.CancellationToken);
+                    return composer.ComposeCompleted();
                 });
 
             next.Compose(composer, payload);

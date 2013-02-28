@@ -87,10 +87,16 @@ namespace FeatherVane.RabbitMQIntegration.Tests
                         payload.Data.ServerProperties.FormatKeyValue(": ", Environment.NewLine)));
                 });
 
+            var retryVane = SourceVaneFactory.New<IConnection>(x =>
+                {
+                    x.UseSourceVane(() => new DelayedRetrySourceVane<IConnection>(connectVane));
+                    x.ConsoleLog(payload => "Attempting to connect to RabbitMQ");
+                });
+
             Vane<IConnection> disconnectVane = VaneFactory.New(() => new DisconnectVane(),
                 x => x.ConsoleLog(payload => "Closing connection"));
 
-            _poolSourceVane = new PoolSourceVane<IConnection>(connectVane, disconnectVane);
+            _poolSourceVane = new PoolSourceVane<IConnection>(retryVane, disconnectVane);
             SourceVane<IConnection> poolVane = SourceVaneFactory.New<IConnection>(x =>
                 {
                     x.UseExistingSourceVane(_poolSourceVane);

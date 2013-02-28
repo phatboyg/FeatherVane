@@ -26,7 +26,7 @@ namespace FeatherVane.Vanes
         /// <summary>
         /// Constructs a NextVane
         /// </summary>
-        /// <param name="featherVane">The FeatherVane to combine with the next Vane</param>
+        /// <param name="feather">The FeatherVane to combine with the next Vane</param>
         /// <param name="nextVane">The next Vane</param>
         public NextVane(Feather<T> feather, Vane<T> nextVane)
         {

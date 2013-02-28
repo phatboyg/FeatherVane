@@ -16,7 +16,7 @@ namespace FeatherVane.Feathers
 
     public class StackFeather<T> :
         Feather<T>,
-        Stack<T>
+        Stack<Vane<T>>
     {
         readonly System.Collections.Generic.Stack<Vane<T>> _vanes;
 
@@ -36,13 +36,13 @@ namespace FeatherVane.Feathers
             next.Compose(composer, payload);
         }
 
-        void Stack<T>.Push(Vane<T> vane)
+        void Stack<Vane<T>>.Push(Vane<T> vane)
         {
             lock (_vanes)
                 _vanes.Push(vane);
         }
 
-        void Stack<T>.Pop(Vane<T> vane)
+        void Stack<Vane<T>>.Pop(Vane<T> vane)
         {
             lock (_vanes)
             {
@@ -51,7 +51,7 @@ namespace FeatherVane.Feathers
             }
         }
 
-        void Stack<T>.Set(params Vane<T>[] vanes)
+        void Stack<Vane<T>>.Set(params Vane<T>[] vanes)
         {
             lock (_vanes)
             {

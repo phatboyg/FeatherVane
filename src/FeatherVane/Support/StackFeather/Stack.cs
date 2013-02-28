@@ -13,8 +13,8 @@ namespace FeatherVane.Support.StackFeather
 {
     public interface Stack<T>
     {
-        void Push(Vane<T> vane);
-        void Pop(Vane<T> vane);
-        void Set(params Vane<T>[] vanes);
+        void Push(T vane);
+        void Pop(T vane);
+        void Set(params T[] vanes);
     }
 }

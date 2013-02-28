@@ -12,17 +12,18 @@
 namespace FeatherVane.SourceVanes
 {
     using System;
-    using System.Collections.Generic;
+    using Support.StackFeather;
 
 
     public class StackSourceVane<T> :
-        SourceVane<T>
+        SourceVane<T>,
+        Stack<SourceVane<T>>
     {
-        readonly Stack<SourceVane<T>> _vanes;
+        readonly System.Collections.Generic.Stack<SourceVane<T>> _vanes;
 
         public StackSourceVane(params SourceVane<T>[] vanes)
         {
-            _vanes = new Stack<SourceVane<T>>(vanes);
+            _vanes = new System.Collections.Generic.Stack<SourceVane<T>>(vanes);
         }
 
         public void Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next)
@@ -34,13 +35,13 @@ namespace FeatherVane.SourceVanes
             vane.Compose(composer, payload, next);
         }
 
-        public void Push(SourceVane<T> vane)
+        void Stack<SourceVane<T>>.Push(SourceVane<T> vane)
         {
             lock (_vanes)
                 _vanes.Push(vane);
         }
 
-        public void Pop(SourceVane<T> vane)
+        void Stack<SourceVane<T>>.Pop(SourceVane<T> vane)
         {
             lock (_vanes)
             {
@@ -49,7 +50,7 @@ namespace FeatherVane.SourceVanes
             }
         }
 
-        public void Set(params SourceVane<T>[] vanes)
+        void Stack<SourceVane<T>>.Set(params SourceVane<T>[] vanes)
         {
             lock (_vanes)
             {

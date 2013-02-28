@@ -75,9 +75,9 @@ namespace FeatherVane.SourceVanes
                     var track = new Track<TPayload>(this, next);
 
                     if (useExisting)
-                        return TaskComposer.Compose(track, payload.MergeRight(instance), composer.CancellationToken);
+                        return composer.ComposeTask(track, payload.MergeRight(instance));
 
-                    return TaskComposer.Compose(_createVane, payload, track, composer.CancellationToken);
+                    return composer.ComposeTask(_createVane, payload, track);
                 });
         }
 
@@ -117,15 +117,12 @@ namespace FeatherVane.SourceVanes
 
                 composer.Execute(() => _poolSourceVane.Retain(payload.Right()));
 
-                composer.Compensate(compensation =>
+                composer.Compensate(compensation => compensation.Task(composer.ComposeTask(payload, (x, p) =>
                     {
-                        return compensation.Task(TaskComposer.Compose<T>(composer.CancellationToken, x =>
-                            {
-                                x.Execute(() => _poolSourceVane.Release(payload.Right()));
+                        x.Execute(() => _poolSourceVane.Release(p.Right()));
 
-                                x.Failed(compensation.Exception);
-                            }));
-                    });
+                        x.Failed(compensation.Exception);
+                    })));
             }
         }
     }

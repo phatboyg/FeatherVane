@@ -30,12 +30,7 @@ namespace FeatherVane.SourceVanes
 
         void SourceVane<T>.Compose<TPayload>(Composer composer, Payload<TPayload> payload, Vane<Tuple<TPayload, T>> next)
         {
-            composer.Execute(() =>
-                {
-                    Payload<Tuple<TPayload, T>> nextPayload = payload.MergeRight(_instance);
-
-                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
-                });
+            composer.Execute(() => composer.ComposeTask(next, payload.MergeRight(_instance)));
         }
     }
 }

@@ -37,9 +37,7 @@ namespace FeatherVane.SourceVanes
                 {
                     TId id = _selector(payload.Data);
 
-                    Payload<Tuple<TPayload, TId>> nextPayload = payload.MergeRight(id);
-
-                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
+                    return composer.ComposeTask(next, payload.MergeRight(id));
                 });
         }
 
@@ -53,9 +51,7 @@ namespace FeatherVane.SourceVanes
 
                     TId id = _selector(obj.Data);
 
-                    Payload<Tuple<TPayload, TId>> nextPayload = payload.MergeRight(id);
-
-                    return TaskComposer.Compose(next, nextPayload, composer.CancellationToken);
+                    return composer.ComposeTask(next, payload.MergeRight(id));
                 });
         }
     }

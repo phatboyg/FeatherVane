@@ -26,12 +26,7 @@ namespace FeatherVane.Vanes
 
         public void Compose(Composer composer, Payload<Tuple<TLeft, TRight>> payload)
         {
-            composer.Execute(() =>
-                {
-                    Payload<TRight> nextPayload = payload.SplitRight();
-
-                    return TaskComposer.Compose(_output, nextPayload, composer.CancellationToken);
-                });
+            composer.Execute(() => composer.ComposeTask(_output, payload.SplitRight()));
         }
     }
 }
