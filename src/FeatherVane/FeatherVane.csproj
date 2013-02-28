@@ -131,6 +131,7 @@
     <Compile Include="Routing\Vanes\SegmentVane.cs" />
     <Compile Include="SourceVane.cs" />
     <Compile Include="SourceVaneFactory.cs" />
+    <Compile Include="SourceVanes\DelayedRetrySourceVane.cs" />
     <Compile Include="SourceVanes\FactorySourceVane.cs" />
     <Compile Include="SourceVanes\IdentitySourceVane.cs" />
     <Compile Include="SourceVanes\InstanceSourceVane.cs" />

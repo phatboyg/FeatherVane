@@ -149,7 +149,7 @@ namespace FeatherVane
             if (_task.Status == TaskStatus.RanToCompletion)
                 return this;
 
-            _task = Compensate(_task, () => compensation(new TaskCompensation<T>(_task)).Task);
+            _task = Compensate(_task, x => compensation(new TaskCompensation<T>(x)).Task);
             return this;
         }
 
@@ -183,7 +183,8 @@ namespace FeatherVane
                 throw _completeException.Value;
 
             if (dueTime < -1)
-                throw new ArgumentOutOfRangeException("dueTime", "Delay time must be -1 or >= 0");
+                throw new ArgumentOutOfRangeException("dueTime",
+                    "The timeout must be non-negative or -1, and it must be less than or equal to Int32.MaxValue.");
 
             _task = Execute(_task, () => CreateDelayTask(dueTime, _cancellationToken), _cancellationToken);
             return this;
@@ -205,9 +206,25 @@ namespace FeatherVane
             _task = Execute(_task, () => TaskUtil.CompletedError(exception), _cancellationToken);
         }
 
-        public Task ComposeTask<T1>(Vane<T1> next, Payload<T1> payload, bool runSynchronously = true)
+        public Task ComposeTask<TPayload>(Vane<TPayload> next, Payload<TPayload> payload, bool runSynchronously = true)
         {
             return TaskComposer.Compose(next, payload, _cancellationToken, runSynchronously);
+        }
+
+        public Task ComposeTask<TSource, TPayload>(SourceVane<TSource> vane, Payload<TPayload> payload,
+            Vane<Tuple<TPayload, TSource>> next, bool runSynchronously = true)
+        {
+            return TaskComposer.Compose(vane, payload, next, _cancellationToken, runSynchronously);
+        }
+
+        public Task ComposeTask<TPayload>(Payload<TPayload> payload, Action<Composer, Payload<TPayload>> callback,
+            bool runSynchronously = true)
+        {
+            var composer = new TaskComposer<T>(_cancellationToken, runSynchronously);
+
+            callback(composer, payload);
+
+            return composer.Complete();
         }
 
         public Task Complete()
@@ -265,6 +282,7 @@ namespace FeatherVane
 
         static Task CreateDelayTask(int dueTime, CancellationToken cancellationToken)
         {
+            Action callback;
             if (dueTime == 0)
                 return TaskUtil.Completed();
 
@@ -279,18 +297,19 @@ namespace FeatherVane
 
             if (cancellationToken.CanBeCanceled)
             {
-                registration = cancellationToken.Register(() =>
+                callback = delegate
                     {
                         timer.Dispose();
                         source.TrySetCanceled();
-                    });
+                    };
+                registration = cancellationToken.Register(callback);
             }
 
             timer.Change(dueTime, -1);
             return source.Task;
         }
 
-        static Task Compensate(Task task, Func<Task> compensationTask)
+        static Task Compensate(Task task, Func<Task, Task> compensationTask)
         {
             if (task.IsCompleted)
             {
@@ -298,9 +317,11 @@ namespace FeatherVane
                 {
                     try
                     {
-                        Task resultTask = compensationTask();
+                        Task resultTask = compensationTask(task);
                         if (resultTask == null)
                             throw new InvalidOperationException("Sure could use a Task here buddy");
+
+                        task.MarkObserved();
 
                         return resultTask;
                     }
@@ -324,49 +345,34 @@ namespace FeatherVane
             return CompensateAsync(task, compensationTask);
         }
 
-        static Task CompensateAsync(Task task, Func<Task> compensationTask)
+        static Task CompensateAsync(Task task, Func<Task, Task> compensationTask)
         {
             var source = new TaskCompletionSource<Task>();
 
-            task.ContinueWith(innerTask => source.TrySetFromTask(innerTask),
-                TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+            task.ContinueWith(innerTask =>
+                {
+                    if (innerTask.IsCanceled)
+                        source.TrySetCanceled();
 
-            SynchronizationContext syncContext = SynchronizationContext.Current;
+                    return source.TrySetResult(TaskUtil.Completed());
+                },
+                TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
 
             task.ContinueWith(innerTask =>
                 {
-                    if (syncContext != null)
+                    try
                     {
-                        syncContext.Post(state =>
-                            {
-                                try
-                                {
-                                    Task resultTask = compensationTask();
-                                    if (resultTask == null)
-                                        throw new InvalidOperationException("Sure could use a Task here buddy");
+                        Task resultTask = compensationTask(innerTask);
+                        if (resultTask == null)
+                            throw new InvalidOperationException("Sure could use a Task here buddy");
 
-                                    source.TrySetResult(resultTask);
-                                }
-                                catch (Exception ex)
-                                {
-                                    source.TrySetException(ex);
-                                }
-                            }, state: null);
+                        innerTask.MarkObserved();
+
+                        source.TrySetResult(resultTask);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            Task resultTask = compensationTask();
-                            if (resultTask == null)
-                                throw new InvalidOperationException("Sure could use a Task here buddy");
-
-                            source.TrySetResult(resultTask);
-                        }
-                        catch (Exception ex)
-                        {
-                            source.TrySetException(ex);
-                        }
+                        source.TrySetException(ex);
                     }
                 }, TaskContinuationOptions.OnlyOnFaulted);
 

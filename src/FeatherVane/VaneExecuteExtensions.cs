@@ -77,7 +77,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1>(this Vane<T> vane, T data, T1 ctx1, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
         {
             var payload = new PayloadImpl<T>(data); 
@@ -95,7 +95,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1>(this Vane<T> vane, T data, T1 ctx1,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
         {
             var payload = new PayloadImpl<T>(data); 
@@ -112,7 +112,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
         {
@@ -132,7 +132,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
         {
@@ -151,7 +151,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -173,7 +173,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -194,7 +194,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -218,7 +218,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -241,7 +241,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -267,7 +267,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -292,7 +292,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -320,7 +320,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -347,7 +347,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -377,7 +377,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -406,7 +406,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -438,7 +438,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -469,7 +469,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -503,7 +503,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -536,7 +536,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -572,7 +572,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -607,7 +607,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -645,7 +645,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -682,7 +682,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -722,7 +722,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -761,7 +761,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -803,7 +803,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -844,7 +844,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, T14 ctx14, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -888,7 +888,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, T14 ctx14,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -931,7 +931,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, T14 ctx14, T15 ctx15, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -977,7 +977,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, T14 ctx14, T15 ctx15,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1022,7 +1022,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, T14 ctx14, T15 ctx15, T16 ctx16, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1070,7 +1070,7 @@
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16>(this Vane<T> vane, T data, T1 ctx1, T2 ctx2, T3 ctx3, T4 ctx4, T5 ctx5, T6 ctx6, T7 ctx7, T8 ctx8, T9 ctx9, T10 ctx10, T11 ctx11, T12 ctx12, T13 ctx13, T14 ctx14, T15 ctx15, T16 ctx16,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             where T1 : class
             where T2 : class
             where T3 : class

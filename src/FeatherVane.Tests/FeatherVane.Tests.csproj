@@ -93,6 +93,7 @@
     <Compile Include="Benchmarks\TupleConsumerThroughput.cs" />
     <Compile Include="CircuitBreaker_Specs.cs" />
     <Compile Include="Configuration\Configuration_Specs.cs" />
+    <Compile Include="DelayedRetry_Specs.cs" />
     <Compile Include="DependentTransaction_Specs.cs" />
     <Compile Include="HttpTests\Http_Specs.cs" />
     <Compile Include="HttpTests\RequestHandling_Specs.cs" />

@@ -87,7 +87,7 @@ namespace FeatherVane
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static void Execute<T<#=tInputArgs#>>(this Vane<T> vane, T data, <#=tParms#>, 
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             <#=tWheres#>
         {
             var payload = new PayloadImpl<T>(data);<# for(int j = 1; j <= i; j++){ #> 
@@ -106,7 +106,7 @@ namespace FeatherVane
         /// <param name="cancellationToken">The cancellation token to cancel</param>
         /// <param name="runSynchronously">Run synchronously if possible, otherwise force a Task</param>
         public static Task ExecuteAsync<T<#=tInputArgs#>>(this Vane<T> vane, T data, <#=tParms#>,
-            CancellationToken cancellationToken, bool runSynchronously = true) 
+            CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = true) 
             <#=tWheres#>
         {
             var payload = new PayloadImpl<T>(data);<# for(int j = 1; j <= i; j++){ #> 
