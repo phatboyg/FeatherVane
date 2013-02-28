@@ -15,8 +15,8 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class MessageHandlerConfigurator<T> :
@@ -36,7 +36,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
 
         public void Configure(VaneBuilder<Message<T>> builder)
         {
-            var handler = new MessageHandlerVane<T>(_handlerMethod);
+            var handler = new MessageHandlerFeather<T>(_handlerMethod);
             builder.Add(handler);
         }
 
@@ -44,7 +44,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
         {
             Vane<Message<T>> handlerVane = ConfigureHandlerVane();
 
-            var messageType = new MessageTypeVane<T>(handlerVane);
+            var messageType = new MessageTypeFeather<T>(handlerVane);
             builder.Add(messageType);
         }
 

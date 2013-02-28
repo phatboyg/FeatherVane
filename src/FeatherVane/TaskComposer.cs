@@ -28,7 +28,7 @@ namespace FeatherVane
             return composer.Complete();
         }
 
-        public static Task Compose<T>(FeatherVane<T> vane, Payload<T> payload, Vane<T> next,
+        public static Task Compose<T>(Feather<T> vane, Payload<T> payload, Vane<T> next,
             CancellationToken cancellationToken,
             bool runSynchronously = true)
         {

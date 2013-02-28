@@ -13,6 +13,7 @@ namespace FeatherVane.Tests.Benchmarks
 {
     using System;
     using System.IO;
+    using Feathers;
     using Vanes;
 
     public class TransactionProfilerLoggerThroughput :
@@ -24,9 +25,9 @@ namespace FeatherVane.Tests.Benchmarks
         {
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
-            _vane = VaneFactory.Success(new LogVane<Subject>(sw, x => ""),
-                new ProfilerVane<Subject>(sw, TimeSpan.FromMilliseconds(2)),
-                new TransactionVane<Subject>());
+            _vane = VaneFactory.Success(new LogFeather<Subject>(sw, x => ""),
+                new ProfilerFeather<Subject>(sw, TimeSpan.FromMilliseconds(2)),
+                new TransactionFeather<Subject>());
         }
 
         public void Execute(Subject subject)

@@ -37,7 +37,8 @@ namespace FeatherVane
         /// <typeparam name="T"></typeparam>
         /// <param name="configurator"></param>
         /// <param name="sourceVane"></param>
-        public static void UseExistingSourceVane<T>(this SourceVaneConfigurator<T> configurator, SourceVane<T> sourceVane)
+        public static void UseExistingSourceVane<T>(this SourceVaneConfigurator<T> configurator,
+            SourceVane<T> sourceVane)
         {
             if (configurator == null)
                 throw new ArgumentNullException("configurator");

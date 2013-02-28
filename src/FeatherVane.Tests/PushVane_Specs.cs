@@ -32,7 +32,7 @@ namespace FeatherVane.Tests
         }
 
         class Original :
-            FeatherVane<string>
+            Feather<string>
         {
             public void Compose(Composer composer, Payload<string> payload, Vane<string> next)
             {
@@ -43,7 +43,7 @@ namespace FeatherVane.Tests
         }
 
         class Decorator :
-            FeatherVane<string>
+            Feather<string>
         {
             public void Compose(Composer composer, Payload<string> payload, Vane<string> next)
             {

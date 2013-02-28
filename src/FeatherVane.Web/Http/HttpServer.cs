@@ -189,7 +189,7 @@ namespace FeatherVane.Web.Http
 
 
         class ConnectionComplete :
-            FeatherVane<ConnectionContext>
+            Feather<ConnectionContext>
         {
             readonly Action<ConnectionContext> _onConnectionComplete;
 

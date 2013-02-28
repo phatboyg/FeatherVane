@@ -22,13 +22,13 @@ namespace FeatherVane.Vanes
     public class LeftSplitVane<TLeft, TRight> :
         Vane<Tuple<TLeft, TRight>>
     {
-        readonly FeatherVane<TRight> _nextVane;
+        readonly Feather<TRight> _next;
         readonly Vane<Tuple<TLeft, TRight>> _outputVane;
 
-        public LeftSplitVane(FeatherVane<TRight> nextVane, Vane<Tuple<TLeft, TRight>> outputVane)
+        public LeftSplitVane(Feather<TRight> next, Vane<Tuple<TLeft, TRight>> outputVane)
         {
             _outputVane = outputVane;
-            _nextVane = nextVane;
+            _next = next;
         }
 
         void Vane<Tuple<TLeft, TRight>>.Compose(Composer composer, Payload<Tuple<TLeft, TRight>> payload)
@@ -39,7 +39,7 @@ namespace FeatherVane.Vanes
 
                     var output = new LeftMergeVane<TLeft, TRight>(payload.Data.Item1, _outputVane);
 
-                    return TaskComposer.Compose(_nextVane, nextPayload, output, composer.CancellationToken);
+                    return TaskComposer.Compose(_next, nextPayload, output, composer.CancellationToken);
                 });
         }
     }

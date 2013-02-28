@@ -12,8 +12,9 @@
 namespace FeatherVane.Tests.Benchmarks
 {
     using FeatherVane.Messaging;
+    using FeatherVane.Messaging.Feathers;
     using FeatherVane.Messaging.Payloads;
-    using FeatherVane.Messaging.Vanes;
+    using Feathers;
     using Vanes;
 
 
@@ -32,9 +33,9 @@ namespace FeatherVane.Tests.Benchmarks
                 });
             });
 
-            var messageVane = new MessageTypeVane<Subject>(vane);
+            var messageVane = new MessageTypeFeather<Subject>(vane);
 
-            var fanOutVane = new FanoutVane<Message>(new[] {messageVane});
+            var fanOutVane = new FanoutFeather<Message>(new[] {messageVane});
 
             _vane = VaneFactory.Success(fanOutVane);
         }

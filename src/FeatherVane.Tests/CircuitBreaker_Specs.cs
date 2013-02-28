@@ -3,7 +3,7 @@
     using System;
     using System.Threading;
     using NUnit.Framework;
-    using Vanes.CircuitBreakerSupport;
+    using Support.CircuitBreakerFeather;
 
 
     [TestFixture]

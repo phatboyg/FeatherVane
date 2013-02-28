@@ -12,6 +12,7 @@
 namespace FeatherVane.Tests.Benchmarks
 {
     using System.IO;
+    using Feathers;
     using Vanes;
 
     public class LoggerThroughput :
@@ -23,7 +24,7 @@ namespace FeatherVane.Tests.Benchmarks
         {
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);
-            _vane = VaneFactory.Success(new LogVane<Subject>(sw, x => ""));
+            _vane = VaneFactory.Success(new LogFeather<Subject>(sw, x => ""));
         }
 
         public void Execute(Subject subject)

@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@ namespace FeatherVane
 {
     using System;
     using FeatherVaneConfigurators;
-    using VaneConfigurators;
 
 
     public static class ProfilerConfigurationExtensions

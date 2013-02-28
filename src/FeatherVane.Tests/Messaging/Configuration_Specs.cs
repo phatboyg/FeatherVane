@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using FeatherVane.Messaging;
+    using Feathers;
     using NUnit.Framework;
     using Vanes;
     using Visualizer;
@@ -29,10 +30,10 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<FanoutFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanoutVane = nextVane.FeatherVane as FanoutVane<Message>;
+            var fanoutVane = nextVane.Feather as FanoutFeather<Message>;
             Assert.IsNotNull(fanoutVane);
 
             Assert.AreEqual(2, fanoutVane.Count);
@@ -55,10 +56,10 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<FanoutFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanoutVane = nextVane.FeatherVane as FanoutVane<Message>;
+            var fanoutVane = nextVane.Feather as FanoutFeather<Message>;
             Assert.IsNotNull(fanoutVane);
 
             Assert.AreEqual(2, fanoutVane.Count);
@@ -83,10 +84,10 @@
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<FanoutFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanoutVane = nextVane.FeatherVane as FanoutVane<Message>;
+            var fanoutVane = nextVane.Feather as FanoutFeather<Message>;
             Assert.IsNotNull(fanoutVane);
 
             Assert.AreEqual(2, fanoutVane.Count);

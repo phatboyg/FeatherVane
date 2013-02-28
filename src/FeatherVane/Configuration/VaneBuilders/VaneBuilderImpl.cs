@@ -20,18 +20,18 @@ namespace FeatherVane.VaneBuilders
     public class VaneBuilderImpl<T> :
         VaneBuilder<T>
     {
-        readonly IList<FeatherVane<T>> _featherVanes;
+        readonly IList<Feather<T>> _featherVanes;
         readonly Func<Vane<T>> _tailFactory;
 
         public VaneBuilderImpl(Func<Vane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
-            _featherVanes = new List<FeatherVane<T>>();
+            _featherVanes = new List<Feather<T>>();
         }
 
-        void VaneBuilder<T>.Add(FeatherVane<T> featherVane)
+        void VaneBuilder<T>.Add(Feather<T> feather)
         {
-            _featherVanes.Add(featherVane);
+            _featherVanes.Add(feather);
         }
 
         public Vane<T> Build()

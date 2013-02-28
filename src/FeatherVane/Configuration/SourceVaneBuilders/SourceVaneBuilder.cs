@@ -21,18 +21,18 @@ namespace FeatherVane.SourceVaneBuilders
     public class SourceVaneBuilder<T> :
         VaneBuilder<T>
     {
+        readonly IList<Feather<T>> _featherVanes;
         readonly Func<SourceVane<T>> _tailFactory;
-        readonly IList<FeatherVane<T>> _featherVanes;
 
         public SourceVaneBuilder(Func<SourceVane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
-            _featherVanes = new List<FeatherVane<T>>();
+            _featherVanes = new List<Feather<T>>();
         }
 
-        public void Add(FeatherVane<T> featherVaneFactory)
+        public void Add(Feather<T> featherFactory)
         {
-            _featherVanes.Add(featherVaneFactory);
+            _featherVanes.Add(featherFactory);
         }
 
         public SourceVane<T> Build()
@@ -40,7 +40,7 @@ namespace FeatherVane.SourceVaneBuilders
             return Build(_tailFactory(), _featherVanes);
         }
 
-        static SourceVane<T> Build(SourceVane<T> head, IEnumerable<FeatherVane<T>> vanes)
+        static SourceVane<T> Build(SourceVane<T> head, IEnumerable<Feather<T>> vanes)
         {
             return vanes.Aggregate(head, (x, vane) => new NextSourceVane<T>(x, vane));
         }

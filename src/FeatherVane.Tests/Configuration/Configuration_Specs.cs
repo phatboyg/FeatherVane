@@ -15,6 +15,7 @@ namespace FeatherVane.Tests.Configuration
     using System.Threading.Tasks;
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
+    using Feathers;
     using NUnit.Framework;
     using SourceVanes;
     using Vanes;
@@ -44,7 +45,7 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<ExecuteTaskVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<ExecuteTaskFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
@@ -56,7 +57,7 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<ExecuteVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<ExecuteFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
@@ -69,7 +70,7 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<LogVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<LogFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
@@ -82,7 +83,7 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<ProfilerVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<ProfilerFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
@@ -101,10 +102,10 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<FanoutVane<Message>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<FanoutFeather<Message>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
 
-            var fanout = nextVane.FeatherVane as FanoutVane<Message>;
+            var fanout = nextVane.Feather as FanoutFeather<Message>;
             Assert.IsNotNull(fanout);
 
             Assert.AreEqual(2, fanout.Count);
@@ -126,7 +127,7 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<SpliceVane<Message, A>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SpliceFeather<Message, A>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 
@@ -150,7 +151,7 @@ namespace FeatherVane.Tests.Configuration
             var nextVane = vane as NextVane<Message>;
             Assert.IsNotNull(nextVane);
 
-            Assert.IsInstanceOf<SpliceVane<Message, A>>(nextVane.FeatherVane);
+            Assert.IsInstanceOf<SpliceFeather<Message, A>>(nextVane.Feather);
             Assert.IsInstanceOf<SuccessVane<Message>>(nextVane.Next);
         }
 

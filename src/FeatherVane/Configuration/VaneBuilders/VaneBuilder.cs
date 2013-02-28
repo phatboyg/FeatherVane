@@ -17,7 +17,7 @@ namespace FeatherVane.VaneBuilders
         /// Appends a FeatherVane to the list of FeatherVanes for the Vane. FeatherVanes within a
         /// Vane are composed in the order in which they are added
         /// </summary>
-        /// <param name="featherVane">The FeatherVane to be added</param>
-        void Add(FeatherVane<T> featherVane);
+        /// <param name="feather">The FeatherVane to be added</param>
+        void Add(Feather<T> feather);
     }
 }

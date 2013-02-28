@@ -40,7 +40,7 @@ namespace FeatherVane.FeatherVaneConfigurators
             foreach (var configurator in _configurators)
                 configurator.Configure(fanoutBuilder);
 
-            FeatherVane<T> fanout = fanoutBuilder.Build();
+            Feather<T> fanout = fanoutBuilder.Build();
             builder.Add(fanout);
         }
 

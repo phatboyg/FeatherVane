@@ -14,6 +14,7 @@ namespace FeatherVane.Factories
     using System.Collections.Generic;
     using Configurators;
 
+
     /// <summary>
     /// Use an existing Vane as a VaneFactory
     /// </summary>

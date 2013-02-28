@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2012 Chris Patterson
+﻿// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -22,14 +22,19 @@ namespace FeatherVane.VaneConfigurators
         VaneConfigurator<T>,
         VaneFactory<T>
     {
-        readonly Func<Vane<T>> _tailFactory;
         readonly IList<VaneBuilderConfigurator<T>> _configurators;
+        readonly Func<Vane<T>> _tailFactory;
 
         public VaneConfiguratorImpl(Func<Vane<T>> tailFactory)
         {
             _tailFactory = tailFactory;
 
             _configurators = new List<VaneBuilderConfigurator<T>>();
+        }
+
+        public void Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
+        {
+            _configurators.Add(vaneBuilderConfigurator);
         }
 
         IEnumerable<ValidateResult> Configurator.Validate()
@@ -49,11 +54,6 @@ namespace FeatherVane.VaneConfigurators
                 configurator.Configure(builder);
 
             return builder.Build();
-        }
-
-        public void Add(VaneBuilderConfigurator<T> vaneBuilderConfigurator)
-        {
-            _configurators.Add(vaneBuilderConfigurator);
         }
     }
 }

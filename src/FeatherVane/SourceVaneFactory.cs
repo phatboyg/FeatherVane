@@ -18,6 +18,12 @@ namespace FeatherVane
 
     public static class SourceVaneFactory
     {
+        /// <summary>
+        /// Configure a SourceVane of the specified generic type
+        /// </summary>
+        /// <typeparam name="T">The SourceVane type</typeparam>
+        /// <param name="configureCallback">The configuration callback</param>
+        /// <returns>A ready to use SourceVane</returns>
         public static SourceVane<T> New<T>(Action<SourceVaneConfigurator<T>> configureCallback)
         {
             var configurator = new SourceVaneConfiguratorImpl<T>();

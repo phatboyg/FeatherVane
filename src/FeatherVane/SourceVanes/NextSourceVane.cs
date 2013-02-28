@@ -1,4 +1,4 @@
-// Copyright 2012-2012 Chris Patterson
+// Copyright 2012-2013 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@ namespace FeatherVane.SourceVanes
         SourceVane<TSource>,
         AcceptVaneVisitor
     {
-        readonly FeatherVane<TSource> _nextVane;
+        readonly Feather<TSource> _next;
         readonly SourceVane<TSource> _sourceVane;
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace FeatherVane.SourceVanes
         /// </summary>
         /// <param name="sourceVane">The FeatherVane to combine with the next Vane</param>
         /// <param name="nextVane"></param>
-        public NextSourceVane(SourceVane<TSource> sourceVane, FeatherVane<TSource> nextVane)
+        public NextSourceVane(SourceVane<TSource> sourceVane, Feather<TSource> next)
         {
             _sourceVane = sourceVane;
-            _nextVane = nextVane;
+            _next = next;
         }
 
         public SourceVane<TSource> Source
@@ -43,20 +43,20 @@ namespace FeatherVane.SourceVanes
             get { return _sourceVane; }
         }
 
-        public FeatherVane<TSource> Next
+        public Feather<TSource> Next
         {
-            get { return _nextVane; }
+            get { return _next; }
         }
 
         bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(_sourceVane) && visitor.Visit(_nextVane);
+            return visitor.Visit(_sourceVane) && visitor.Visit(_next);
         }
 
         void SourceVane<TSource>.Compose<TPayload>(Composer composer, Payload<TPayload> payload,
             Vane<Tuple<TPayload, TSource>> next)
         {
-            var nextVane = new LeftSplitVane<TPayload, TSource>(_nextVane, next);
+            var nextVane = new LeftSplitVane<TPayload, TSource>(_next, next);
 
             _sourceVane.Compose(composer, payload, nextVane);
         }

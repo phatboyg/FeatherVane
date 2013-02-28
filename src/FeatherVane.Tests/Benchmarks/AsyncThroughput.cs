@@ -12,6 +12,7 @@
 namespace FeatherVane.Tests.Benchmarks
 {
     using System.Threading.Tasks;
+    using Feathers;
     using Vanes;
 
 
@@ -22,7 +23,7 @@ namespace FeatherVane.Tests.Benchmarks
 
         public AsyncThroughput()
         {
-            var executeVane = new ExecuteTaskVane<Subject>(x => Task.Factory.StartNew(() => { }));
+            var executeVane = new ExecuteTaskFeather<Subject>(x => Task.Factory.StartNew(() => { }));
             _vane = VaneFactory.Success(executeVane);
         }
 

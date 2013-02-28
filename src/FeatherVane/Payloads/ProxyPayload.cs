@@ -39,7 +39,7 @@ namespace FeatherVane.Payloads
 
         public Type VaneType
         {
-            get { return typeof(FeatherVane<T>); }
+            get { return typeof(Feather<T>); }
         }
 
         public bool Has(Type contextType)

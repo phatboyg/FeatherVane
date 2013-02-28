@@ -19,6 +19,6 @@ namespace FeatherVane
 
         bool Visit<T, TSource>(SourceVane<T, TSource> vane);
 
-        bool Visit<T>(FeatherVane<T> vane);
+        bool Visit<T>(Feather<T> vane);
     }
 }

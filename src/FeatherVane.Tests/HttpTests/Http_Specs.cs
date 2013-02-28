@@ -12,10 +12,12 @@
 namespace FeatherVane.Tests.HttpTests
 {
     using System;
+    using Feathers;
     using NUnit.Framework;
     using Vanes;
     using Web.Http;
-    using Web.Http.Vanes;
+    using Web.Http.Feathers;
+
 
     [TestFixture]
     public class HttpServerTest
@@ -49,9 +51,9 @@ namespace FeatherVane.Tests.HttpTests
         protected virtual Vane<ConnectionContext> CreateMainVane()
         {
             return VaneFactory.Connect(new UnhandledVane<ConnectionContext>(),
-                new ProfilerVane<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
-                new LogVane<ConnectionContext>(Console.Error, x => x.Get<RequestContext>().Url.ToString()),
-                new NotFoundFeatherVane());
+                new ProfilerFeather<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(4)),
+                new LogFeather<ConnectionContext>(Console.Error, x => x.Get<RequestContext>().Url.ToString()),
+                new NotFoundFeather());
         }
     }
 }

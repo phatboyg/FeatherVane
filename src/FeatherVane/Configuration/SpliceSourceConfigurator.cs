@@ -15,7 +15,7 @@ namespace FeatherVane
 
 
     public interface SpliceSourceConfigurator<T> :
-        FeatherVaneConfigurator<T>
+        FeatherConfigurator<T>
     {
         void Source<TSource>(Action<SourceVaneConfigurator<TSource>> configureSource,
             Action<SpliceConfigurator<T, TSource>> configureSplice);

@@ -12,7 +12,7 @@
 namespace FeatherVane
 {
     using FeatherVaneConfigurators;
-    using Vanes;
+    using Feathers;
 
 
     public static class CircuitBreakerConfigurationExtensions
@@ -20,8 +20,8 @@ namespace FeatherVane
         public static void CircuitBreaker<T>(this VaneConfigurator<T> configurator,
             int openThreshold = 10, int closeThreshold = 5)
         {
-            var vaneConfigurator = new FeatherVaneFactoryConfigurator<T>(
-                () => new CircuitBreakerVane<T>(openThreshold, closeThreshold));
+            var vaneConfigurator = new FeatherFactoryConfigurator<T>(
+                () => new CircuitBreakerFeather<T>(openThreshold, closeThreshold));
 
             configurator.Add(vaneConfigurator);
         }

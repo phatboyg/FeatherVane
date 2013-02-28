@@ -15,12 +15,12 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class ExecuteTaskConfigurator<T> :
-        FeatherVaneConfigurator<T>,
+        FeatherConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
         readonly Func<Payload<T>, Task> _continuationTask;
@@ -32,7 +32,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var executeTask = new ExecuteTaskVane<T>(_continuationTask);
+            var executeTask = new ExecuteTaskFeather<T>(_continuationTask);
             builder.Add(executeTask);
         }
 

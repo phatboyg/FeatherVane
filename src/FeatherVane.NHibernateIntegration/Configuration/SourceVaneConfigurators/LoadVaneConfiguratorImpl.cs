@@ -16,11 +16,11 @@ namespace FeatherVane.NHibernateIntegration.SourceVaneConfigurators
     using Configurators;
     using FeatherVane.SourceVaneConfigurators;
     using FeatherVane.SourceVanes;
+    using Feathers;
     using NHibernate;
     using SourceVanes;
     using VaneBuilders;
     using VaneConfigurators;
-    using Vanes;
 
 
     public class LoadVaneConfiguratorImpl<T, TSource, TIdentity> :
@@ -75,7 +75,7 @@ namespace FeatherVane.NHibernateIntegration.SourceVaneConfigurators
             SourceVane<TSource> sourceVane = _sourceConfigurator.Create();
             Vane<Tuple<T, TSource>> outputVane = _vaneConfigurator.Create();
 
-            var splice = new SpliceVane<T, TSource>(outputVane, sourceVane);
+            var splice = new SpliceFeather<T, TSource>(outputVane, sourceVane);
 
             builder.Add(splice);
         }

@@ -15,7 +15,7 @@ namespace FeatherVane.NHibernateIntegration
 
 
     public interface LoadConfigurator<T> :
-        FeatherVaneConfigurator<T>
+        FeatherConfigurator<T>
     {
         /// <summary>
         /// Loads an object from NHibernate of the type specified, using the configuration

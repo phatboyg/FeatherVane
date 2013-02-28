@@ -14,12 +14,12 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System;
     using System.Collections.Generic;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class CompensateConfigurator<T> :
-        FeatherVaneConfigurator<T>,
+        FeatherConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
         readonly Func<Payload<T>, bool> _compensate;
@@ -31,7 +31,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var execute = new CompensateVane<T>(_compensate);
+            var execute = new CompensateFeather<T>(_compensate);
             builder.Add(execute);
         }
 

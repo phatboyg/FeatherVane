@@ -16,6 +16,7 @@ namespace FeatherVane.Tests.NHibernateIntegration
     using System.IO;
     using FeatherVane.NHibernateIntegration;
     using FeatherVane.NHibernateIntegration.SourceVanes;
+    using Feathers;
     using NHibernate;
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
@@ -81,7 +82,7 @@ namespace FeatherVane.Tests.NHibernateIntegration
         [Test]
         public void Should_throw_if_an_object_is_not_found()
         {
-            var executeVane = new ExecuteVane<Tuple<A, Subject>>(x => { });
+            var executeVane = new ExecuteFeather<Tuple<A, Subject>>(x => { });
             Vane<Tuple<A, Subject>> finalVane = VaneFactory.Success(executeVane);
 
             var id = new IdentitySourceVane<A, int>(x => x.Id);
@@ -89,7 +90,7 @@ namespace FeatherVane.Tests.NHibernateIntegration
             var loadVane = new LoadSourceVane<Subject, int>(SessionFactory, id, factory);
 
             SourceVane<Subject> sourceVane = VaneFactory.Source(loadVane);
-            var spliceVane = new SpliceVane<A, Subject>(finalVane, sourceVane);
+            var spliceVane = new SpliceFeather<A, Subject>(finalVane, sourceVane);
 
             Vane<A> vane = VaneFactory.Success(spliceVane);
 

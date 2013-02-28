@@ -15,10 +15,10 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
+    using Feathers;
     using SourceVaneConfigurators;
     using VaneBuilders;
     using VaneConfigurators;
-    using Vanes;
 
 
     public class SpliceConfiguratorImpl<T, TSource> :
@@ -26,8 +26,8 @@ namespace FeatherVane.FeatherVaneConfigurators
         SourceVaneConfigurator<TSource>,
         VaneBuilderConfigurator<T>
     {
-        readonly VaneConfiguratorImpl<Tuple<T, TSource>> _vaneConfigurator;
         readonly SourceVaneConfiguratorImpl<TSource> _sourceConfigurator;
+        readonly VaneConfiguratorImpl<Tuple<T, TSource>> _vaneConfigurator;
 
         public SpliceConfiguratorImpl()
         {
@@ -55,7 +55,7 @@ namespace FeatherVane.FeatherVaneConfigurators
             Vane<Tuple<T, TSource>> outputVane = _vaneConfigurator.Create();
             SourceVane<TSource> sourceVane = _sourceConfigurator.Create();
 
-            var splice = new SpliceVane<T, TSource>(outputVane, sourceVane);
+            var splice = new SpliceFeather<T, TSource>(outputVane, sourceVane);
 
             builder.Add(splice);
         }

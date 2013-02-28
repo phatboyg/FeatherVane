@@ -16,9 +16,10 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using System.Linq;
     using Configurators;
     using Factories;
+    using FeatherVane.Feathers;
     using FeatherVane.Vanes;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class MessageConsumerConfigurator<T, TConsumer> :
@@ -45,10 +46,10 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
 
             SourceVane<TConsumer> sourceVane = _sourceVaneFactory.Create();
 
-            var spliceVane = new SpliceVane<Message<T>, TConsumer>(messageVane, sourceVane);
+            var spliceVane = new SpliceFeather<Message<T>, TConsumer>(messageVane, sourceVane);
             Vane<Message<T>> consumerVane = VaneFactory.Success(spliceVane);
 
-            var messageType = new MessageTypeVane<T>(consumerVane);
+            var messageType = new MessageTypeFeather<T>(consumerVane);
             builder.Add(messageType);
         }
 
@@ -59,7 +60,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
 
         public void Configure(VaneBuilder<Tuple<Message<T>, TConsumer>> builder)
         {
-            var consumer = new MessageConsumerVane<T, TConsumer>(_consumeMethod);
+            var consumer = new MessageConsumerFeather<T, TConsumer>(_consumeMethod);
             builder.Add(consumer);
         }
 

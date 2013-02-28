@@ -12,7 +12,7 @@
 namespace FeatherVane.RabbitMQIntegration.Tests
 {
     using System;
-    using ConnectionManagement;
+    using FeatherVane.SourceVanes;
     using NUnit.Framework;
     using RabbitMQ.Client;
     using SourceVanes;
@@ -82,7 +82,7 @@ namespace FeatherVane.RabbitMQIntegration.Tests
 
             SourceVane<IConnection> connectVane = SourceVaneFactory.New<IConnection>(x =>
                 {
-                    x.UseSourceVane(() => new ConnectVane(_connectionFactory));
+                    x.UseSourceVane(() => new ConnectSourceVane(_connectionFactory));
                     x.ConsoleLog(payload => string.Format("Connection Created: {0}",
                         payload.Data.ServerProperties.FormatKeyValue(": ", Environment.NewLine)));
                 });

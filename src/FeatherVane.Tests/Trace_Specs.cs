@@ -12,6 +12,7 @@
 namespace FeatherVane.Tests
 {
     using System;
+    using Feathers;
     using NUnit.Framework;
     using Vanes;
 
@@ -24,13 +25,13 @@ namespace FeatherVane.Tests
             string expected = "47";
             string called = null;
 
-            FeatherVane<string> logger = new LogVane<string>(Console.Out, x =>
+            Feather<string> logger = new LogFeather<string>(Console.Out, x =>
                 {
                     called = x.Data;
                     return x.Data;
                 });
 
-            FeatherVane<string> profiler = new ProfilerVane<string>(Console.Error, TimeSpan.FromMilliseconds(2));
+            Feather<string> profiler = new ProfilerFeather<string>(Console.Error, TimeSpan.FromMilliseconds(2));
 
             Vane<string> vane = VaneFactory.Success(profiler, logger);
 

@@ -15,8 +15,8 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Transactions;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class TransactionConfiguratorImpl<T> :
@@ -46,7 +46,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var transaction = new TransactionVane<T>(_isolationLevel, _timeout);
+            var transaction = new TransactionFeather<T>(_isolationLevel, _timeout);
             builder.Add(transaction);
         }
 

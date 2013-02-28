@@ -11,6 +11,7 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+    using Feathers;
     using NUnit.Framework;
     using Vanes;
     using Visualization;
@@ -23,9 +24,9 @@ namespace FeatherVane.Tests
         [Test]
         public void Should_render_properly()
         {
-            Vane<A> vane = VaneFactory.Success(new TransactionVane<A>(),
-                new ExecuteVane<A>(x => { }),
-                new CompensateVane<A>(x => false));
+            Vane<A> vane = VaneFactory.Success(new TransactionFeather<A>(),
+                new ExecuteFeather<A>(x => { }),
+                new CompensateFeather<A>(x => false));
 
             var graphVisitor = new GraphVaneVisitor();
             graphVisitor.Visit(vane);

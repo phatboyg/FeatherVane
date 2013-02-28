@@ -14,8 +14,8 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
     using System;
     using System.Collections.Generic;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class ConsumeMessageConfigurator<T, TConsumer> :
@@ -37,7 +37,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
 
         public void Configure(VaneBuilder<Tuple<Message<T>, TConsumer>> builder)
         {
-            var consumer = new MessageConsumerVane<T, TConsumer>(_consumeMethod);
+            var consumer = new MessageConsumerFeather<T, TConsumer>(_consumeMethod);
             builder.Add(consumer);
         }
     }

@@ -14,12 +14,12 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System;
     using System.Collections.Generic;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class ExecuteConfigurator<T> :
-        FeatherVaneConfigurator<T>,
+        FeatherConfigurator<T>,
         VaneBuilderConfigurator<T>
     {
         readonly Action<Payload<T>> _continuation;
@@ -31,7 +31,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var execute = new ExecuteVane<T>(_continuation);
+            var execute = new ExecuteFeather<T>(_continuation);
             builder.Add(execute);
         }
 

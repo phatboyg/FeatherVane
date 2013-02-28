@@ -63,7 +63,7 @@ namespace FeatherVane.Messaging.FeatherVaneConfigurators
             foreach (var configurator in _configurators)
                 configurator.Configure(fanoutBuilder);
 
-            FeatherVane<Message> fanout = fanoutBuilder.Build();
+            Feather<Message> fanout = fanoutBuilder.Build();
 
             builder.Add(fanout);
         }

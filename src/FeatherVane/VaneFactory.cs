@@ -65,7 +65,7 @@ namespace FeatherVane
         /// <typeparam name="T">The Vane type</typeparam>
         /// <param name="vanes">The FeatherVanes to combine</param>
         /// <returns>An executable Vane</returns>
-        public static Vane<T> Success<T>(params FeatherVane<T>[] vanes)
+        public static Vane<T> Success<T>(params Feather<T>[] vanes)
         {
             var success = new SuccessVane<T>();
 
@@ -79,14 +79,14 @@ namespace FeatherVane
         /// <typeparam name="T">The Vane type</typeparam>
         /// <param name="vanes">The FeatherVanes to combine</param>
         /// <returns>An executable Vane</returns>
-        public static Vane<T> Unhandled<T>(params FeatherVane<T>[] vanes)
+        public static Vane<T> Unhandled<T>(params Feather<T>[] vanes)
         {
             var unhandled = new UnhandledVane<T>();
 
             return Connect(unhandled, vanes);
         }
 
-        public static SourceVane<T> Source<T>(SourceVane<T> source, params FeatherVane<T>[] vanes)
+        public static SourceVane<T> Source<T>(SourceVane<T> source, params Feather<T>[] vanes)
         {
             SourceVane<T> current = source;
             for (int i = 0; i < vanes.Length; i++)
@@ -95,7 +95,7 @@ namespace FeatherVane
         }
 
 
-        public static Vane<T> Connect<T>(Vane<T> last, params FeatherVane<T>[] vanes)
+        public static Vane<T> Connect<T>(Vane<T> last, params Feather<T>[] vanes)
         {
             Vane<T> next = last;
             for (int i = vanes.Length - 1; i >= 0; i--)
@@ -104,12 +104,12 @@ namespace FeatherVane
             return next;
         }
 
-        public static Vane<T> Append<T>(this FeatherVane<T> head, Vane<T> next)
+        public static Vane<T> Append<T>(this Feather<T> head, Vane<T> next)
         {
             return new NextVane<T>(head, next);
         }
 
-        public static Vane<T> Push<T>(this Vane<T> existing, FeatherVane<T> front)
+        public static Vane<T> Push<T>(this Vane<T> existing, Feather<T> front)
         {
             return new NextVane<T>(front, existing);
         }

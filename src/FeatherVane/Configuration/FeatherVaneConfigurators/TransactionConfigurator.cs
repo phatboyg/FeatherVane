@@ -16,7 +16,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
 
     public interface TransactionConfigurator<out T> :
-        FeatherVaneConfigurator<T>
+        FeatherConfigurator<T>
     {
         TransactionConfigurator<T> SetTimeout(TimeSpan timeout);
 

@@ -15,7 +15,7 @@ namespace FeatherVane.NHibernateIntegration
 
 
     public interface LoadVaneConfigurator<T, TSource> :
-        FeatherVaneConfigurator<Tuple<T, TSource>>,
+        FeatherConfigurator<Tuple<T, TSource>>,
         VaneConfigurator<Tuple<T, TSource>>
     {
     }

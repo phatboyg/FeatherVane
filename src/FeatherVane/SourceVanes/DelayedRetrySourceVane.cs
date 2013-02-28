@@ -58,10 +58,7 @@ namespace FeatherVane.SourceVanes
         {
             IEnumerator<int> timeoutEnumerator = null;
             bool useTimeout = false;
-            composer.Execute(() =>
-                {
-                    timeoutEnumerator = _timeouts.GetEnumerator();
-                });
+            composer.Execute(() => { timeoutEnumerator = _timeouts.GetEnumerator(); });
 
             Func<Composer, Task> nextTask = null;
             nextTask = outer => outer.ComposeTask(payload, (inner, taskPayload) =>

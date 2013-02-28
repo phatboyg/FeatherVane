@@ -12,27 +12,27 @@
 namespace FeatherVane.VaneBuilders
 {
     using System.Collections.Generic;
-    using Vanes;
+    using Feathers;
 
 
     public class FanoutBuilder<T> :
         VaneBuilder<T>
     {
-        readonly IList<FeatherVane<T>> _vanes;
+        readonly IList<Feather<T>> _vanes;
 
         public FanoutBuilder()
         {
-            _vanes = new List<FeatherVane<T>>();
+            _vanes = new List<Feather<T>>();
         }
 
-        void VaneBuilder<T>.Add(FeatherVane<T> featherVaneFactory)
+        void VaneBuilder<T>.Add(Feather<T> featherFactory)
         {
-            _vanes.Add(featherVaneFactory);
+            _vanes.Add(featherFactory);
         }
 
-        public FeatherVane<T> Build()
+        public Feather<T> Build()
         {
-            return new FanoutVane<T>(_vanes);
+            return new FanoutFeather<T>(_vanes);
         }
     }
 }

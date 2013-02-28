@@ -15,8 +15,8 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.IO;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class ProfilerConfiguratorImpl<T> :
@@ -42,7 +42,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var profiler = new ProfilerVane<T>(_output, _threshold);
+            var profiler = new ProfilerFeather<T>(_output, _threshold);
             builder.Add(profiler);
         }
 

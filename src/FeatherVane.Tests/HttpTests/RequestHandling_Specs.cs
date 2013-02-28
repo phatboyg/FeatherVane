@@ -17,10 +17,12 @@ namespace FeatherVane.Tests.HttpTests
     using System.Net;
     using System.Text;
     using System.Threading;
+    using Feathers;
     using NUnit.Framework;
     using Vanes;
     using Web.Http;
-    using Web.Http.Vanes;
+    using Web.Http.Feathers;
+
 
     [TestFixture]
     public class Submitting_a_request :
@@ -123,13 +125,13 @@ namespace FeatherVane.Tests.HttpTests
         protected override Vane<ConnectionContext> CreateMainVane()
         {
             return VaneFactory.Connect(new UnhandledVane<ConnectionContext>(),
-                new ProfilerVane<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(10)),
-                new HelloFeatherVane(),
-                new NotFoundFeatherVane());
+                new ProfilerFeather<ConnectionContext>(Console.Out, TimeSpan.FromMilliseconds(10)),
+                new HelloFeather(),
+                new NotFoundFeather());
         }
 
-        class HelloFeatherVane :
-            FeatherVane<ConnectionContext>
+        class HelloFeather :
+            Feather<ConnectionContext>
         {
             public void Compose(Composer composer,
                 Payload<ConnectionContext> payload, Vane<ConnectionContext> next)

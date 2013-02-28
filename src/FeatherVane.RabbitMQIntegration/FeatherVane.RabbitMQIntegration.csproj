@@ -42,20 +42,20 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="ConnectionManagement\DisconnectVane.cs" />
-    <Compile Include="ConnectionManagement\ConnectVane.cs" />
     <Compile Include="Exchange.cs" />
     <Compile Include="ExchangeBinding.cs" />
     <Compile Include="ExchangeBindings.cs" />
+    <Compile Include="Feathers\ExchangeBindFeather.cs" />
+    <Compile Include="Feathers\QueueBindFeather.cs" />
     <Compile Include="HashSetExchangeBindings.cs" />
     <Compile Include="HashSetQueueBindings.cs" />
     <Compile Include="Queue.cs" />
     <Compile Include="QueueBinding.cs" />
     <Compile Include="QueueBindings.cs" />
     <Compile Include="RabbitMQConsumer.cs" />
-    <Compile Include="Vanes\ExchangeBindVane.cs" />
-    <Compile Include="Vanes\ModelSourceVane.cs" />
-    <Compile Include="Vanes\QueueBindVane.cs" />
+    <Compile Include="SourceVanes\ConnectSourceVane.cs" />
+    <Compile Include="SourceVanes\ModelSourceVane.cs" />
+    <Compile Include="Vanes\DisconnectVane.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FeatherVane\FeatherVane.csproj">

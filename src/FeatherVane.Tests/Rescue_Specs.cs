@@ -21,14 +21,14 @@ namespace FeatherVane.Tests
         public void Should_complete_the_rescue_vane()
         {
             var fail = new TestFail();
-            var middle = new TestVane();
+            var middle = new Test();
 
             var success = new TestSuccess();
 
             Vane<TestSubject> vane = VaneFactory.New(() => fail, x =>
                 {
                     x.Rescue(() => success, r => { });
-                    x.FeatherVane(() => middle);
+                    x.Feather(() => middle);
                 });
 
             vane.Execute(_testSubject);

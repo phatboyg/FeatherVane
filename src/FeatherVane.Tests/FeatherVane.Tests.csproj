@@ -111,14 +111,14 @@
     <Compile Include="PushVane_Specs.cs" />
     <Compile Include="Rescue_Specs.cs" />
     <Compile Include="Routing\ControllerAction_Specs.cs" />
-    <Compile Include="Routing\RouteTestVane.cs" />
+    <Compile Include="Routing\RouteTest.cs" />
     <Compile Include="StreamDecorator_Specs.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="TaskUtil.cs" />
     <Compile Include="TestFail.cs" />
     <Compile Include="TestSubject.cs" />
     <Compile Include="TestSuccess.cs" />
-    <Compile Include="TestVane.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="Trace_Specs.cs" />
     <Compile Include="TypeRouter_Specs.cs" />
     <Compile Include="Visitor_Specs.cs" />

@@ -15,8 +15,8 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.IO;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
-    using Vanes;
 
 
     public class LogConfiguratorImpl<T> :
@@ -45,7 +45,7 @@ namespace FeatherVane.FeatherVaneConfigurators
 
         void VaneBuilderConfigurator<T>.Configure(VaneBuilder<T> builder)
         {
-            var logger = new LogVane<T>(_output, _format);
+            var logger = new LogFeather<T>(_output, _format);
             builder.Add(logger);
         }
 

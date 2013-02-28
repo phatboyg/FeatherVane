@@ -1,6 +1,7 @@
 ﻿namespace FeatherVane.Tests
 {
     using System;
+    using Feathers;
     using NUnit.Framework;
     using Vanes;
 
@@ -10,11 +11,11 @@
         [Test]
         public void Should_allow_the_type_to_be_dispatched()
         {
-            var lambda = new ExecuteVane<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
+            var lambda = new ExecuteFeather<ConsumeContext<A>>(context => Console.WriteLine("Body: {0}", context.Data.Body.Value));
 
             Vane<ConsumeContext<A>> messageAVane = VaneFactory.Connect(new SuccessVane<ConsumeContext<A>>(), lambda);
 
-            var typeRouter = new TypeRouterVane<ConsumeContext>(context => context.Data.ContextType);
+            var typeRouter = new TypeRouterFeather<ConsumeContext>(context => context.Data.ContextType);
             typeRouter.Add(messageAVane, x =>
                 {
                     ConsumeContext<A> context;

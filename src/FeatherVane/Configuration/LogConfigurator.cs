@@ -16,7 +16,7 @@ namespace FeatherVane
 
 
     public interface LogConfigurator<out T> :
-        FeatherVaneConfigurator<T>
+        FeatherConfigurator<T>
     {
         LogConfigurator<T> SetOutput(TextWriter output);
 

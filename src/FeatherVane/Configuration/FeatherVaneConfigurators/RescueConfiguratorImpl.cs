@@ -15,6 +15,7 @@ namespace FeatherVane.FeatherVaneConfigurators
     using System.Collections.Generic;
     using System.Linq;
     using Configurators;
+    using Feathers;
     using VaneBuilders;
     using Vanes;
 
@@ -46,7 +47,7 @@ namespace FeatherVane.FeatherVaneConfigurators
         {
             Vane<T> rescueVane = BuildRescueVane();
 
-            var vane = new RescueVane<T>(rescueVane);
+            var vane = new RescueFeather<T>(rescueVane);
             builder.Add(vane);
         }
 

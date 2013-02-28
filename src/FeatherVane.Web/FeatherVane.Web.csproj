@@ -51,16 +51,17 @@
     <Compile Include="Http\Contexts\HttpListenerResponseContext.cs" />
     <Compile Include="Http\Exceptions\HttpServerException.cs" />
     <Compile Include="Http\ExtensionsToResponseContext.cs" />
+    <Compile Include="Http\Feathers\CompressionFeather.cs" />
+    <Compile Include="Http\Feathers\NotFoundFeather.cs" />
+    <Compile Include="Http\Feathers\TextEncoding.cs" />
     <Compile Include="Http\HttpServer.cs" />
     <Compile Include="Http\RequestContext.cs" />
     <Compile Include="Http\ResponseContext.cs" />
     <Compile Include="Http\ServerContext.cs" />
-    <Compile Include="Http\Vanes\CompressionFeatherVane.cs" />
-    <Compile Include="Http\Vanes\TextEncoding.cs" />
-    <Compile Include="Http\Vanes\NotFoundFeatherVane.cs" />
     <Compile Include="Util\StreamStack.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Http\Vanes\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

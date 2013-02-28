@@ -43,7 +43,7 @@ namespace FeatherVane.Tests
         public void Should_execute_and_compensate_on_fail()
         {
             var fail = new TestFail();
-            var log = new TestVane();
+            var log = new Test();
             Vane<TestSubject> vane = VaneFactory.Connect(fail, log);
 
             var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
@@ -63,8 +63,8 @@ namespace FeatherVane.Tests
         public void Should_execute_two_and_compensate_on_fail()
         {
             var fail = new TestFail();
-            var log = new TestVane();
-            var log2 = new TestVane();
+            var log = new Test();
+            var log2 = new Test();
             Vane<TestSubject> vane = VaneFactory.Connect(fail, log, log2);
 
             var exception = Assert.Throws<AggregateException>(() => vane.Execute(_testSubject));
@@ -88,7 +88,7 @@ namespace FeatherVane.Tests
         public void Should_execute_both_vanes()
         {
             var success = new TestSuccess();
-            var log = new TestVane();
+            var log = new Test();
             Vane<TestSubject> vane = VaneFactory.Connect(success, log);
 
             vane.Execute(_testSubject);
@@ -104,8 +104,8 @@ namespace FeatherVane.Tests
         public void Should_execute_three_vanes()
         {
             var success = new TestSuccess();
-            var log = new TestVane();
-            var log2 = new TestVane();
+            var log = new Test();
+            var log2 = new Test();
             Vane<TestSubject> vane = VaneFactory.Connect(success, log, log2);
 
             vane.Execute(_testSubject);

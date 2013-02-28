@@ -24,7 +24,7 @@ namespace FeatherVane.Visualization
     {
         readonly HashSet<Edge> _edges = new HashSet<Edge>();
         readonly HashSet<object> _seen = new HashSet<object>();
-        readonly Stack<Vertex> _stack = new Stack<Vertex>();
+        readonly System.Collections.Generic.Stack<Vertex> _stack = new System.Collections.Generic.Stack<Vertex>();
         readonly Cache<int, Vertex> _vertices = new DictionaryCache<int, Vertex>();
         Vertex _current;
         static VaneTypeNameFormatter _typeNameFormatter = new VaneTypeNameFormatter();
@@ -50,9 +50,9 @@ namespace FeatherVane.Visualization
             return true;
         }
 
-        public bool Visit<T>(FeatherVane<T> vane)
+        public bool Visit<T>(Feather<T> vane)
         {
-            VisitFeatherVane(vane);
+            VisitFeather(vane);
 
             return true;
         }
@@ -72,7 +72,7 @@ namespace FeatherVane.Visualization
                 });
         }
 
-        Vertex GetVertex<T>(FeatherVane<T> vane)
+        Vertex GetVertex<T>(Feather<T> vane)
         {
             return GetVertex(vane.GetHashCode(), () => GetTitle(vane.GetType()), vane.GetType(), typeof(T));
         }
@@ -97,7 +97,7 @@ namespace FeatherVane.Visualization
             return _typeNameFormatter.GetTypeName(vaneType);
         }
 
-        void VisitFeatherVane<T>(FeatherVane<T> vane)
+        void VisitFeather<T>(Feather<T> vane)
         {
             if (_seen.Contains(vane))
                 return;
@@ -178,7 +178,7 @@ namespace FeatherVane.Visualization
 
         void VisitNextVane<T>(NextVane<T> nextVane)
         {
-            Visit(nextVane.FeatherVane);
+            Visit(nextVane.Feather);
             Push(() => Visit(nextVane.Next));
         }
 

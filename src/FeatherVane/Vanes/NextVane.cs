@@ -20,7 +20,7 @@ namespace FeatherVane.Vanes
         Vane<T>,
         AcceptVaneVisitor
     {
-        readonly FeatherVane<T> _featherVane;
+        readonly Feather<T> _feather;
         readonly Vane<T> _nextVane;
 
         /// <summary>
@@ -28,15 +28,15 @@ namespace FeatherVane.Vanes
         /// </summary>
         /// <param name="featherVane">The FeatherVane to combine with the next Vane</param>
         /// <param name="nextVane">The next Vane</param>
-        public NextVane(FeatherVane<T> featherVane, Vane<T> nextVane)
+        public NextVane(Feather<T> feather, Vane<T> nextVane)
         {
-            _featherVane = featherVane;
+            _feather = feather;
             _nextVane = nextVane;
         }
 
-        public FeatherVane<T> FeatherVane
+        public Feather<T> Feather
         {
-            get { return _featherVane; }
+            get { return _feather; }
         }
 
         public Vane<T> Next
@@ -46,12 +46,12 @@ namespace FeatherVane.Vanes
 
         bool AcceptVaneVisitor.Accept(VaneVisitor visitor)
         {
-            return visitor.Visit(_featherVane) && visitor.Visit(_nextVane);
+            return visitor.Visit(_feather) && visitor.Visit(_nextVane);
         }
 
         void Vane<T>.Compose(Composer composer, Payload<T> payload)
         {
-            _featherVane.Compose(composer, payload, _nextVane);
+            _feather.Compose(composer, payload, _nextVane);
         }
     }
 }
