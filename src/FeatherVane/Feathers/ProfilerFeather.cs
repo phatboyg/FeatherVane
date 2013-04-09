@@ -14,6 +14,7 @@ namespace FeatherVane.Feathers
     using System;
     using System.Diagnostics;
     using System.IO;
+    using Taskell;
 
 
     public class ProfilerFeather<T> :

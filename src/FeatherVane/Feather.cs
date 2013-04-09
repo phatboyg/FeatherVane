@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using Taskell;
+
+
     /// <summary>
     /// A FeatherVane is an autonomous vane that can be composed into a network of vanes.
     /// </summary>

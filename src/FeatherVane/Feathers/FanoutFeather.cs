@@ -15,6 +15,7 @@ namespace FeatherVane.Feathers
     using System.Diagnostics;
     using System.Linq;
     using Internals.Caching;
+    using Taskell;
 
 
     /// <summary>

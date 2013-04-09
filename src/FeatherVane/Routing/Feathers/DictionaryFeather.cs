@@ -13,6 +13,7 @@ namespace FeatherVane.Routing.Feathers
 {
     using System;
     using System.Collections.Generic;
+    using Taskell;
 
 
     public class DictionaryFeather :
@@ -32,7 +33,7 @@ namespace FeatherVane.Routing.Feathers
                 {
                     Vane<Tuple<RoutingContext, string>> matchingVane;
                     if (_vanes.TryGetValue(payload.Data.Item2, out matchingVane))
-                        return TaskComposer.Compose(matchingVane, payload, composer.CancellationToken);
+                        return CompositionExtensions.Compose(matchingVane, payload, composer.CancellationToken);
 
                     return TaskUtil.Completed();
                 });

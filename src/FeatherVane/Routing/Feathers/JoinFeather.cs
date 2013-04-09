@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Routing.Feathers
 {
+    using Taskell;
+
+
     public class JoinFeather :
         Feather<RoutingContext>
     {
@@ -29,13 +32,13 @@ namespace FeatherVane.Routing.Feathers
         {
             composer.Execute(() =>
                 {
-                    payload.Data.GetActivation(_rightId)
-                           .Then(() => TaskUtil.RunSynchronously(() =>
-                               {
-                                   payload.Data.Activate(_id);
+                    return payload.Data.GetActivation(_rightId)
+                                  .Then(() =>
+                                      {
+                                          payload.Data.Activate(_id);
 
-                                   _output.Compose(composer, payload);
-                               }, composer.CancellationToken), composer.CancellationToken);
+                                          return composer.ComposeTask(_output, payload);
+                                      }, composer.CancellationToken);
                 });
 
             next.Compose(composer, payload);

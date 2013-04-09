@@ -12,6 +12,7 @@
 namespace FeatherVane.RabbitMQIntegration.Feathers
 {
     using RabbitMQ.Client;
+    using Taskell;
 
 
     public class QueueBindFeather :

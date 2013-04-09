@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane
 {
+    using Taskell;
+
+
     public interface Vane<in T>
     {
         void Compose(Composer composer, Payload<T> payload);

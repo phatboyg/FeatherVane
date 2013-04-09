@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Feathers
 {
+    using Taskell;
+
+
     /// <summary>
     /// A WireTap passes the context to another Vane so that it can be observed
     /// </summary>
@@ -33,7 +36,7 @@ namespace FeatherVane.Feathers
 
         void Feather<T>.Compose(Composer composer, Payload<T> payload, Vane<T> next)
         {
-            composer.Execute(() => TaskComposer.Compose(_tap, payload, composer.CancellationToken));
+            composer.Execute(() => CompositionExtensions.Compose(_tap, payload, composer.CancellationToken));
 
             next.Compose(composer, payload);
         }

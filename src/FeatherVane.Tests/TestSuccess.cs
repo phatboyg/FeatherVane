@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Tests
 {
+    using Taskell;
+
+
     class TestSuccess :
         Vane<TestSubject>
     {

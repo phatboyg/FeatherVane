@@ -72,50 +72,6 @@ namespace FeatherVane
             return tcs.Task;
         }
 
-        internal static Task RunSynchronously(Action action,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (cancellationToken.IsCancellationRequested)
-                return Cancelled();
-
-            try
-            {
-                action();
-                return Completed();
-            }
-            catch (Exception ex)
-            {
-                return CompletedError(ex);
-            }
-        }
-
-        internal static bool TrySetFromTask<T>(this TaskCompletionSource<T> source, Task task)
-        {
-            if (task.Status == TaskStatus.Canceled)
-                return source.TrySetCanceled();
-
-            if (task.Status == TaskStatus.Faulted)
-                return source.TrySetException(task.Exception.InnerExceptions);
-
-            if (task.Status == TaskStatus.RanToCompletion)
-            {
-                var taskOfT = task as Task<T>;
-                return source.TrySetResult(taskOfT != null
-                                               ? taskOfT.Result
-                                               : default(T));
-            }
-
-            return false;
-        }
-
-        internal static void MarkObserved(this Task task)
-        {
-            if (!task.IsCompleted)
-                return;
-
-            Exception unused = task.Exception;
-        }
-
         /// <summary>
         /// Executes a task after the previous task is completed, taking the fast track if it is already completed
         /// otherwise deferring to async execution

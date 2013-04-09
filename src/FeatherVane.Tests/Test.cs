@@ -12,6 +12,7 @@
 namespace FeatherVane.Tests
 {
     using System.Diagnostics;
+    using Taskell;
 
 
     [DebuggerNonUserCode]

@@ -13,6 +13,7 @@ namespace FeatherVane.Tests.Routing
 {
     using System.Diagnostics;
     using FeatherVane.Routing;
+    using Taskell;
 
 
     [DebuggerNonUserCode]

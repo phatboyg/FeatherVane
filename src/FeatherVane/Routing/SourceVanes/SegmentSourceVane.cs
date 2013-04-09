@@ -12,6 +12,7 @@
 namespace FeatherVane.Routing.SourceVanes
 {
     using System;
+    using Taskell;
 
 
     /// <summary>
@@ -44,7 +45,7 @@ namespace FeatherVane.Routing.SourceVanes
                     if (segmentValue == null)
                         return TaskUtil.Completed();
 
-                    return TaskComposer.Compose(next, payload.MergeRight(segmentValue), composer.CancellationToken);
+                    return CompositionExtensions.Compose(next, payload.MergeRight(segmentValue), composer.CancellationToken);
                 });
         }
     }

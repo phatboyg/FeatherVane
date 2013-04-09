@@ -42,6 +42,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="Taskell">
+      <HintPath>..\packages\Taskell.0.1.0\lib\net40\Taskell.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\SourceVaneConfigurators\LoadVaneConfiguratorImpl.cs" />

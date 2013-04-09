@@ -14,6 +14,7 @@ namespace FeatherVane.Feathers
     using System;
     using System.Linq;
     using Internals.Caching;
+    using Taskell;
 
 
     /// <summary>
@@ -78,7 +79,7 @@ namespace FeatherVane.Feathers
                     {
                         Payload<TOutput> output = _converter(payload);
 
-                        return TaskComposer.Compose(_vane, output, composer.CancellationToken);
+                        return CompositionExtensions.Compose(_vane, output, composer.CancellationToken);
                     });
             }
         }

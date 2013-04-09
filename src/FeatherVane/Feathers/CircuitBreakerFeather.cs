@@ -14,6 +14,7 @@ namespace FeatherVane.Feathers
     using System;
     using System.Collections.Generic;
     using Support.CircuitBreakerFeather;
+    using Taskell;
 
 
     /// <summary>

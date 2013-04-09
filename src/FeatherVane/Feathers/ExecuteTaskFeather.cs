@@ -13,6 +13,7 @@ namespace FeatherVane.Feathers
 {
     using System;
     using System.Threading.Tasks;
+    using Taskell;
 
 
     /// <summary>

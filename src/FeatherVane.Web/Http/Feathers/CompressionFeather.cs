@@ -13,6 +13,7 @@ namespace FeatherVane.Web.Http.Feathers
 {
     using System;
     using System.IO.Compression;
+    using Taskell;
 
 
     public class CompressionFeather :

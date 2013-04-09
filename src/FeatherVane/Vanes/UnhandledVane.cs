@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
+    using Taskell;
+
+
     public class UnhandledVane<T> :
         Vane<T>
     {

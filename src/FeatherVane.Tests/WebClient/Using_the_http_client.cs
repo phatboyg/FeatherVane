@@ -16,6 +16,7 @@ namespace FeatherVane.Tests.WebClient
     using System.Threading.Tasks;
     using NUnit.Framework;
     using Newtonsoft.Json.Linq;
+    using Taskell;
 
 
     [TestFixture, Explicit]
@@ -102,7 +103,7 @@ namespace FeatherVane.Tests.WebClient
                                                          Description = text
                                                      };
 
-                                                 return TaskComposer.Compose(next, payload.MergeRight(data),
+                                                 return CompositionExtensions.Compose(next, payload.MergeRight(data),
                                                      composer.CancellationToken);
                                              },
                                              composer.CancellationToken,

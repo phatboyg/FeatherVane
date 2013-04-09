@@ -70,6 +70,9 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="Taskell">
+      <HintPath>..\packages\Taskell.0.1.0\lib\net40\Taskell.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionVersion.cs">

@@ -12,6 +12,7 @@
 namespace FeatherVane.RabbitMQIntegration.Vanes
 {
     using RabbitMQ.Client;
+    using Taskell;
 
 
     /// <summary>

@@ -13,6 +13,7 @@ namespace FeatherVane.SourceVanes
 {
     using System;
     using Support.StackFeather;
+    using Taskell;
 
 
     public class StackSourceVane<T> :

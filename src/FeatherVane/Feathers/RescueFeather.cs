@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Feathers
 {
+    using Taskell;
+
+
     /// <summary>
     /// If the next Vane faults, a Rescue reroutes the Build to an alternate Vane.
     /// </summary>
@@ -39,7 +42,7 @@ namespace FeatherVane.Feathers
         {
             next.Compose(composer, payload);
 
-            composer.Compensate(x => x.Task(TaskComposer.Compose(_vane, payload, composer.CancellationToken)));
+            composer.Compensate(x => x.Task(CompositionExtensions.Compose(_vane, payload, composer.CancellationToken)));
         }
     }
 }

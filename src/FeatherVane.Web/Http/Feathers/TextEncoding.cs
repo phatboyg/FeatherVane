@@ -13,6 +13,7 @@ namespace FeatherVane.Web.Http.Feathers
 {
     using System.Text;
     using System.Text.RegularExpressions;
+    using Taskell;
 
 
     public class TextEncoding :

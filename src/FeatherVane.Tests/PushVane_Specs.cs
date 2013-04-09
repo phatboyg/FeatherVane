@@ -13,6 +13,7 @@ namespace FeatherVane.Tests
 {
     using System;
     using NUnit.Framework;
+    using Taskell;
     using Vanes;
 
     [TestFixture]

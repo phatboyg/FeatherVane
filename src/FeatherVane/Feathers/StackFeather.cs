@@ -12,6 +12,7 @@
 namespace FeatherVane.Feathers
 {
     using Support.StackFeather;
+    using Taskell;
 
 
     public class StackFeather<T> :

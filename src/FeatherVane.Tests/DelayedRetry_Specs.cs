@@ -15,6 +15,7 @@ namespace FeatherVane.Tests
     using System.Threading.Tasks;
     using NUnit.Framework;
     using SourceVanes;
+    using Taskell;
 
 
     [TestFixture]

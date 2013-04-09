@@ -19,6 +19,7 @@ namespace FeatherVane.Tests.HttpTests
     using System.Threading;
     using Feathers;
     using NUnit.Framework;
+    using Taskell;
     using Vanes;
     using Web.Http;
     using Web.Http.Feathers;

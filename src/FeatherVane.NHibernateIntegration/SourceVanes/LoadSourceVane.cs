@@ -13,6 +13,7 @@ namespace FeatherVane.NHibernateIntegration.SourceVanes
 {
     using System;
     using NHibernate;
+    using Taskell;
 
 
     /// <summary>

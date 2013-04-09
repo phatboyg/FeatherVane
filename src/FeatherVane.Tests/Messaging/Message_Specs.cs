@@ -15,6 +15,7 @@ namespace FeatherVane.Tests.Messaging
     using FeatherVane.Messaging;
     using FeatherVane.Messaging.Payloads;
     using NUnit.Framework;
+    using Taskell;
 
 
     [TestFixture]
@@ -29,7 +30,7 @@ namespace FeatherVane.Tests.Messaging
             var alpha = new Alpha();
             var payload = new MessagePayload<Alpha>(alpha);
 
-            TaskComposer.Compose(vane, payload, CancellationToken.None).Wait();
+            CompositionExtensions.Compose(vane, payload, CancellationToken.None).Wait();
 
             Assert.IsTrue(ReferenceEquals(alpha, messageVane.Message));
         }

@@ -11,6 +11,9 @@
 // permissions and limitations under the License.
 namespace FeatherVane.Vanes
 {
+    using Taskell;
+
+
     /// <summary>
     /// Curries a FeatherVane into a Vane, using the next Vane supplied during
     /// Build operations.
